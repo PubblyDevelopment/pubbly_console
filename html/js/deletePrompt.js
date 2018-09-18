@@ -1,6 +1,3 @@
-/**
- * Created by Jason on 8/24/2016.
- */
 
 
 function deletePrompt(nameToCheck, typeOfDeletion, ajaxURL, callback) {

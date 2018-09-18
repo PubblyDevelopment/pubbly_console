@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Jason
- * Date: 6/15/2016
- * Time: 3:03 PM
- */
 
 function loginCheck()
 {

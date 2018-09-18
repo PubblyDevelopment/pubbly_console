@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: Jason
- * Date: 8/17/2016
- * Time: 11:15 AM
- */
 chdir('../');
 $schoolName = $_GET['schoolName'];
 $subjectName = $_GET['subjectName'];

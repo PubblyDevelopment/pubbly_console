@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: Jason
- * Date: 9/23/2016
- * Time: 3:25 PM
- */
 $unit = $_GET['unitName'];
 $level = isset($_GET['levelName']) ? $_GET['levelName'] : false;
 $subject = isset($_GET['subjectName']) ? $_GET['subjectName'] : false;
