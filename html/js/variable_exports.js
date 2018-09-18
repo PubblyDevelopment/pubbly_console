@@ -597,8 +597,8 @@ getSeries(function (ret) {
                             view: "button", id: "goChild", value: "View", gravity: 1, disabled: true, on: {
                                 onItemClick: function () {
                                     if (window.selectedChild) {
-                                        let sn = btoa(window.seriesName);
-                                        let cn = btoa(window.childName);
+                                        let sn = btoa(window.selectedSeries);
+                                        let cn = btoa(window.selectedChild);
                                         var win = window.open("read.php?t=c&sn=" + sn + "&cn=" + cn, '_blank');
                                     } else {
                                         $$(this).disable();

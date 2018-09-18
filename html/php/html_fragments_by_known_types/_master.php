@@ -68,6 +68,10 @@ class html_fragments_by_known_types {
         // Global swaps
         // $this->addSwap("REL_ROOT", ".");
 
+        $buildType = isset($this->types[$type]['buildType']) ?
+                $this->types[$type]['buildType'] :
+                "echo";
+
         // Load HTML file passed through
         if ($this->checkAndLoadFile($type)) {
             // Custom swaps from 2x array to obj conversion
@@ -149,14 +153,14 @@ class html_fragments_by_known_types {
                     $commentSwaps .= "    $replace: '$with'" . "\r\n";
                 }
                 $commentSwaps .= "-->";
-                echo $commentTitle;
-                echo $commentLoc;
-                echo $commentSwaps;
-                echo $this->html;
+
+                $this->html = $commentTitle . $commentLoc . $commentSwaps . $this->html;
             } else {
+                // $this->html;
+            }
+            if ($buildType == "echo") {
                 echo $this->html;
             }
         }
     }
-
 }

@@ -12,6 +12,27 @@ class Engine extends html_fragments_by_known_types {
 
     public $whoAmI = "engine";
     public $types = [
+        "1.0.7-run" => [
+            "fsLoc" => "engine/1.0.7/run.html",
+            "defaultSwaps" => [
+                ["REL_ROOT", "."],
+                ["ENGINE", "1.0.7"],
+                ["START_PAGE", 0],
+                ["PUBBLY_JSON", "{}"],
+            ]
+        ],
+        "1.0.7-build" => [
+            "fsLoc" => "engine/1.0.7/build.html",
+            "defaultSwaps" => [
+                ["REL_ROOT", "."],
+                ["ENGINE", "1.0.7"],
+                ["START_PAGE", 0],
+                ["BUILD_POST_SPECS", ""],
+                ["BUILD_POST_LOC", ""],
+                ["XML_NAME", ""],
+                ["BOOK_LOC", ""]
+            ]
+        ],
         "1.0.6-run" => [
             "fsLoc" => "engine/1.0.6/run.html",
             "defaultSwaps" => [
@@ -32,6 +53,15 @@ class Engine extends html_fragments_by_known_types {
                 ["XML_NAME", ""],
                 ["BOOK_LOC", ""]
             ]
+        ],
+        "old" => [
+            "fsLoc" => "engine/old/index.html",
+            "defaultSwaps" => [
+                ["DOTS", "../../"],
+                ["XML_NAME", "MainXML.xml"],
+                ["SERIES_NAME", ""],
+            ],
+            "buildType" => "return"
         ],
     ];
 
