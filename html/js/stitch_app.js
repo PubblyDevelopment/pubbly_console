@@ -666,7 +666,6 @@ var unitPageList = {
             // Save and delete buttons
             {
                 cols: [
-                    {},
                     {
                         value: "Save", id: "saveUnitPageOrder", view: "button", disabled: true, on: {
                             onItemClick: function () {
@@ -674,9 +673,8 @@ var unitPageList = {
                             }
                         },
                     },
-                    {},
                     {
-                        value: "View", id: "viewUnit", view: "button", disabled: false, on: {
+                        value: "View Old", id: "viewUnitOld", view: "button", disabled: false, on: {
                             onItemClick: function () {
                                 var url;
                                 if (isTutorial) {
@@ -700,7 +698,31 @@ var unitPageList = {
                             }
                         }
                     },
-                    {},
+                    {
+                        value: "View New", id: "viewUnitNew", view: "button", disabled: false, on: {
+                            onItemClick: function () {
+                                var url;
+                                if (isTutorial) {
+                                    //url = "schools/" + window.schoolName + "/tutorials/" + window.unitName + "/index.php";
+                                    url = "read.php?engineCode=new&t=t&sc=" + btoa(schoolName) + "&u=" + btoa(unitName);
+                                    console.log(url);
+                                } else {
+                                    // url = "schools/" + window.schoolName + "/" + window.subjectName + "/" + window.levelName + "/" + window.unitName + "/index.php";
+                                    url = "read.php?engineCode=new&t=u&sc=" + btoa(schoolName) + "&su=" + btoa(subjectName) + "&l=" + btoa(levelName) + "&u=" + btoa(unitName);
+                                    console.log(url);
+                                }
+                                if (window.saveDisabled) {
+                                    var win = window.open(url, '_blank');
+                                    win.focus();
+                                } else {
+                                    saveUnit(function () {
+                                        var win = window.open(url, '_blank');
+                                        win.focus();
+                                    });
+                                }
+                            }
+                        }
+                    },
                 ]
             },
         ]

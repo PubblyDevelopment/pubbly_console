@@ -198,7 +198,8 @@ var selectBook = {
                         window.selectedBook = unitName;
                         window.selectedBookID = this.getItem(id).ID;
                         $$("deleteBook").enable();
-                        $$("viewBook").enable();
+                        $$("viewBookOld").enable();
+                        $$("viewBookNew").enable();
                         $$("reuploadBook").enable();
                         $$('reuploadBook').data.upload = "ajax/upload/uploadBook.php?bookName=" + window.selectedBook;
                         $$("downloadBook").enable();
@@ -242,9 +243,18 @@ var selectBook = {
                         }
                     },
                     {},
-                    {value: "View", id: "viewBook", view: "button", disabled: true, on: {onItemClick: function () {
+
+                    {value: "View old", id: "viewBookOld", view: "button", disabled: true, on: {onItemClick: function () {
                                 window.location.href = "read.php?t=b&id=" + window.selectedBookID;
-                            }}},
+                            }
+                        }
+                    },
+                    {value: "View new", id: "viewBookNew", view: "button", disabled: true, on: {onItemClick: function () {
+                                window.location.href = "read.php?engineCode=new&t=b&id=" + window.selectedBookID;
+                            }
+                        }
+                    },
+
                     {},
                     {
                         view: "button",

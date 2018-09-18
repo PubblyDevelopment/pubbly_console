@@ -509,102 +509,126 @@ getSeries(function (ret) {
                     ]
                 },
                 {
-                    cols: [
-                        {view: "label", label: "Child: ", gravity: 1, align: "center"},
+                    rows: [
                         {
-                            view: "combo", id: "childSelector", gravity: 3, value: 1, options: {
-                                body: {
-                                    id: "childSelectorDropDown",
-                                    data: [
-                                        {id: 1, value: " -- Choose -- "},
-                                    ],
+                            cols: [
+                                {view: "label", label: "Child: ", gravity: 1, align: "center"},
+                                {
+                                    view: "combo", id: "childSelector", gravity: 3, value: 1, options: {
+                                        body: {
+                                            id: "childSelectorDropDown",
+                                            data: [
+                                                {id: 1, value: " -- Choose -- "},
+                                            ],
+                                            on: {
+                                                'onItemClick': function (id) {
+                                                    var childName = this.getItem(id).value;
+                                                    if (childName == " -- choose -- ") {
+                                                        $$("goChildOld").disable();
+                                                        $$("goChildNew").disable();
+                                                        $$("renameChild").disable();
+                                                        $$("deleteChild").disable();
+                                                        window.selectedChild = false;
+                                                    } else {
+                                                        $$("goChildOld").enable();
+                                                        $$("goChildNew").enable();
+                                                        $$("renameChild").enable();
+                                                        $$("deleteChild").enable();
+                                                        window.selectedChild = childName;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                },
+                                {
+                                    view: "button", id: "renameChild", value: "Rename", gravity: 1, disabled: true, on: {
+                                        onItemClick: function () {
+                                            var newName = window.prompt("Enter a new name for the series");
+                                            // Makes sure you're not renaming a child the same name as another child.
+                                            let errolCheck = false;
+                                            for (let s = 0; s < selectedSeriesKids.length; s++) {
+                                                if (selectedSeriesKids[s] == newName) {
+                                                    errolCheck = true;
+                                                }
+                                            }
+                                            if (newName) {
+                                                if (errolCheck) {
+                                                    window.alert("Already a child in this series with that name");
+                                                } else {
+                                                    var THIS = this;
+                                                    $$(this).disable();
+                                                    $$(this).setValue("Please wait...");
+                                                    $$(this).refresh();
+                                                    $.ajax({
+                                                        type: 'get',
+                                                        url: 'ajax/rename/renameChild.php',
+                                                        data: {
+                                                            "series": window.selectedSeries,
+                                                            "oldName": window.selectedChild,
+                                                            "newName": newName
+                                                        },
+                                                        success: function (ret) {
+                                                            if (ret == "done") {
+                                                                window.location.href = window.location.href;
+                                                            } else {
+                                                                window.alert(ret + "</br>Please contact support");
+                                                                document.body.innerHTML = ret;
+                                                            }
+                                                        }
+                                                    })
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                },
+                            ]
+                        },
+                        {
+                            cols: [
+                                
+                                {
+                                    view: "button",
+                                    id: "deleteChild",
+                                    value: "Delete",
+                                    gravity: 1,
+                                    disabled: true,
+                                    css: "delete",
                                     on: {
-                                        'onItemClick': function (id) {
-                                            var childName = this.getItem(id).value;
-                                            if (childName == " -- choose -- ") {
-                                                $$("goChild").disable();
-                                                $$("renameChild").disable();
-                                                $$("deleteChild").disable();
-                                                window.selectedChild = false;
+                                        onItemClick: function () {
+                                            var url = "ajax/delete/deleteChild.php?seriesName=" + window.selectedSeries + "&childName=" + window.selectedChild;
+                                            deletePrompt(selectedChild, "child", url, false);
+                                        }
+                                    }
+                                },
+                                {
+                                    view: "button", id: "goChildOld", value: "View new", gravity: 1, disabled: true, on: {
+                                        onItemClick: function () {
+                                            if (window.selectedChild) {
+                                                let sn = btoa(window.selectedSeries);
+                                                let cn = btoa(window.selectedChild);
+                                                var win = window.open("read.php?engineCode=new&t=c&sn=" + sn + "&cn=" + cn, '_blank');
                                             } else {
-                                                $$("goChild").enable();
-                                                $$("renameChild").enable();
-                                                $$("deleteChild").enable();
-                                                window.selectedChild = childName;
+                                                $$(this).disable();
                                             }
                                         }
                                     }
-                                }
-                            },
-                        },
-                        {
-                            view: "button",
-                            id: "deleteChild",
-                            value: "Delete",
-                            gravity: 1,
-                            disabled: true,
-                            css: "delete",
-                            on: {
-                                onItemClick: function () {
-                                    var url = "ajax/delete/deleteChild.php?seriesName=" + window.selectedSeries + "&childName=" + window.selectedChild;
-                                    deletePrompt(selectedChild, "child", url, false);
-                                }
-                            }
-                        },
-                        {
-                            view: "button", id: "renameChild", value: "Rename", gravity: 1, disabled: true, on: {
-                                onItemClick: function () {
-                                    var newName = window.prompt("Enter a new name for the series");
-                                    // Makes sure you're not renaming a child the same name as another child.
-                                    let errolCheck = false;
-                                    for (let s = 0; s < selectedSeriesKids.length; s++) {
-                                        if (selectedSeriesKids[s] == newName) {
-                                            errolCheck = true;
+                                },
+                                {
+                                    view: "button", id: "goChildNew", value: "View old", gravity: 1, disabled: true, on: {
+                                        onItemClick: function () {
+                                            if (window.selectedChild) {
+                                                let sn = btoa(window.selectedSeries);
+                                                let cn = btoa(window.selectedChild);
+                                                var win = window.open("read.php?t=c&sn=" + sn + "&cn=" + cn, '_blank');
+                                            } else {
+                                                $$(this).disable();
+                                            }
                                         }
                                     }
-                                    if (newName) {
-                                        if (errolCheck) {
-                                            window.alert("Already a child in this series with that name");
-                                        } else {
-                                            var THIS = this;
-                                            $$(this).disable();
-                                            $$(this).setValue("Please wait...");
-                                            $$(this).refresh();
-                                            $.ajax({
-                                                type: 'get',
-                                                url: 'ajax/rename/renameChild.php',
-                                                data: {
-                                                    "series": window.selectedSeries,
-                                                    "oldName": window.selectedChild,
-                                                    "newName": newName
-                                                },
-                                                success: function (ret) {
-                                                    if (ret == "done") {
-                                                        window.location.href = window.location.href;
-                                                    } else {
-                                                        window.alert(ret + "</br>Please contact support");
-                                                        document.body.innerHTML = ret;
-                                                    }
-                                                }
-                                            })
-                                        }
-                                    }
-
-                                }
-                            }
-                        },
-                        {
-                            view: "button", id: "goChild", value: "View", gravity: 1, disabled: true, on: {
-                                onItemClick: function () {
-                                    if (window.selectedChild) {
-                                        let sn = btoa(window.selectedSeries);
-                                        let cn = btoa(window.selectedChild);
-                                        var win = window.open("read.php?t=c&sn=" + sn + "&cn=" + cn, '_blank');
-                                    } else {
-                                        $$(this).disable();
-                                    }
-                                }
-                            }
+                                },
+                            ]
                         },
                     ]
                 },

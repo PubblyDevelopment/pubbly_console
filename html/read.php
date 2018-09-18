@@ -9,7 +9,7 @@ $types = [
 ];
 $type = $types[$_GET['t']];
 require_once("engine/latest.php");
-$engineCode = isset($_GET['engineCode']) ? $_GET['engineCode'] : $latestEngineRelease;
+$engineCode = (isset($_GET['engineCode']) && $_GET['engineCode'] == "new") ? $latestEngineRelease : "old";
 
 
 $postSpecs = [
@@ -61,33 +61,34 @@ require_once("php/html_fragments_by_known_types/engine.php");
 $htmlFileName = ($type == "child") ? "$childName.html" : "index.html";
 
 // Old garbage engine again
-if (!file_exists("$loc/$htmlFileName")) {
-    $oldHTML = file_get_contents("engine/old/index.html");
-    $dots = ($type == "unit") ? "../../../../../" : "../../";
+if ($engineCode == "old") {
+    if (!file_exists("$loc/$htmlFileName")) {
+        $oldHTML = file_get_contents("engine/old/index.html");
+        $dots = ($type == "unit") ? "../../../../../" : "../../";
 
-    $frag = new Engine("old", [
-        ["XML_NAME", $xmlName],
-        ["DOTS", $dots],
-    ]);
-    file_put_contents("$loc/$htmlFileName", $frag->html);
+        $frag = new Engine("old", [
+            ["XML_NAME", $xmlName],
+            ["DOTS", $dots],
+        ]);
+        file_put_contents("$loc/$htmlFileName", $frag->html);
+    }
+    header("location: $loc/$htmlFileName");
+} else {
+    $jsonLoc = "$loc/$jsonName.$engineCode.json";
+    $jsonUpdated = (file_exists("$jsonLoc")) ? filemtime("$jsonLoc") : 0;
+    $xmlUpdated = (file_exists("$loc/$xmlName")) ? filemtime("$loc/$xmlName") : 0;
+    if ($jsonUpdated <= $xmlUpdated) {
+        new Engine("$engineCode-build", [
+            ["BUILD_POST_SPECS", json_encode($postSpecs)],
+            ["BUILD_POST_LOC", "build.php"],
+            ["BOOK_LOC", "$loc"],
+            ["XML_NAME", "$xmlName"],
+        ]);
+    } else {
+        new Engine("$engineCode-run", [
+            ["PUBBLY_JSON", file_get_contents("$jsonLoc")]
+        ]);
+    }
 }
-header("location: $loc/$htmlFileName");
 
-/*
-  $jsonLoc = "$loc/$jsonName.$engineCode.json";
-  $jsonUpdated = (file_exists("$jsonLoc")) ? filemtime("$jsonLoc") : 0;
-  $xmlUpdated = (file_exists("$loc/$xmlName")) ? filemtime("$loc/$xmlName") : 0;
-  if ($jsonUpdated <= $xmlUpdated) {
-  new Engine("$engineCode-build", [
-  ["BUILD_POST_SPECS", json_encode($postSpecs)],
-  ["BUILD_POST_LOC", "build.php"],
-  ["BOOK_LOC", "$loc"],
-  ["XML_NAME", "$xmlName"],
-  ]);
-  } else {
-  new Engine("$engineCode-run", [
-  ["PUBBLY_JSON", file_get_contents("$jsonLoc")]
-  ]);
-  }
- */
 ?>

@@ -31,7 +31,8 @@ function deselectCat(level) {
         $$("deleteUnit").disable();
         $$("deleteUnitAction").disable();
         $$("editUnitAction").disable();
-        $$("saveUnitAction").disable();
+        $$("saveUnitActionOld").disable();
+        $$("saveUnitActionNew").disable();
         $$("downloadUnit").disable();
         window.selectedUnit = false;
     }
@@ -239,9 +240,11 @@ var unitActions = {
                         var outdated = this.getItem(id).outdated;
                         window.currentUnitOutdated = (outdated == "OUTDATED") ? true : false;
                         if (currentUnitOutdated) {
-                            $$("saveUnitAction").setValue("Update and view");
+                            $$("saveUnitActionOld").setValue("Update+View Old");
+                            $$("saveUnitActionNew").setValue("Update+View New");
                         } else {
-                            $$("saveUnitAction").setValue("View");
+                            $$("saveUnitActionOld").setValue("View Old");
+                            $$("saveUnitActionNew").setValue("View New");
                         }
                         if (isGame(unitName)) {
                             $$("uploadIconAction").enable();
@@ -257,12 +260,14 @@ var unitActions = {
                             $$('uploadIconAction').data.upload = "";
                         }
                         $$("uploadIconAction").refresh();
-                        $$("saveUnitAction").refresh();
+                        $$("saveUnitActionOld").refresh();
+                        $$("saveUnitActionNew").refresh();
                         $$("unitCombo").setValue(id);
                         $$("deleteUnit").enable();
                         $$("deleteUnitAction").enable();
                         $$("editUnitAction").enable();
-                        $$("saveUnitAction").enable();
+                        $$("saveUnitActionOld").enable();
+                        $$("saveUnitActionNew").enable();
                         $$("downloadUnit").enable();
                         window.selectedUnit = unitName;
                     }
@@ -353,28 +358,55 @@ var unitActions = {
                                         }
                                     },
                                     {
-                                        id: "saveUnitAction",
-                                        view: "button",
-                                        value: "View",
-                                        disabled: true,
-                                        on: {
-                                            onItemClick: function () {
-                                                if (window.currentUnitOutdated) {
-                                                    saveUnit(function () {
-                                                        reloadUnits();
-                                                        viewUnit();
-                                                    });
-                                                } else {
-                                                    var url = "read.php?t=u&sc=" + btoa(selectedSchool) + "&su=" + btoa(selectedSubject) + "&l=" + btoa(selectedLevel) + "&u=" + btoa(selectedUnit);
-                                                    if (window.selectedUnit == "Tutorial") {
-                                                        url = "read.php?t=t&sc=" + btoa(selectedSchool) + "&u=" + btoa(selectedUnit);
+                                        cols: [
+                                            {
+                                                id: "saveUnitActionOld",
+                                                view: "button",
+                                                value: "View Old",
+                                                disabled: true,
+                                                on: {
+                                                    onItemClick: function () {
+                                                        if (window.currentUnitOutdated) {
+                                                            saveUnit(function () {
+                                                                reloadUnits();
+                                                                viewUnit();
+                                                            });
+                                                        } else {
+                                                            var url = "read.php?t=u&sc=" + btoa(selectedSchool) + "&su=" + btoa(selectedSubject) + "&l=" + btoa(selectedLevel) + "&u=" + btoa(selectedUnit);
+                                                            if (window.selectedUnit == "Tutorial") {
+                                                                url = "read.php?t=t&sc=" + btoa(selectedSchool) + "&u=" + btoa(selectedUnit);
+                                                            }
+                                                            var win = window.open(url, '_blank');
+                                                            win.focus();
+                                                        }
                                                     }
-                                                    var win = window.open(url, '_blank');
-                                                    win.focus();
                                                 }
-                                            }
-                                        }
+                                            }, {
+                                                id: "saveUnitActionNew",
+                                                view: "button",
+                                                value: "View New",
+                                                disabled: true,
+                                                on: {
+                                                    onItemClick: function () {
+                                                        if (window.currentUnitOutdated) {
+                                                            saveUnit(function () {
+                                                                reloadUnits();
+                                                                viewUnit();
+                                                            });
+                                                        } else {
+                                                            var url = "read.php?engineCode=new&t=u&sc=" + btoa(selectedSchool) + "&su=" + btoa(selectedSubject) + "&l=" + btoa(selectedLevel) + "&u=" + btoa(selectedUnit);
+                                                            if (window.selectedUnit == "Tutorial") {
+                                                                url = "read.php?engineCode=new&t=t&sc=" + btoa(selectedSchool) + "&u=" + btoa(selectedUnit);
+                                                            }
+                                                            var win = window.open(url, '_blank');
+                                                            win.focus();
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                        ]
                                     },
+
                                     {},
                                 ]
                             },
@@ -940,7 +972,8 @@ var selectUnits = {
                                             $$("deleteUnit").enable();
                                             $$("deleteUnitAction").enable();
                                             $$("editUnitAction").enable();
-                                            $$("saveUnitAction").enable();
+                                            $$("saveUnitActionOld").enable();
+                                            $$("saveUnitActionNew").enable();
                                             $$("downloadUnit").enable();
                                             window.selectedUnit = unitName;
                                         }

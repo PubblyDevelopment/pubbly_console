@@ -92,11 +92,12 @@ body {
 }
 
 #mainC {
-    /*background-image: url(../presets/blackMetal.jpg);
-    background-color:#99ccff;*/
+    /*
+    border: 1px solid RGB(34,34,34);
+    */    
     background-color:RGB(34,34,34);
     position: relative;
-    border: 1px solid RGB(34,34,34);
+    border: 1px solid RGB(255,0,0);
     border-radius: 10px;
     overflow: hidden;
 }
