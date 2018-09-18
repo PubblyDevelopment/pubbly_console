@@ -757,7 +757,7 @@ function attachDropzoneEvents(seriesName, dzid, callback) {
     window.parentDropzone.on("error", function (file, ret) {
         console.error(file);
         console.error(ret);
-    })
+    });
 }
 
 function initCaps(string) {

@@ -11,6 +11,7 @@ $name = $_GET['name'];
 
 chdir('../');
 include_once("../../includes/loginCheck.php");
+chdir('../');
 if (loginCheck()) {
     // Get real path for our folder
     chdir($loc);

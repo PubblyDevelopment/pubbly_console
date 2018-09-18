@@ -263,6 +263,7 @@ var unitActions = {
                         $$("deleteUnitAction").enable();
                         $$("editUnitAction").enable();
                         $$("saveUnitAction").enable();
+                        $$("downloadUnit").enable();
                         window.selectedUnit = unitName;
                     }
                 }
@@ -364,13 +365,10 @@ var unitActions = {
                                                         viewUnit();
                                                     });
                                                 } else {
-                                                    var url = "schools/";
-                                                    url += window.selectedSchool + "/";
-                                                    url += window.selectedSubject + "/";
-                                                    if (window.selectedUnit !== "Tutorial") {
-                                                        url += window.selectedLevel + "/";
+                                                    var url = "read.php?t=u&sc=" + btoa(selectedSchool) + "&su=" + btoa(selectedSubject) + "&l=" + btoa(selectedLevel) + "&u=" + btoa(selectedUnit);
+                                                    if (window.selectedUnit == "Tutorial") {
+                                                        url = "read.php?t=t&sc=" + btoa(selectedSchool) + "&u=" + btoa(selectedUnit);
                                                     }
-                                                    url += window.selectedUnit + "/index.php";
                                                     var win = window.open(url, '_blank');
                                                     win.focus();
                                                 }
@@ -462,7 +460,6 @@ function download(what) {
         var loc = "schools/" + arr.join("/");
         var zipName = arr.join("_");
         var url = "ajax/download/prepUnitDownload.php?loc=" + loc + "&name=" + zipName;
-        console.log(url);
         webix.message("Preparing download...");
         $.ajax(url).done(
                 function (ret) {
@@ -600,9 +597,7 @@ var tutorials = {
             {cols: [
                     {view: "button", value: "View", id: "viewTutorial", disabled: true, on: {onItemClick: function () {
                                 function goTut() {
-                                    var url = "schools/";
-                                    url += window.selectedSchool + "/";
-                                    url += "tutorials/" + window.selectedTutorial + "/index.php";
+                                    var url = "read.php?t=t&sc=" + btoa(selectedSchool) + "&u=" + btoa(selectedUnit);
                                     var win = window.open(url, '_blank');
                                     win.focus();
                                 }
@@ -1023,11 +1018,7 @@ function saveUnit(callback, which) {
 }
 
 function viewUnit() {
-    var url = "schools/";
-    url += window.selectedSchool + "/";
-    url += window.selectedSubject + "/";
-    url += window.selectedLevel + "/";
-    url += window.selectedUnit + "/index.php";
+    var url = "read.php?t=u&sc=" + btoa(selectedSchool) + "&su=" + btoa(selectedSubject) + "&l=" + btoa(selectedLevel) + "&u=" + btoa(selectedUnit);
     var win = window.open(url, '_blank');
     win.focus();
 }
