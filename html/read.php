@@ -10,6 +10,7 @@ $types = [
 $type = $types[$_GET['t']];
 require_once("engine/latest.php");
 $engineCode = (isset($_GET['engineCode']) && $_GET['engineCode'] == "new") ? $latestEngineRelease : "old";
+$forceDebug = isset($_GET['fb']) ? $_GET['fb'] : false;
 
 
 $postSpecs = [
@@ -77,7 +78,7 @@ if ($engineCode == "old") {
     $jsonLoc = "$loc/$jsonName.$engineCode.json";
     $jsonUpdated = (file_exists("$jsonLoc")) ? filemtime("$jsonLoc") : 0;
     $xmlUpdated = (file_exists("$loc/$xmlName")) ? filemtime("$loc/$xmlName") : 0;
-    if ($jsonUpdated <= $xmlUpdated) {
+    if ($jsonUpdated <= $xmlUpdated || $forceDebug) {
         new Engine("$engineCode-build", [
             ["BUILD_POST_SPECS", json_encode($postSpecs)],
             ["BUILD_POST_LOC", "build.php"],

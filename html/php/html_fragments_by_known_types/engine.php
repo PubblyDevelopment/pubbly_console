@@ -12,6 +12,27 @@ class Engine extends html_fragments_by_known_types {
 
     public $whoAmI = "engine";
     public $types = [
+        "1.0.8-run" => [
+            "fsLoc" => "engine/1.0.8/run.html",
+            "defaultSwaps" => [
+                ["REL_ROOT", "."],
+                ["ENGINE", "1.0.8"],
+                ["START_PAGE", 0],
+                ["PUBBLY_JSON", "{}"],
+            ]
+        ],
+        "1.0.8-build" => [
+            "fsLoc" => "engine/1.0.8/build.html",
+            "defaultSwaps" => [
+                ["REL_ROOT", "."],
+                ["ENGINE", "1.0.8"],
+                ["START_PAGE", 0],
+                ["BUILD_POST_SPECS", ""],
+                ["BUILD_POST_LOC", ""],
+                ["XML_NAME", ""],
+                ["BOOK_LOC", ""]
+            ]
+        ],
         "1.0.7-run" => [
             "fsLoc" => "engine/1.0.7/run.html",
             "defaultSwaps" => [

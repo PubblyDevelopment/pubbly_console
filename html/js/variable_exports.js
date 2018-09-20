@@ -720,7 +720,7 @@ getSeries(function (ret) {
                                         type: 'HEAD',
                                         error: function ()
                                         {
-                                            window.location.href = window.selectedSeries + "/Parent.zip"; // boo last gen
+                                            window.location.href = "series/" + window.selectedSeries + "/Parent.zip"; // boo last gen
                                         },
                                         success: function ()
                                         {
