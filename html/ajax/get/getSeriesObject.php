@@ -22,6 +22,7 @@ if (isset($seriesName)) {
     $variableImages = [];
     $variableAudios = [];
     $variableFields = [];
+    $variableVideos = [];
     $i = 1;
     // Get all variable assets (images and audios)
     foreach ($xml->Assets->children() as $child) {
@@ -36,6 +37,10 @@ if (isset($seriesName)) {
             } else if ((string) $child->Type == "Field") {
                 $fieldName = (string) $child->Source;
                 $variableFields[$fieldName] = $i;
+                $i++;
+            } else if ((string) $child->Type == "Video") {
+                $videoName = (string) $child->Source;
+                $variableVideos[$videoName] = $i;
                 $i++;
             }
         }
@@ -71,6 +76,15 @@ if (isset($seriesName)) {
                     $asset['fieldName'] = (string) $object->ObjName;
                     $asset['textAlign'] = (isset($object->TextAlign)) ? (string) $object->TextAlign : "center";
 
+                    array_push($retObj['parent']['pages'][$p - 1], $asset);
+                }
+            } else if ((string) $object->ObjType == "video") {
+                $src = (string) $object->ObjName . '.' . (string) $object->ObjExt;
+                if (isset($variableVideos[$src])) {
+                    $asset = [];
+                    $asset['originalAsset'] = $src;
+                    $asset['newAsset'] = $src;
+                    $asset['type'] = "video";
                     array_push($retObj['parent']['pages'][$p - 1], $asset);
                 }
             }
@@ -137,6 +151,27 @@ if (isset($seriesName)) {
                             $asset['newAsset'] = $src;
                         }
                         $asset['type'] = "image";
+
+                        $sizeOrLoc = getSizeOrLocFromOldAssetSrc($src, $swapsMade);
+                        $asset['sizeOrLoc'] = ($sizeOrLoc == false) ? "size" : $sizeOrLoc;
+                        $notes = getNotes($seriesName, $child, $p, $src);
+                        foreach ($notes as $note) {
+                            $asset[$note['noteType']] = $note['noteAct'];
+                        }
+                        array_push($cObj['pages'][$p - 1], $asset);
+                    }
+                } else if ((string) $object->ObjType == "video") {
+                    $src = (string) $object->ObjName . '.' . (string) $object->ObjExt;
+                    if (isset($variableVideos[$src])) {
+                        $asset = [];
+                        $asset['originalAsset'] = $src;
+                        $newSrc = getNewAssetFromOldAssetSrc($src, $swapsMade);
+                        if ($newSrc) {
+                            $asset['newAsset'] = $newSrc;
+                        } else {
+                            $asset['newAsset'] = $src;
+                        }
+                        $asset['type'] = "video";
 
                         $sizeOrLoc = getSizeOrLocFromOldAssetSrc($src, $swapsMade);
                         $asset['sizeOrLoc'] = ($sizeOrLoc == false) ? "size" : $sizeOrLoc;

@@ -491,11 +491,11 @@ $(document).ready(function () {
                                         onItemClick: function () {
                                             let sn = btoa(window.seriesName);
                                             let cn = btoa(childName);
-                                            var win = window.open("read.php?t=c&sn=" + sn + "&cn=" + cn, '_blank');
+                                            let url = "read.php?t=c&sn=" + sn + "&cn=" + cn;
+                                            var win = window.open(url, '_blank');
                                             if (audioPlayer) {
                                                 audioPlayer.pause();
                                             }
-                                            console.log(audioPlayer);
                                             win.focus();
                                         }
                                     }
@@ -807,15 +807,26 @@ $(document).ready(function () {
                 dropzone.view = "list";
             }
 
-            if (assetType == "image") {
+            if (assetType == "image" || assetType == "video") {
                 preview.data = [];
                 preview.data.push({});
                 preview.data[0] = {};
-                preview.data[0].img = "" +
+                if (assetType == "image") {
+                    preview.data[0].img = "" +
                         "<div class='imageCont'>" +
                         "<span class='helper'></span>" +
                         "<img src='series/" + seriesName + "/images/" + assetSrc + "' class='preview' />" +
                         "</div>";
+                }   else if (assetType == "video") {
+                    preview.data[0].img = "" +
+                        "<div class='imageCont'>" +
+                        "<span class='helper'></span>" +
+                        "<video src='series/" + seriesName + "/videos/" + assetSrc + "' class='preview' controls>" +
+                        "</video>" +
+                        "</div>";
+                }
+
+                
                 preview.gravity = 1;
                 preview.id = rootID + "_img";
                 preview.scroll = false;
@@ -842,7 +853,6 @@ $(document).ready(function () {
                     setSizeOrLocAjax(seriesName, bookName, pageNumber, originalAssetName, $$(this).getValue());
                     $$(this).refresh();
                 }
-
             } else if (assetType == "audio") {
                 preview.disabled = false;
                 preview.gravity = 1;
@@ -949,6 +959,8 @@ $(document).ready(function () {
                     $$(this).refresh();
                     $$(rootID + "_textarea").refresh();
                 }
+            }   else if (assetType == "video") {
+                console.log("here");
             }
 
             var rowNum = {};
@@ -1036,6 +1048,7 @@ $(document).ready(function () {
                         var img = $$(elemID + "_img").$view.getElementsByClassName("preview")[0];
                         img.setAttribute("src", 'assets/assetWait.png');
                         var src = "series/" + window.seriesName + "/" + item.src;
+                        console.log(src);
                         window.setTimeout(function () {
                             img.setAttribute("src", src);
                         }, 250);
