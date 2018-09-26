@@ -44,6 +44,9 @@ function unpackParentZip($seriesName) {
         if (is_dir('images')) {
             recurse_copy("images", "oldImages");
         }
+        if (is_dir('videos')) {
+            recurse_copy("videos", "oldVideos");
+        }
         if (is_dir('audio')) {
             recurse_copy("audio", "oldAudio");
         }
@@ -108,7 +111,9 @@ function unpackParentZip($seriesName) {
                     }
                 } else if ((string) $object->ObjType == "video") {
                     $src = (string) $object->ObjName;
-                    $object->ObjName = "P_$src";
+                    $ext = (string) $object->ObjExt;
+                    // $object->ObjName = "P_$src";
+                    $object->ObjFileName = "P_$src" . ".$ext";
                 } else if ((string) $object->ObjType == "field") {
                     $object->originalContents = (string) $object->FldContentsEncoded;
                     $object->newContents = (string) $object->FldContentsEncoded;
@@ -205,6 +210,15 @@ function unpackParentZip($seriesName) {
             // oldImages and oldAudio now comtaines all the duplicate parent assets from the last go, no longer needed.
             rmdir('oldImages');
         }
+        if (is_dir('oldVideos')) {
+            $oldVideos = scandir('oldVideos');
+            foreach ($oldVideos as &$oldVideo) {
+                if (!file_exists("videos/$$oldVideo") && $oldVideo != "." && $oldVideo != "..") {
+                    rename("oldVideos/$oldVideo", "videos/$oldVideo");
+                }
+            }
+            rmdir('oldVideos');
+        }
         // Same for aud
         if (is_dir('oldAudio')) {
             $oldAudios = scandir('oldAudio');
@@ -218,6 +232,8 @@ function unpackParentZip($seriesName) {
         }
 
         $variableImages = [];
+        $variableVideos = [];
+        $variableVideosNoExt = [];
         $variableAudios = [];
         $i = 1;
         // Get all variable assets (images and audios)
@@ -225,6 +241,10 @@ function unpackParentZip($seriesName) {
             if (strtolower((string) $child->FixedOrVariable) == "variable") {
                 if ((string) $child->Type == "Image") {
                     $variableImages[(string) $child->Source] = $i;
+                    $i++;
+                } else if ((string) $child->Type == "Video") {
+                    $variableVideos[(string) $child->Source] = $i;
+                    $variableVideosNoExt[trimExtension((string) $child->Source)] = $i;
                     $i++;
                 } else if ((string) $child->Type == "Audio") {
                     $fileName = trimExtension((string) $child->Source);
@@ -234,20 +254,37 @@ function unpackParentZip($seriesName) {
             }
         }
 
-        // Set Source and ParentSource for images
+        // Set Source and ParentSource for images/videos
         foreach ($xml->Pages->children() as $page) {
             foreach ($page->Objects->children() as $object) {
-                $src = (string) $object->ObjFileName . '.' . (string) $object->ObjExt;
-                if (isset($variableImages[$src])) {
-                    if ($object->Source[0] == null) {
-                        $object->addChild("Source", $src);
-                    } else {
-                        $object->Source = $src;
+
+                if ((string) $object->ObjType == "video") {
+                    $src = (string) $object->ObjFileName;
+                    if (isset($variableVideos[$src])) {
+                        if ($object->Source[0] == null) {
+                            $object->addChild("Source", $src);
+                        } else {
+                            $object->Source = $src;
+                        }
+                        if ($object->ParentSource[0] == null) {
+                            $object->addChild("ParentSource", $src);
+                        } else {
+                            $object->ParentSource = $src;
+                        }
                     }
-                    if ($object->ParentSource[0] == null) {
-                        $object->addChild("ParentSource", $src);
-                    } else {
-                        $object->ParentSource = $src;
+                } else {
+                    $src = (string) $object->ObjFileName . '.' . (string) $object->ObjExt;
+                    if (isset($variableImages[$src])) {
+                        if ($object->Source[0] == null) {
+                            $object->addChild("Source", $src);
+                        } else {
+                            $object->Source = $src;
+                        }
+                        if ($object->ParentSource[0] == null) {
+                            $object->addChild("ParentSource", $src);
+                        } else {
+                            $object->ParentSource = $src;
+                        }
                     }
                 }
             }

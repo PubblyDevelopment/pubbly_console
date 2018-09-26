@@ -96,12 +96,12 @@ $(document).ready(function () {
                 var id = window.location.pathname.split("/")[3];
                 var author = window.location.pathname.split("/")[2];
                 document.body.innerHTML = "<div class=fatalError>" +
-                  "<h2>Fatal error</h2>" +
-                  "<p>This book is missing the XML. Try reuploading.</p>" +
-                  "<p>If the problem persists, try reuploading, " +
-                  "<a href=http://" + window.location.hostname + "/phpscripts/Optimize.php?id=" + id + "&username=" + author + ">reoptimizing</a>" +
-                  " or contact support.</p>" +
-                  "</div>";
+                        "<h2>Fatal error</h2>" +
+                        "<p>This book is missing the XML. Try reuploading.</p>" +
+                        "<p>If the problem persists, try reuploading, " +
+                        "<a href=http://" + window.location.hostname + "/phpscripts/Optimize.php?id=" + id + "&username=" + author + ">reoptimizing</a>" +
+                        " or contact support.</p>" +
+                        "</div>";
             }
         });
     } else {
@@ -261,9 +261,9 @@ function xmlLoaded(curXML) {
          */
         var shade = addElem(bookC, "div", [["id", "shade"]]);
 
-	// Random loader gifs, picked from the pile
-	let randomLoaders = ["Bee_loop_fast", "wordtopia5","Mathazzar-Loading","bird_jump_loop2","word_pup_screen_gif_03"];
-	let gifName = randomLoaders[rand(0, randomLoaders.length-1)];
+        // Random loader gifs, picked from the pile
+        let randomLoaders = ["Bee_loop_fast", "wordtopia5", "Mathazzar-Loading", "bird_jump_loop2", "word_pup_screen_gif_03"];
+        let gifName = randomLoaders[rand(0, randomLoaders.length - 1)];
         shade.innerHTML = '<div id=tapPromptCentered><img id=tapPromptAct src=' + dependenciesLoc + 'presets/ipadIcons/' + gifName + '.gif></img></div>';
         navC = document.getElementById("navC");
         closeC = document.getElementById("closeC");
@@ -318,11 +318,11 @@ function xmlLoaded(curXML) {
          var subChoices = addElem(plateMax, "div", [["id", "subChoices"]]);
          var subCol1 = addElem(subChoices, "div", [["id", "subCol1"], ["class", "subCol"]]);
          var subCol2 = addElem(subChoices, "div", [["id", "subCol2"], ["class", "subCol"]]);
-
+         
          // pushed to production, drawing tools removed.
          //$("#plateCont").css({"display":"none","pointer-events":"none"});
-
-
+         
+         
          plateHeight = 'close';
          function togglePlate() {
          if (plateHeight == 'close') {
@@ -331,9 +331,9 @@ function xmlLoaded(curXML) {
          animPlate('close');
          }
          }
-
+         
          plateMin.addEventListener('mouseup', togglePlate);
-
+         
          book.drawingTools = {};
          book.drawingTools.status = false;
          book.drawingTools.cur = false;
@@ -343,7 +343,7 @@ function xmlLoaded(curXML) {
          this.displayName = displayName || name;
          this.choices = choices;
          this.subValues = subValues;
-
+         
          this.elem = addElem(plateMax, 'div', [['id', this.name], ['class', 'plateChoice']]);
          this.icon = addElem(this.elem, 'img', [['id', this.name + '-icon'], ['class', 'plateChoiceIcon'], ['src', dependenciesLoc + 'presets/icons/' + this.name + '.png']]);
          this.title = addElem(this.elem, 'p', [['id', this.name + '-title'], ['class', 'plateChoiceName']], this.displayName);
@@ -366,14 +366,14 @@ function xmlLoaded(curXML) {
          if (prevName == 'nuke') {
          $("#clearInputLeft").trigger("click");
          }
-
+         
          if (this.name == 'navigation' || this.name == 'nav') {
          book.drawingTools.cur = false;
          animPlate('close');
          } else {
          book.drawingTools.cur = this.name;
          }
-
+         
          if (prevTool) {
          prevTool.hoverLeave();
          }
@@ -388,7 +388,7 @@ function xmlLoaded(curXML) {
          $("#subChoices #opacity").css({"display": "none"});
          $("#subChoices #shape").css({"display": "none"});
          $("#subChoices #clear").css({"display": "none"});
-
+         
          var choice = this.choices;
          if (choice.left.length == 1) {
          $("#subCol1 > #" + choice.left[0]).css({"display": "inline-block"});
@@ -415,7 +415,7 @@ function xmlLoaded(curXML) {
          $(".shapeAct")[0].click();
          shapeValue = '50%';
          }
-
+         
          $('.colorSquare')[subValues.color].click();
          document.getElementById('thicknessSlider').value = subValues.thickness;
          document.getElementById('opacitySlider').value = subValues.opacity * 100;
@@ -451,7 +451,7 @@ function xmlLoaded(curXML) {
          THIS.select()
          });
          }
-
+         
          drawingTools = {
          pencil: {
          name: 'pencil',
@@ -471,7 +471,7 @@ function xmlLoaded(curXML) {
          opacity: 1,
          shape: 'circle',
          }
-
+         
          },
          pen: {
          name: 'pen',
@@ -564,7 +564,7 @@ function xmlLoaded(curXML) {
          html: '',
          }
          };
-
+         
          // inner html for sub choices
          // --COLOR
          var colorHTML = '';
@@ -576,20 +576,20 @@ function xmlLoaded(curXML) {
          colorHTML += firstHTML + c + secondHTML + colorArr[c] + closeHTML;
          }
          drawingToolsSubs.color.html = colorHTML;
-
+         
          // --THICKNESS
          drawingToolsSubs.thickness.html = '<div id=thicknessInputLeft class=thicknessTable><input type=range id=thicknessSlider min=3 max=80></input><p id=thicknessLabel>Thickness<p></div>';
-
+         
          // --CLEAR
          drawingToolsSubs.clear.html = '<input id=clearInputLeft type=button value="Clear Drawing" ></input>';
-
+         
          // --OPACITY
          drawingToolsSubs.opacity.html = '<div id=opacityInputLeft class=opacityTable><input type=range id=opacitySlider min=10 max=100></input><p id=opacityLabel>Opacity<p></div>';
-
+         
          // --SHAPE
          drawingToolsSubs.shape.html = '<div class=shapeAct id=circle-shape chosen=false></div><div class=shapeAct id=square-shape chosen=false></div><p id=shapeLabel>Shape</p>';
-
-
+         
+         
          for (var t in drawingTools) {
          var curTool = drawingTools[t];
          var curName = curTool.name;
@@ -603,11 +603,11 @@ function xmlLoaded(curXML) {
          addElem(subCol2, "div", [["id", curSub.name], ["class", "subChoice"], ["val", false]], curSub.html);
          }
          }
-
+         
          // --DISPLAY
          var subCol3 = addElem(subChoices, "div", [["id", "subCol3"], ["class", "subCol"]]);
          var choiceDisplay = addElem(subCol3, "div", [["id", "choiceDisplay"]]);
-
+         
          $(".colorSquare").mouseleave(function () {
          if (this.getAttribute('chosen') == 'false') {
          $(this).clearQueue();
@@ -632,8 +632,8 @@ function xmlLoaded(curXML) {
          $(this).animate({"background-color": "white", "opacity": 1}, 200);
          }
          });
-
-
+         
+         
          $(".colorSquare").click(function () {
          var colorSlot = this.getAttribute('slot');
          var colorCho = this.style.backgroundColor;
@@ -645,27 +645,27 @@ function xmlLoaded(curXML) {
          $(cur).css({"borderColor": "transparent"});
          }
          }
-
+         
          $(this).animate({"borderColor": "#303030"}, 400);
          this.parentNode.setAttribute('val', colorCho);
          this.setAttribute('chosen', 'true');
          $(choiceDisplay).css({"background-color": colorCho});
-
+         
          // set new value
          book.drawingTools[book.drawingTools.cur].subValues.color = colorSlot;
          });
          document.getElementById("thicknessSlider").addEventListener('change', function (e) {
          var thickVal = this.value;
          $(choiceDisplay).css({"height": thickVal, "width": thickVal, 'margin': (90 - this.value) / 2});
-
+         
          // set new value
          book.drawingTools[book.drawingTools.cur].subValues.thickness = thickVal;
          }, false);
          document.getElementById("opacitySlider").addEventListener('change', function (e) {
-
+         
          var opVal = this.value / 100;
          $(choiceDisplay).css({"opacity": opVal});
-
+         
          // set new value
          book.drawingTools[book.drawingTools.cur].subValues.opacity = opVal;
          }, false);
@@ -685,7 +685,7 @@ function xmlLoaded(curXML) {
          } else if (shapeCho == 'square') {
          $(choiceDisplay).css({"border-radius": '0%'});
          }
-
+         
          // set new value
          book.drawingTools[book.drawingTools.cur].subValues.shape = shapeCho;
          });
@@ -810,15 +810,15 @@ function xmlLoaded(curXML) {
         book.highlighterWaitAtEnd = ticksToMili(getValue(curInfo, "WaitAfterHighlighterSeries", true) || 0);
         book.lastPageDouble = false;
         book.resetRandomRemovals = (getValue(curInfo, "ResetRandomRemovals", true) == "true") ? true : false;
-	let interruptTimeOld= getValue(curInfo, "TimeToInterrupt", true);
-	let interruptTimeNew= getValue(curInfo, "AllowInterrupting", true);
-	if (curInfo.getElementsByTagName("AllowInterrupting").length) {
-		book.interruptTime = (interruptTimeNew) ? 99999 : 0;
-	}	else	{
-		book.interruptTime = interruptTimeOld;
-	}
+        let interruptTimeOld = getValue(curInfo, "TimeToInterrupt", true);
+        let interruptTimeNew = getValue(curInfo, "AllowInterrupting", true);
+        if (curInfo.getElementsByTagName("AllowInterrupting").length) {
+            book.interruptTime = (interruptTimeNew) ? 99999 : 0;
+        } else {
+            book.interruptTime = interruptTimeOld;
+        }
 
-	
+
         book.useSaveStates = (getValue(curInfo, "ReturnPageToPreviousStateOnInterruptions", true) == "true") ? true : false;
         book.snapDropToLoc = (getValue(curInfo, "SnapDroppedImagesIntoLocation", true) == "false") ? false : true;
         book.fieldHighlightColor = getValue(curInfo, "FieldHighlightColor", true);
@@ -1708,9 +1708,11 @@ function Page(key, curXmlPage) {
 
         for (obj in this.objKey) {
             let name = this.objKey[obj];
-            layeredObjNames.push({"name":name, "layer":this.objs[name].layer});
+            layeredObjNames.push({"name": name, "layer": this.objs[name].layer});
         }
-        layeredObjNames.sort(function(a,b) {return a.layer - b.layer});
+        layeredObjNames.sort(function (a, b) {
+            return a.layer - b.layer
+        });
         for (let o = 0; o < layeredObjNames.length; o++) {
             let name = layeredObjNames[o].name
             var curObj = this.objs[name];
@@ -1877,12 +1879,12 @@ function Page(key, curXmlPage) {
 
                         try {
                             btx.drawImage(
-                              curElem,
-                              -1 * (curData.width / 2),
-                              -1 * (curData.height / 2),
-                              curData.width,
-                              curData.height
-                              );
+                                    curElem,
+                                    -1 * (curData.width / 2),
+                                    -1 * (curData.height / 2),
+                                    curData.width,
+                                    curData.height
+                                    );
                         } catch (e) {
                         }
                         btx.rotate(-1 * curData.rot);
@@ -1936,11 +1938,11 @@ function Page(key, curXmlPage) {
 
                         try {
                             btx.drawImage(
-                              curElem,
-                              (-1 * (curObj.width / 2)),
-                              (-1 * (curObj.height / 2)),
-                              width,
-                              height);
+                                    curElem,
+                                    (-1 * (curObj.width / 2)),
+                                    (-1 * (curObj.height / 2)),
+                                    width,
+                                    height);
                         } catch (e) {
                         }
 
@@ -1948,11 +1950,11 @@ function Page(key, curXmlPage) {
                     } else {
                         try {
                             btx.drawImage(
-                              curElem,
-                              left,
-                              top,
-                              width,
-                              height);
+                                    curElem,
+                                    left,
+                                    top,
+                                    width,
+                                    height);
                         } catch (e) {
                         }
                     }
@@ -1960,19 +1962,19 @@ function Page(key, curXmlPage) {
                     /*
                      Animations were getting stuck at the last leg. Thought that was a bug, it was a workaround for "saving animations in their last state".
                      Had to get rid of that, so I set the anim.AT to false in the sequence, now you can drag animated objects.
-
+                     
                      BUT WAIT!!
-
+                     
                      What about animations that finish with an opacity, and need to keep it?
-
+                     
                      Well, now when an animation ends, the animation data is copied over to the actual data, problem solved.
-
+                     
                      BUT WAIT, regular objects don't have opacity!!
-
+                     
                      Added opacity to regular objects.
-
+                     
                      TODO: Didn't get opacity for all regular objects. Don't want to screw with it today, so put an undefined default of 1 check up top. This will probably cause problems in the future, but who cares about future Jason, that guys lame!
-
+                     
                      PROBLEM SOLVED MOTHERS!!!
                      */
                 }
@@ -2365,9 +2367,9 @@ function Page(key, curXmlPage) {
         let commaSplit = customPoints.toLowerCase().split(",");
         let barSplit = customPoints.toLowerCase().split("|");
         if (commaSplit.length > barSplit.length) {
-                customPoints = commaSplit.slice();
-        }       else    {
-                customPoints = barSplit.slice();
+            customPoints = commaSplit.slice();
+        } else {
+            customPoints = barSplit.slice();
         }
     }
 
@@ -2512,7 +2514,7 @@ function PObject(curXmlObj, key) {
                 }
                 let dmf = getValue(curXmlObj, "ObjMoveForwardAfterDragging", true);
                 this.dragMovesForwards = (dmf == "true") ? true : false;
-                
+
                 this.animating = false;
             }
         }
@@ -2768,7 +2770,17 @@ function PObject(curXmlObj, key) {
                 }
             }
         } else if (this.type == 'video') {
-            this.src = book.assetLoc.vid + tmpFileName + "." + getValue(curXmlObj, "ObjExt");
+            let swapVideoSrc = getValue(curXmlObj, "Source", true);
+            let newSwapVideoDefaultSrc = getValue(curXmlObj, "ObjFileName", true);
+            let defaultSrc = book.assetLoc.vid + tmpFileName + "." + getValue(curXmlObj, "ObjExt");
+            if (swapVideoSrc) {
+                this.src = book.assetLoc.vid + swapVideoSrc;
+            } else if (newSwapVideoDefaultSrc) {
+                this.src =  book.assetLoc.vid + newSwapVideoDefaultSrc;
+            } else {
+                this.src = defaultSrc;
+            }
+
             this.controller = getValue(curXmlObj, "ObjShowController");
             if (this.initVis == 'hide') {
                 this.initVis = 'hidden';
@@ -3332,7 +3344,7 @@ let AmbientAudio = function (src) {
     this.fade = {};
     this.fadeAct = function () {
         if (_This.fade.dir == 1 && _This.aud.volume + _This.fade.modVal >= _This.fade.to
-          || _This.fade.dir == -1 && _This.aud.volume + _This.fade.modVal <= _This.fade.to) {
+                || _This.fade.dir == -1 && _This.aud.volume + _This.fade.modVal <= _This.fade.to) {
             _This.aud.volume = _This.fade.to;
             window.clearInterval(_This.fade.int);
         } else {
@@ -3391,7 +3403,7 @@ let AmbientAudio = function (src) {
                 this.fade.modVal = (this.fade.to - this.aud.volume) / (this.fade.in / intSpeed);
                 this.fade.dir = (this.fade.modVal > 0) ? 1 : -1;
                 if (this.fade.modVal !== 0
-                  && (this.fade.to >= 0 && this.fade.to <= 1)) {
+                        && (this.fade.to >= 0 && this.fade.to <= 1)) {
                     this.fade.int = window.setInterval(this.fadeAct, intSpeed);
                 } else {
                     console.error("bad fade set, fixitfixtitfixit");

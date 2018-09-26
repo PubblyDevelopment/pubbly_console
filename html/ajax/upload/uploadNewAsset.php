@@ -135,10 +135,8 @@ if ($ret = loginCheck() === true) {
         foreach ($xml->Pages->children() as $page) {
             foreach ($page->Objects->children() as $object) {
                 if ((string) $object->ParentSource == $oldSrc) {
-                    $object->ObjName = $filename;
-                    $object->ObjExt = $fileExt;
-
-                    $object->swapSizeOrLoc = $assetSwapSizeOrLoc;
+                    $object->Source = $filename . "." . $fileExt;
+                    // $object->ObjFileName = $filename . "." . $fileExt;
                 }
             }
         }

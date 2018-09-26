@@ -79,7 +79,7 @@ if (isset($seriesName)) {
                     array_push($retObj['parent']['pages'][$p - 1], $asset);
                 }
             } else if ((string) $object->ObjType == "video") {
-                $src = (string) $object->ObjName . '.' . (string) $object->ObjExt;
+                $src = (string) $object->ObjFileName;
                 if (isset($variableVideos[$src])) {
                     $asset = [];
                     $asset['originalAsset'] = $src;
@@ -161,7 +161,7 @@ if (isset($seriesName)) {
                         array_push($cObj['pages'][$p - 1], $asset);
                     }
                 } else if ((string) $object->ObjType == "video") {
-                    $src = (string) $object->ObjName . '.' . (string) $object->ObjExt;
+                    $src = (string) $object->ObjFileName;
                     if (isset($variableVideos[$src])) {
                         $asset = [];
                         $asset['originalAsset'] = $src;
