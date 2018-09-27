@@ -27,18 +27,27 @@ function getSeries() {
         url: "ajax/get/getSeriesList.php",
         success: function (ret) {
             ret = window.eval(ret);
+            window.seriesList = ret;
             var justNames = [];
+            let justFolders = [];
             for (var i = 0; i < ret.length; i++) {
                 // i increments before getChild ajax call returns
                 var seriesName = ret[i].name;
+                let folderName = ret[i].folder;
                 window.seriesObj[seriesName] = [];
                 justNames.push(seriesName);
+                if (justFolders.indexOf(folderName) === -1) {
+                    justFolders.push(folderName);
+                }
                 if (i == 0) {
                     getChildren(seriesName, true);
                 } else {
                     getChildren(seriesName, false);
                 }
             }
+
+            $$("selectSeriesFolderCombo").getList().parse(justFolders);
+
             $$("selectSeriesCombo").enable();
             $$("selectSeriesCombo").getList().clearAll();
             $$("selectSeriesCombo").getList().parse(justNames);
@@ -357,30 +366,55 @@ var library = {
                             {
                                 rows: [
                                     {
-                                        label: "Series: ",
-                                        id: "selectSeriesCombo",
-                                        view: "combo",
-                                        labelWidth: 60,
-                                        value: "...loading...",
-                                        disabled: true,
-                                        options: [
-                                            "...loading...",
-                                        ],
-                                        on: {
-                                            onChange: function (newI, oldI) {
-                                                if (newI !== "- Series -") {
-                                                    $$("selectChildCombo").enable();
-                                                    if (newI !== oldI) {
-                                                        // reorder something probably
-                                                        setChildCombo(window.seriesObj[newI]);
-                                                        window.selectedSeriesName = newI;
+                                        cols: [
+                                            {
+                                                label: "Series: ",
+                                                labelWidth: 60,
+                                                id: "selectSeriesFolderCombo",
+                                                view: "combo",
+                                                value: "...loading...",
+                                                options: [
+                                                ],
+                                                on: {
+                                                    onChange: function (folderName) {
+                                                        let filtered = [];
+                                                        for (let i = 0; i < window.seriesList.length; i++) {
+                                                            if (window.seriesList[i].folder == folderName) {
+                                                                filtered.push(window.seriesList[i].name);
+                                                            }
+                                                        }
+                                                        $$("selectSeriesCombo").getList().clearAll();
+                                                        $$("selectSeriesCombo").getList().parse(filtered);
+                                                        $$("selectSeriesCombo").setValue(filtered[0]);
+                                                        $$("selectSeriesCombo").refresh();
                                                     }
-                                                } else {
-                                                    $$("selectChildCombo").disable();
-                                                    $$("addPubFromSeries").disable();
                                                 }
-                                            }
-                                        }
+                                            },
+                                            {
+                                                id: "selectSeriesCombo",
+                                                view: "combo",
+                                                value: "...loading...",
+                                                disabled: true,
+                                                options: [
+                                                    "...loading...",
+                                                ],
+                                                on: {
+                                                    onChange: function (newI, oldI) {
+                                                        if (newI !== "- Series -") {
+                                                            $$("selectChildCombo").enable();
+                                                            if (newI !== oldI) {
+                                                                // reorder something probably
+                                                                setChildCombo(window.seriesObj[newI]);
+                                                                window.selectedSeriesName = newI;
+                                                            }
+                                                        } else {
+                                                            $$("selectChildCombo").disable();
+                                                            $$("addPubFromSeries").disable();
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                        ]
                                     },
                                     {
                                         label: "Child: ",

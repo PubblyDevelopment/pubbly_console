@@ -54,91 +54,129 @@ var elem = {
                                 height: 50, cols: [
                                     {
                                         cols: [
-                                            {view: "label", label: "Sort series: ", width: 85},
+                                            {},
                                             {
                                                 view: "button",
-                                                id: "sortByName",
-                                                value: "Name",
-                                                width: 75,
-                                                css: "selected",
+                                                value: "New folder",
                                                 on: {
                                                     onItemClick: function () {
-                                                        // Ugly right? If the thing is selected, toggle the direction. If not, keep the same direction.
-                                                        if ($($$("sortByName").$view).find("button")[0].innerHTML.charAt(0) == "⇑") {
-                                                            if ($($$("sortByName").$view).hasClass("selected")) {
-                                                                reorderSeriesList("name", "desc");
-                                                                setWebixInnerById("sortByName", "&#x21D3; Name");
-                                                            } else {
-                                                                reorderSeriesList("name", "asc");
-                                                                setWebixInnerById("sortByName", "&#x21D1; Name");
+                                                        let folderName = prompt("Enter a new folder name. (Note, it will not save until you put a series in it");
+                                                        if (folderName) {
+                                                            let found = false;
+                                                            let pull = $$("seriesList").data.pull;
+                                                            let fc = 1;
+                                                            for (let i in pull) {
+                                                                let fn = pull[i].folder;
+                                                                if (fn) {
+                                                                    fc++;
+                                                                }
+                                                                found = found || (fn == folderName);
                                                             }
-                                                        } else {
-                                                            if ($($$("sortByName").$view).hasClass("selected")) {
-                                                                reorderSeriesList("name", "asc");
-                                                                setWebixInnerById("sortByName", "&#x21D1; Name");
-                                                            } else {
-                                                                reorderSeriesList("name", "desc");
-                                                                setWebixInnerById("sortByName", "&#x21D3; Name");
+                                                            fc++;
+                                                            console.log(fc);
+                                                            if (!found) {
+                                                                $$("seriesList").data.add({
+                                                                    id: fc,
+                                                                    open: true,
+                                                                    folder: folderName,
+                                                                    value: folderName
+                                                                });
                                                             }
-                                                        }
-                                                        $($$("sortByDate").$view).removeClass("selected");
-                                                        $($$("sortByName").$view).addClass("selected");
-
-                                                        $$("seriesName").setValue("");
-                                                        $$("seriesName").refresh();
-                                                        $$("startSwapping").disable();
-                                                        $$("deleteSeries").disable();
-                                                        $$("backupSeries").disable();
-                                                        $$("downloadParent").disable();
-                                                        $$("renameSeries").disable();
-                                                        $$("goSeries").disable();
-                                                        $$('reuploadParentDZ').collapse();
-                                                        for (var i = $$("childSelectorDropDown").count(); i > 0; i--) {
-                                                            $$("childSelectorDropDown").remove(i);
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                view: "button", id: "sortByDate", value: "Date", width: 75, on: {
-                                                    onItemClick: function () {
-                                                        if ($($$("sortByDate").$view).find("button")[0].innerHTML.charAt(0) == "⇑") {
-                                                            if ($($$("sortByDate").$view).hasClass("selected")) {
-                                                                reorderSeriesList("date", "desc");
-                                                                setWebixInnerById("sortByDate", "&#x21D3; Date");
-                                                            } else {
-                                                                reorderSeriesList("date", "asc");
-                                                                setWebixInnerById("sortByDate", "&#x21D1; Date");
-                                                            }
-                                                        } else {
-                                                            if ($($$("sortByDate").$view).hasClass("selected")) {
-                                                                reorderSeriesList("date", "asc");
-                                                                setWebixInnerById("sortByDate", "&#x21D1; Date");
-                                                            } else {
-                                                                reorderSeriesList("date", "desc");
-                                                                setWebixInnerById("sortByDate", "&#x21D3; Date");
-                                                            }
-                                                        }
-                                                        $($$("sortByName").$view).removeClass("selected");
-                                                        $($$("sortByDate").$view).addClass("selected");
-
-                                                        $$("seriesName").setValue("");
-                                                        $$("seriesName").refresh();
-                                                        $$("startSwapping").disable();
-                                                        $$("deleteSeries").disable();
-                                                        $$("backupSeries").disable();
-                                                        $$("downloadParent").disable();
-                                                        $$("renameSeries").disable();
-                                                        $$("goSeries").disable();
-                                                        $$('reuploadParentDZ').collapse();
-                                                        for (var i = $$("childSelectorDropDown").count(); i > 0; i--) {
-                                                            $$("childSelectorDropDown").remove(i);
                                                         }
                                                     }
                                                 }
                                             },
                                             {},
                                         ]
+
+                                                /*
+                                                 cols: [
+                                                 {view: "label", label: "Sort series: ", width: 85},
+                                                 {
+                                                 view: "button",
+                                                 id: "sortByName",
+                                                 value: "Name",
+                                                 width: 75,
+                                                 css: "selected",
+                                                 on: {
+                                                 onItemClick: function () {
+                                                 // Ugly right? If the thing is selected, toggle the direction. If not, keep the same direction.
+                                                 if ($($$("sortByName").$view).find("button")[0].innerHTML.charAt(0) == "⇑") {
+                                                 if ($($$("sortByName").$view).hasClass("selected")) {
+                                                 reorderSeriesList("name", "desc");
+                                                 setWebixInnerById("sortByName", "&#x21D3; Name");
+                                                 } else {
+                                                 reorderSeriesList("name", "asc");
+                                                 setWebixInnerById("sortByName", "&#x21D1; Name");
+                                                 }
+                                                 } else {
+                                                 if ($($$("sortByName").$view).hasClass("selected")) {
+                                                 reorderSeriesList("name", "asc");
+                                                 setWebixInnerById("sortByName", "&#x21D1; Name");
+                                                 } else {
+                                                 reorderSeriesList("name", "desc");
+                                                 setWebixInnerById("sortByName", "&#x21D3; Name");
+                                                 }
+                                                 }
+                                                 $($$("sortByDate").$view).removeClass("selected");
+                                                 $($$("sortByName").$view).addClass("selected");
+                                                 
+                                                 $$("seriesName").setValue("");
+                                                 $$("seriesName").refresh();
+                                                 $$("startSwapping").disable();
+                                                 $$("deleteSeries").disable();
+                                                 $$("backupSeries").disable();
+                                                 $$("downloadParent").disable();
+                                                 $$("renameSeries").disable();
+                                                 $$("goSeries").disable();
+                                                 $$('reuploadParentDZ').collapse();
+                                                 for (var i = $$("childSelectorDropDown").count(); i > 0; i--) {
+                                                 $$("childSelectorDropDown").remove(i);
+                                                 }
+                                                 }
+                                                 }
+                                                 },
+                                                 {
+                                                 view: "button", id: "sortByDate", value: "Date", width: 75, on: {
+                                                 onItemClick: function () {
+                                                 if ($($$("sortByDate").$view).find("button")[0].innerHTML.charAt(0) == "⇑") {
+                                                 if ($($$("sortByDate").$view).hasClass("selected")) {
+                                                 reorderSeriesList("date", "desc");
+                                                 setWebixInnerById("sortByDate", "&#x21D3; Date");
+                                                 } else {
+                                                 reorderSeriesList("date", "asc");
+                                                 setWebixInnerById("sortByDate", "&#x21D1; Date");
+                                                 }
+                                                 } else {
+                                                 if ($($$("sortByDate").$view).hasClass("selected")) {
+                                                 reorderSeriesList("date", "asc");
+                                                 setWebixInnerById("sortByDate", "&#x21D1; Date");
+                                                 } else {
+                                                 reorderSeriesList("date", "desc");
+                                                 setWebixInnerById("sortByDate", "&#x21D3; Date");
+                                                 }
+                                                 }
+                                                 $($$("sortByName").$view).removeClass("selected");
+                                                 $($$("sortByDate").$view).addClass("selected");
+                                                 
+                                                 $$("seriesName").setValue("");
+                                                 $$("seriesName").refresh();
+                                                 $$("startSwapping").disable();
+                                                 $$("deleteSeries").disable();
+                                                 $$("backupSeries").disable();
+                                                 $$("downloadParent").disable();
+                                                 $$("renameSeries").disable();
+                                                 $$("goSeries").disable();
+                                                 $$('reuploadParentDZ').collapse();
+                                                 for (var i = $$("childSelectorDropDown").count(); i > 0; i--) {
+                                                 $$("childSelectorDropDown").remove(i);
+                                                 }
+                                                 }
+                                                 }
+                                                 },
+                                                 {},
+                                                 ]
+                                                 */
                                     },
                                     {},
                                 ]
@@ -397,55 +435,155 @@ function reorderSeriesList(type, dir) {
 }
 
 getSeries(function (ret) {
-    var seriesData = ret;
+    seriesData = ret;
 
-    for (var s = 0; s < seriesData.length; s++) {
-        seriesData[s].length = seriesData[s].children.length;
-    }
+    let folders = [];
+    seriesData.map(s => {
+        if (folders.indexOf(s.folder) === -1) {
+            folders.push(s.folder);
+        }
+    });
+    let i = 0;
+    treeData = folders.map(f => {
+        i++;
+        let ret = {
+            id: "0." + i,
+            open: true,
+            folder: f,
+            data: []
+        };
+        let ii = 0;
+        seriesData.map(s => {
+            ii++;
+            s.folder = (typeof s.folder == "undefined") ? "" : s.folder;
+            if (s.folder === f) {
+                let d = {
+                    id: s.ID,
+                    value: s.name + ": " + s.children.length + " children",
+                    name: s.name,
+                    children: s.children,
+                };
+                ret.data.push(d);
+            }
+        });
+        ret.value = f;
+        return ret;
+    });
+    console.log(treeData);
+
     var seriesList = {
         header: "Series", body: {
-            view: "list",
+            view: "tree",
             id: "seriesList",
             scroll: "y",
-            template: "#name#: #length# children", // Maybe add "Last modified" or something.
-            select: "multiselect",
-            data: seriesData,
+            // template: "#name#: #length# children",
+            select: true,
+            data: treeData,
+            drag: true,
             on: {
+                onBeforeDrop: function (context) {
+                    let seriesID = context.start;
+                    let pid, spri, folderName;
+                    if (context.parent > 0) {
+                        // Dropping on folder
+                        pid = context.parent;
+                        spri = context.index + 1;
+                    } else {
+                        pid = context.target;
+                        spri = 0;
+                    }
+                    if (seriesID.split(".").length > 1) {
+                        // Dropping folder
+                        context.parent = 0;
+                    } else {
+                        folderName = this.getItem(pid).folder;
+                        console.log("Set " + seriesID + " to .folder" + folderName);
+                        context.parent = pid;
+                        $.ajax({
+                            type: 'get',
+                            url: 'ajax/set/setSeriesFolder.php',
+                            data: {"seriesID": seriesID, "folderName": folderName},
+                            success: function (ret) {
+                                if (ret == "done") {
+                                    // window.location.href = window.location.href;
+                                    webix.message("Folder changed");
+                                } else {
+                                    window.alert(ret + "</br>Please contact support");
+                                    document.body.innerHTML = ret;
+                                }
+                            }
+                        })
+                    }
+                },
+                onAfterDrop: function (context) {
+                    let newOrder = this.data.order.filter(id => {
+                        if (id.split && id.split(".")[1]) {
+                            // folder
+                        } else {
+                            return id;
+                        }
+                    });
+                    let orderByID = {};
+                    for (let i = 0; i < newOrder.length; i++) {
+                        orderByID[newOrder[i]] = i;
+                    }
+                    $.ajax({
+                        type: 'post',
+                        url: 'ajax/set/setSeriesOrder.php',
+                        data: {"orderByID": JSON.stringify(orderByID)},
+                        success: function (ret) {
+                            if (ret == "done") {
+                                // window.location.href = window.location.href;
+                                webix.message("Order updated");
+                            } else {
+                                window.alert(ret + "</br>Please contact support");
+                                document.body.innerHTML = ret;
+                            }
+                        }
+                    })
+                },
                 onItemClick: function (id) {
                     var obj = this.getItem(id);
-                    var seriesName = obj.name;
-                    window.selectedSeries = seriesName;
-                    var seriesKids = obj.children;
-                    window.selectedSeriesKids = obj.children;
-                    // seriesName
-                    $$("seriesName").setValue(seriesName);
-                    $$("seriesName").refresh();
-                    $$("startSwapping").enable();
-                    $$("downloadParent").enable();
-                    $$("deleteSeries").enable();
-                    $$("backupSeries").enable();
-                    $$("renameSeries").enable();
-                    $$("goSeries").enable();
+                    if (typeof obj.folder !== "undefined") {
+                        obj.open = !obj.open;
+                        $$("seriesList").refresh();
+                        return false;
+                    } else {
+                        var seriesName = obj.name;
+                        window.selectedSeries = seriesName;
+                        var seriesKids = obj.children;
+                        window.selectedSeriesKids = obj.children;
+                        // seriesName
+                        $$("seriesName").setValue(seriesName);
+                        $$("seriesName").refresh();
+                        $$("startSwapping").enable();
+                        $$("downloadParent").enable();
+                        $$("deleteSeries").enable();
+                        $$("backupSeries").enable();
+                        $$("renameSeries").enable();
+                        $$("goSeries").enable();
 
 
-                    for (var i = $$("childSelectorDropDown").count(); i > 0; i--) {
-                        $$("childSelectorDropDown").remove(i);
+                        for (var i = $$("childSelectorDropDown").count(); i > 0; i--) {
+                            $$("childSelectorDropDown").remove(i);
+                        }
+                        $$("childSelectorDropDown").add({id: 1, value: " -- Choose -- "}, 0);
+                        for (var i = 1; i < seriesKids.length + 1; i++) {
+                            $$("childSelectorDropDown").add({id: i + 1, value: seriesKids[i - 1]}, i);
+                        }
+                        $$("childSelector").setValue(1);
+                        $$("childSelectorDropDown").refresh();
+                        $$("childSelector").refresh();
+
+                        $$("reuploadParentDZ").expand();
+                        attachDropzoneEvents(seriesName, "reuploadParent", function () {
+                            // Callback is what happens after a successful reupload
+                            window.location.href = window.location.href;
+                        });
                     }
-                    $$("childSelectorDropDown").add({id: 1, value: " -- Choose -- "}, 0);
-                    for (var i = 1; i < seriesKids.length + 1; i++) {
-                        $$("childSelectorDropDown").add({id: i + 1, value: seriesKids[i - 1]}, i);
-                    }
-                    $$("childSelector").setValue(1);
-                    $$("childSelectorDropDown").refresh();
-                    $$("childSelector").refresh();
-
-                    $$("reuploadParentDZ").expand();
-                    attachDropzoneEvents(seriesName, "reuploadParent", function () {
-                        // Callback is what happens after a successful reupload
-                        window.location.href = window.location.href;
-                    });
                 }
             }
+
         }
     };
 
@@ -470,23 +608,32 @@ getSeries(function (ret) {
                                 onItemClick: function () {
                                     var newName = window.prompt("Enter a new name for the series");
                                     if (newName) {
-                                        var THIS = this;
-                                        $$(this).disable();
-                                        $$(this).setValue("Please wait...");
-                                        $$(this).refresh();
-                                        $.ajax({
-                                            type: 'get',
-                                            url: 'ajax/rename/renameSeries.php',
-                                            data: {"oldName": window.selectedSeries, "newName": newName},
-                                            success: function (ret) {
-                                                if (ret == "done") {
-                                                    window.location.href = window.location.href;
-                                                } else {
-                                                    window.alert(ret + "</br>Please contact support");
-                                                    document.body.innerHTML = ret;
+                                        let pull = $$("seriesList").data.pull;
+                                        let taken = false;
+                                        for (let s in pull) {
+                                            taken = (typeof pull[s].folder == "undefined" && pull[s].name == newName) || taken;
+                                        }
+                                        if (taken) {
+                                            webix.message("Name taken");
+                                        } else {
+                                            var THIS = this;
+                                            $$(this).disable();
+                                            $$(this).setValue("Please wait...");
+                                            $$(this).refresh();
+                                            $.ajax({
+                                                type: 'get',
+                                                url: 'ajax/rename/renameSeries.php',
+                                                data: {"oldName": window.selectedSeries, "newName": newName},
+                                                success: function (ret) {
+                                                    if (ret == "done") {
+                                                        window.location.href = window.location.href;
+                                                    } else {
+                                                        window.alert(ret + "</br>Please contact support");
+                                                        document.body.innerHTML = ret;
+                                                    }
                                                 }
-                                            }
-                                        })
+                                            })
+                                        }
                                     }
                                 }
                             }
@@ -587,7 +734,7 @@ getSeries(function (ret) {
                         },
                         {
                             cols: [
-                                
+
                                 {
                                     view: "button",
                                     id: "deleteChild",
