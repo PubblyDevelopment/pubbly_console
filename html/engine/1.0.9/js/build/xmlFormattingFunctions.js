@@ -1017,7 +1017,7 @@ function parseSequenceFrames(baseSrc, frameOrder) {
     let frames = [];
     for (let f = 0; f < frameOrder.length; f++) {
         frames.push({
-            fileName: baseSrc + "/" + frameOrder[f],
+            dSrc: baseSrc + "/" + frameOrder[f],
         })
     }
     return frames;

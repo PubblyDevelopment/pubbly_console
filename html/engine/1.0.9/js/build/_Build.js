@@ -27,15 +27,17 @@ function Build(props) {
         xml.pages.map(page => {
             page.objs.map(obj => {
                 if (obj.type == "image") {
-                    obj.relPath = bLoc + "/images/" + obj.fileName;
+                    obj.relPath = bLoc + "/images/" + obj.fSrc;
                 } else if (obj.type == "gif") {
                     obj.relPath = bLoc + "/images/" + obj.fileName + "." + obj.ext;
                 } else if (obj.type == "sequence") {
-                    obj.relDir = bLoc + "/images/" + obj.baseSrc;
+                    obj.frames.map(frame => {
+                        frame.relPath = bLoc + "/images/" + frame.dSrc;
+                    });
                 }
             });
             page.auds.map(aud => {
-                aud.relPath = bLoc + "/audio/" + aud.filename;
+                aud.relPathNoExt = bLoc + "/audio/" + aud.fName;
             });
         });
         let FirstLoadBuffer = new PubblyPageBuffer(xml);

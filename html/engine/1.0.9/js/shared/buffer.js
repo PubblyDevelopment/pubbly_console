@@ -17,14 +17,18 @@ class PubblyPageBuffer {
             console.error("PubblyPageBuffer.loadPage: Page " + p + " not found");
         }
     }
+
     loadMultiplePages(pages, cbs) {
         cbs = assignDefaultCallbacks(cbs);
         // pages >>> [2, 3, 4, 5] will load in that order
         // cbs >>> {done: cb, fail: cb, prog: cb}
         // cbs.prog() >>> Will call back with calculated order (prog/pages.length)
         let totalPages = pages.length;
-        let totalAssets = pages.reduce(
-                (a, p) => a + this.getPageUnloadedAssetCount(p));
+        let totalAssets = 0;
+        pages.map(p => {
+            let pCount = this.getPageUnloadedAssetCount(p);
+            totalAssets += pCount;
+        });
         let nextPageFunc = function () {
             let nextPage = pages.shift();
             if (typeof nextPage !== "undefined") {
@@ -51,12 +55,12 @@ class PubblyPageBuffer {
         }.bind(this);
         if (totalAssets) {
             nextPageFunc();
-        }   else {
+        } else {
             cbs.done();
         }
 
     }
-    
+
     getPageUnloadedAssetCount(p) {
         // returns the number of assets on a given page
         // ['path/to/1.jpg', 'path/to/2.jpg']
@@ -87,7 +91,14 @@ class PubblyPageBuffer {
         for (let p = 0; p < data.pages.length; p++) {
             // Add audios
             let audLoads = data.pages[p].auds.map(aud => {
-                return {type: "audio", relPath: aud.relPath};
+                if (aud.relPath) {
+                    // Audio has been found by previous run
+                    return {type: "audio", relPath: aud.relPath};
+                }   else if (aud.relPathNoExt) {
+                    return {type: "audio", relPath: aud.relPathNoExt};
+                }   else {
+                    console.error("PubblyPageBuffer.constructor: Cannot load audio, does not have relPath or relPathNoExt");
+                }
             });
             let imgLoads = [];
             let gifLoads = [];
@@ -97,10 +108,7 @@ class PubblyPageBuffer {
                     imgLoads.push({type: "image", relPath: obj.relPath});
                 } else if (obj.type == "sequence") {
                     obj.frames.forEach(function (frame) {
-                        let relPath = obj.relDir + "/" + 
-                                // frame has images/FOLDERNAME
-                                getFileSourceFromPath(frame.fileName);
-                        imgLoads.push({type: "image", relPath});
+                        imgLoads.push({type: "image", relPath: frame.relPath});
                     });
                 } else if (obj.type == "video") {
                     vidLoads.push({type: obj.type, relPath: obj.relPath});

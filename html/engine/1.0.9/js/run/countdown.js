@@ -95,7 +95,7 @@ function Countdown(pubblyScope) {
     this.next = function () {
         this.at--;
         // Check interval redraw? Meh, only one frame a second, not a huge loss.
-        _Pubbly.drawPage();
+        _Pubbly.drawPage_dispatch();
         if (this.at <= 0) {
             this.finish();
         }

@@ -163,7 +163,7 @@ let Sq_Players_Child = {
     audio: function () {
         const _This = this;
 
-        this.elem = this._Pubbly.getElemFromFileName(this.target.chosenDestination);
+        this.elem = this._Pubbly.pageBuffer.assetListLoaders[0].byFileName[this.target.chosenDestination].elem;
 
         this.on_canplay = function () {
             _This.elem.removeEventListener("canplaythrough", _This.on_canplay);

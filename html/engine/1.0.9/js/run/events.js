@@ -96,10 +96,10 @@ function Events(pubblyScope) { // Scopped contstants are _InitCapsCamelCase
                     // TEST: Might not work, this.what may not still be linked to the actual object that pubbly.js loooks at
                     this.what.markedForDeletion = true;
                     _Pubbly.clearClones(); // Loops through pages[0].objs arr, slices clones marked for deletion
-                    _Pubbly.drawPage(); // Draws page without deleted clone.
+                    _Pubbly.drawPage_dispatch(); // Draws page without deleted clone.
                 }
                 this.what = {};
-                _Pubbly.drawPage();
+                _Pubbly.drawPage_dispatch();
             }
         };
         this.animate = function () {
@@ -118,7 +118,7 @@ function Events(pubblyScope) { // Scopped contstants are _InitCapsCamelCase
                 } else {
                     this.what.offsets[0] = this.origOffsets[0] * percent;
                     this.what.offsets[1] = this.origOffsets[1] * percent;
-                    _Pubbly.drawPage();
+                    _Pubbly.drawPage_dispatch();
                 }
             }
         };
@@ -232,7 +232,7 @@ function Events(pubblyScope) { // Scopped contstants are _InitCapsCamelCase
             on: false,
 
             blink: function () {
-                _Pubbly.drawPage();
+                _Pubbly.drawPage_dispatch();
                 this.on = !this.on;
             },
             start: function () {
@@ -486,10 +486,10 @@ function Events(pubblyScope) { // Scopped contstants are _InitCapsCamelCase
                         _Pubbly.sendToTop.call(_Pubbly, this.m.dragging.what.name);
                     }
                 }
-                _Pubbly.drawPage();
+                _Pubbly.drawPage_dispatch();
             } else if (this.m.action == "lining") {
                 this.m.lining.end = loc;
-                _Pubbly.drawPage();
+                _Pubbly.drawPage_dispatch();
             } else if (this.m.action == "drawing") {
                 let tool = _Pubbly.drawingTool;
                 let relLoc = [
@@ -500,7 +500,7 @@ function Events(pubblyScope) { // Scopped contstants are _InitCapsCamelCase
 
                 workspace.draw(tool, relLoc);
                 // Takes image from workspace can and redraws on display can.
-                _Pubbly.drawPage();
+                _Pubbly.drawPage_dispatch();
             } else if (this.m.lastMouseLocs.length > this.dragEventsBeforeTurnDetermination) {
                 this.m.lastMouseLocs.pop();
                 if (!this.m.turning) {
@@ -594,7 +594,7 @@ function Events(pubblyScope) { // Scopped contstants are _InitCapsCamelCase
                     name: caught.link.name + "",
                 });
                 this.m.lining = caught.link.lines[caught.link.lines.length - 1];
-                _Pubbly.drawPage();
+                _Pubbly.drawPage_dispatch();
             } else if (caught.action == "draw") {
                 let tool = _Pubbly.drawingTool;
                 cursorLibrary = "draw";
@@ -612,7 +612,7 @@ function Events(pubblyScope) { // Scopped contstants are _InitCapsCamelCase
 
                 workspace.start(tool, relLoc);
                 // Takes image from workspace can and redraws on display can.
-                _Pubbly.drawPage();
+                _Pubbly.drawPage_dispatch();
             } else if (caught.action == "editText") {
                 // Use default cursor library and action
                 this.f.edit(caught.link, loc);
@@ -651,7 +651,7 @@ function Events(pubblyScope) { // Scopped contstants are _InitCapsCamelCase
                                 ];
                             }
                             what.offsets = false;
-                            _Pubbly.drawPage();
+                            _Pubbly.drawPage_dispatch();
                             // Start new stops old
                             // _Pubbly.sequence.startNew(caught[0], this.m.action);
                         } else {
@@ -678,7 +678,7 @@ function Events(pubblyScope) { // Scopped contstants are _InitCapsCamelCase
                             this.m.lining.end = false;
                             this.m.lining.markedForDeletion = true;
                             _Pubbly.clearLines();
-                            _Pubbly.drawPage();
+                            _Pubbly.drawPage_dispatch();
                         }
                     } else {
                         caught = _Pubbly.checkLocFor(loc, "clicks");

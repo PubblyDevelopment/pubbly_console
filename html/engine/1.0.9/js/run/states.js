@@ -18,7 +18,7 @@ function States(PubblyScope) {
             let attempt = _Pubbly.lzwCompress.unpack(compressed);
             if (attempt) {
                 _Pubbly.data = attempt;
-                _Pubbly.drawPage();
+                _Pubbly.drawPage_dispatch();
             }
         } else {
             console.error("Cannot find relative state to load");

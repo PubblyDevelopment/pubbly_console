@@ -1,3 +1,3 @@
 <?php
-$latestEngineRelease = "1.0.8";
+$latestEngineRelease = "1.0.9";
 ?>

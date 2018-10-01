@@ -92,7 +92,7 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
             ],
 
             "image": [
-                ["fileRoot", "ObjFileName"],
+                ["fName", "ObjFileName"],
                 ["ext", "ObjExt"],
                 ["swapMethod", "swapSizeOrLoc", false],
                 ["swapHeight", "swapHeight", false, forceType("int")],
@@ -101,7 +101,7 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
             "sequence": [
                 ["type", null, "sequence"],
                 ["sequence", "ObjIsImageSequence", "false", forceType("bool")],
-                ["baseSrc", "ObjImageSequenceFolder", ""],
+                ["dName", "ObjImageSequenceFolder", ""],
                 ["frameOrder", "ObjImageSequenceOrder", "", forceType("barSplit")],
             ],
             "field": [
@@ -216,7 +216,12 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
                         }
 
                         if (curObj.sequence) {
-                            curObj.frames = parseSequenceFrames(curObj.baseSrc, curObj.frameOrder);
+                            curObj.frames = curObj.frameOrder.map(frame => {
+                                let ret = {};
+                                ret.dSrc = curObj.dName + "/" + frame;
+                                ret.fName = frame;
+                                return ret;
+                            });
                             curObj.at = 0;
                             // error("update", "New Engine Update Required", "");
                         }
@@ -323,10 +328,10 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
                                         // HHEERREE
                                         curPage.auds.push({
                                             ext: false,
-                                            src: false,
+                                            fSrc: false,
                                             loaded: false,
                                             errored: false,
-                                            filename: target.destination,
+                                            fName: target.destination,
                                         });
                                         curPage.audKey[target.destination] = curPage.auds.length;
                                     }
@@ -355,7 +360,7 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
         // Init values and current values
 
         // LastPageDoubleEducatedGuess
-        if (xml.info.lastPageSpread == undefined) {
+        if (xml.info.lastPageSpread == "undefined") {
             // Ray dropped this prop at some point in time.
             // Meaning, I need to infer it from the page naming strings...
             // 33-34 is probs double, 33 is def single.
@@ -397,11 +402,29 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
 
 
                 // ALSO!!!! For consistance across the board,
+                /*
+                 DIRECTORY SOURCE - dSrc
+                 folder/file.ext
+                 images/thing.jpg
+
+                 FILE SOURCE - fSrc
+                 file.ext
+                 thing.jpg
+                 
+                 FILE NAME - fName
+                 file
+                 thing
+                 
+                 EXTENSION - ext
+                 ext
+                 jpg
+                 */
+
                 //  name = GreenThing
-                //  fileName = thing.jpg
+                //  fName = thing.jpg
                 //  src = images/thing.jpg
-                if (curObj.fileRoot && curObj.ext) {
-                    curObj.fileName = curObj.fileRoot + "." + curObj.ext;
+                if (curObj.fName && curObj.ext) {
+                    curObj.fSrc = curObj.fName + "." + curObj.ext;
                 }
             }
             curPage.points.changed = [];

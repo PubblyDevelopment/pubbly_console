@@ -32,6 +32,13 @@
  
  ---
  
+
+ DIRECTORY SOURCE - dSrc
+ logos/file.ext
+
+ DIRECTORY NAME - dName
+ logos
+ 
  FILE SOURCE - fSrc
  file.ext
  

@@ -330,6 +330,7 @@ class Pubbly {
             angle: objAngle,
             opacity: objOpacity,
             layer: curObj.layer,
+            vis: curObj.vis,
         };
         return ret;
     }
@@ -598,7 +599,8 @@ class Pubbly {
             console.error("Pubbly.drawPage_dispatch: Can only draw prev, cur or next pages. Please call with a value between " + start + " and " + end);
         } else {
             let page = this.data.pages[which];
-            let imagesToDraw = page.objs.filter(o => o.type === "image");
+            let imagesToDraw = page.objs.filter(o =>
+                (o.type === "image" || o.type === "sequence"));
             let fieldsToDraw = page.objs.filter(o => o.type === "field");
             let workspacesToDraw = page.objs.filter(o => o.type === "workspace");
             let gifsToDraw = page.objs.filter(o => o.type === "gifs");
@@ -613,358 +615,8 @@ class Pubbly {
                 this.draw_cloneCanvasToSpread(ctx, which);
             }
     }
-    /*
-     // Which can be a page number, or an array of page numbers
-     if (typeof which === "object") {
-     let drawn = 0;
-     for (let w = 0; w < which.length; w++) {
-     drawAct.call(this, which[w], function () {
-     drawn++;
-     if (drawn == which.length - 1 && cb) {
-     cb();
-     }
-     });
-     }
-     } else {
-     if (typeof which === "undefined") {
-     which = this.curPage;
-     }
-     drawAct.call(this, which, cb);
-     }
-     function drawField(ctx, curObj, relPage) {
-     let text = curObj.contents || ""; // Default is fixed text.
-     if (curObj.displayType == "points") {
-     let localCheck = this.data.pages[relPage].points[curObj.display];
-     let globalCheck = this.data.points[curObj.display];
-     text = (typeof localCheck == "undefined") ? globalCheck : localCheck;
-     if (typeof text == "undefined") {
-     error("warn", "draw page", "Undefined points reference: " + curObj.display);
-     } else {
-     text = text.toString();
-     }
-     } else if (curObj.displayType == "countdown") {
-     text = this.countdown.at;
-     }
-     let lines = false;
-     let drawTops = [];
-     if (text !== "" || curObj.editing) {
-     lines = text.toString().split('\n') || []; // To string for points
-     let fakeText = !text;
-     if (fakeText) {
-     lines = ["M"];
-     }
-     
-     
-     // IF the size of the thing changes, THEN you empty the size and recalculated.
-     // This saves us from having to run time consuming measureText nonsense every redraw.
-     let measureChar = "M";
-     if (curObj.calculated.size || curObj.size !== "auto") {
-     ctx.font = curObj.size + "pt " + curObj.font;
-     } else {
-     // Calculate the best fit font size for the given field dimentions
-     // Ping pong back and forth until one more px font size is too large and one less is too small.
-     // Reasonable starting guess
-     let widthLimit = parseInt(curObj.width / lines[0].length);
-     let curDirection = false,
-     lastDirection = false,
-     measured = 0;
-     do {
-     // RESET HERE ever time, otherwise you gets stucks
-     measured = 0;
-     ctx.font = widthLimit + "pt " + curObj.font;
-     for (let l = 0; l < lines.length; l++) {
-     measured = Math.max(
-     ctx.measureText(lines[l]).width,
-     measured);
-     }
-     if (measured > curObj.width) {
-     curDirection = -1
-     } else {
-     curDirection = 1;
-     }
-     // first time setting this
-     if (lastDirection === false) {
-     lastDirection = curDirection;
-     }
-     
-     if (lastDirection !== curDirection) {
-     // Changed directions means we found the size
-     // If we overshot, undershoot
-     if (curDirection = -1) {
-     widthLimit--;
-     }
-     // If we undershot, then fine, that's what we want
-     curDirection = lastDirection = false;
-     } else {
-     widthLimit += curDirection;
-     }
-     } while (curDirection !== false);
-     // switch to "o" maybe later?
-     // For the sake of not blowing my brains out, we're using "M".width as a decent round about method for measuring height
-     let heightLimit = 0;
-     measured = 0;
-     // Maybe flip M and measure the widht of taht? Does measureText measure the thing as it is drawn on a temp canvas, or just do some sort of... fuck it
-     
-     // Old books expect garbage.
-     // Therefore, true height font improvements make them look worse.
-     let garbage_adjustment = 0.7;
-     do {
-     heightLimit++;
-     ctx.font = heightLimit + "pt " + curObj.font;
-     measured = ctx.measureText(measureChar).width;
-     } while (measured < (curObj.height * garbage_adjustment) / lines.length);
-     heightLimit--;
-     curObj.calculated.size = Math.min(heightLimit, widthLimit);
-     // Now to get the ACTUAL measurements with whatever size we have
-     }
-     ctx.font = curObj.calculated.size + "pt " + curObj.font;
-     let widestLine = 0;
-     for (let l = 0; l < lines.length; l++) {
-     widestLine = Math.max(
-     ctx.measureText(lines[l]).width,
-     widestLine);
-     }
-     curObj.calculated.lineHeight = ctx.measureText(measureChar).width;
-     curObj.calculated.widestLine = widestLine;
-     if (curObj.align == "left") {
-     curObj.calculated.leftMargin = 0;
-     } else if (curObj.align == "center") {
-     curObj.calculated.leftMargin = (curObj.width - widestLine) / 2;
-     } else if (curObj.align == "right") {
-     curObj.calculated.leftMargin = curObj.width - widestLine;
-     } else {
-     error("warn", "draw page", "Unknown text align of " + curObj.align);
-     }
-     
-     if (fakeText) {
-     lines = [""];
-     }
-     let insert = {at: 0, line: 0, char: 0};
-     if (curObj.editing) {
-     let top = curObj.loc[0];
-     let left = curObj.loc[1] + curObj.calculated.leftMargin;
-     let height = curObj.calculated.size;
-     insert = {
-     at: this.events.f.insertionPoint.at,
-     line: 0,
-     char: 0,
-     }
-     for (let i = 0; i < insert.at; i++) {
-     insert.char++;
-     if (insert.char > lines[insert.line].length) {
-     insert.char = 0;
-     insert.line++;
-     }
-     }
-     }
-     ctx.font = curObj.calculated.size + "pt " + curObj.font;
-     ctx.fillStyle = curObj.color;
-     let drawLeftBase = curObj.loc[1] + curObj.calculated.leftMargin;
-     for (let l = 0; l < lines.length; l++) {
-     let drawLeft = drawLeftBase;
-     let drawTop = curObj.loc[0] + (curObj.calculated.lineHeight * (l + 1));
-     if (curObj.align == "center") {
-     // move every line over to middle
-     let width = ctx.measureText(lines[l]).width;
-     drawLeft += (curObj.calculated.widestLine / 2) - (width / 2);
-     } else if (curObj.align == "right") {
-     // move every line over to middle
-     let width = ctx.measureText(lines[l]).width;
-     drawLeft += curObj.calculated.widestLine - width;
-     }
-     drawTops.push(drawTop);
-     ctx.fillText(
-     lines[l],
-     drawLeft,
-     drawTop,
-     );
-     if (curObj.editing &&
-     this.events.f.insertionPoint.on &&
-     insert.line == l) {
-     let lineStr = lines[l].substring(0, insert.char);
-     let strWidth = ctx.measureText(lineStr).width;
-     let fontsFuckingSuck = drawTop + (curObj.calculated.lineHeight * 0.17);
-     ctx.beginPath();
-     ctx.moveTo(drawLeft + strWidth, fontsFuckingSuck - curObj.calculated.lineHeight);
-     ctx.lineTo(drawLeft + strWidth, fontsFuckingSuck);
-     ctx.stroke();
-     }
-     }
-     }
-     
-     if (this.runtimeProps.drawFieldBorders) {
-     ctx.fillStyle = "black";
-     ctx.beginPath();
-     ctx.lineTo(curObj.loc[1], curObj.loc[0]);
-     ctx.lineTo(curObj.loc[1] + curObj.width, curObj.loc[0]);
-     ctx.lineTo(curObj.loc[1] + curObj.width, curObj.loc[0] + curObj.height);
-     ctx.lineTo(curObj.loc[1], curObj.loc[0] + curObj.height);
-     ctx.lineTo(curObj.loc[1], curObj.loc[0]);
-     ctx.stroke();
-     }
-     
-     }
-     function drawImage(ctx, curObj) {
-     let img;
-     let src = (curObj.type == "sequence") ?
-     curObj.frames[curObj.at].fileName :
-     curObj.src;
-     img = this.pageBuffer.assetListLoaders[which].keys[src].elem;
-     let objDesc = this.getRealObjDescription(curObj);
-     if (img !== false) {
-     ctx.globalAlpha = objDesc.opacity;
-     let args = [
-     img, // Element to be drawn
-     // screw you drawImage, it's top left. IT HAS ALWAYS BEEN TOP LEFT.
-     parseInt(objDesc.left, 10),
-     parseInt(objDesc.top, 10),
-     parseInt(objDesc.width, 10),
-     parseInt(objDesc.height, 10),
-     ];
-     if (objDesc.angle) {
-     let objRad = objDesc.angle * 360 * (Math.PI / 180);
-     let halfWidth = objDesc.width / 2;
-     let halfHeight = objDesc.height / 2;
-     ctx.save();
-     ctx.translate(objDesc.left + halfWidth, objDesc.top + halfHeight);
-     ctx.rotate(objRad);
-     ctx.translate(-halfWidth, -halfHeight);
-     ctx.drawImage(img, 0, 0, objDesc.width, objDesc.height);
-     ctx.restore();
-     } else {
-     ctx.drawImage.apply(ctx, args);
-     }
-     ctx.globalAlpha = 1;
-     } else {
-     error("fatal", "Canvas redraw", "Bad image: " + curObj.fileName);
-     }
-     }
-     function drawLine(ctx, curLine) {
-     ctx.beginPath();
-     ctx.moveTo(curLine.start[0], curLine.start[1]);
-     ctx.lineTo(curLine.end[0], curLine.end[1]);
-     ctx.stroke();
-     }
-     function drawWorkspace(ctx, workspace) {
-     if (workspace.bgTexture) {
-     let pattern = ctx.createPattern(this.presets.blackBoardBG, 'repeat');
-     ctx.rect(workspace.loc[1], workspace.loc[0], workspace.width, workspace.height);
-     ctx.fillStyle = pattern;
-     ctx.fill();
-     }
-     let wan = this.workspaces.elems[workspace.elem].elem;
-     ctx.drawImage(wan, workspace.loc[1], workspace.loc[0]);
-     }
-     
-     function drawAct(num, cb) {
-     let canClass = false;
-     if (num == this.curPage) {
-     canClass = "current";
-     } else if (num + 1 == this.curPage) {
-     canClass = "previous";
-     } else if (num - 1 == this.curPage) {
-     canClass = "next";
-     } else {
-     error("warn", "Bad drawPage call", "Cannot draw any but the current, previous or next pages");
-     }
-     if (canClass) {
-     // One any only. Because too lazy to pass can dimensions, which I need, for angled draw.
-     let canCover = $("#canvases").find("div." + canClass)[0],
-     can = $("#canvases").find("canvas." + canClass)[0],
-     ctx = can.getContext("2d");
-     ctx.width = can.width;
-     ctx.height = can.height;
-     ctx.imageSmoothingEnabled = false;
-     // TODO: BTX, draw all, BTX to CTX for the GUPS
-     // Clear can
-     can.width = can.width;
-     let layeredObjs = [];
-     for (let o = 0; o < this.data.pages[num].objs.length; o++) {
-     let curObj = this.data.pages[num].objs[o];
-     layeredObjs.push({name: curObj.name, layer: curObj.layer});
-     }
-     layeredObjs.sort(function (a, b) {
-     return a.layer - b.layer;
-     });
-     for (let lo = 0; lo < layeredObjs.length; lo++) {
-     let curObj = this.data.pages[num].objs[this.data.pages[num].objKey[layeredObjs[lo].name]];
-     if (curObj.vis) {
-     if (curObj.type == "image" ||
-     curObj.type == "clone" ||
-     curObj.type == "sequence") {
-     if (this.runtimeProps.announceDrawnObjects) {
-     console.log("Drawing img: " + curObj.name);
-     }
-     drawImage.call(this, ctx, curObj);
-     } else if (curObj.type == "field") {
-     // Need to call with relative page number. Why?
-     // Some field display points, and points can be local
-     // To know values for local points, you have to know pagenum
-     if (this.runtimeProps.announceDrawnObjects) {
-     console.log("Drawing field: " + curObj.name);
-     }
-     drawField.call(this, ctx, curObj, num);
-     } else if (curObj.type == "gif") {
-     // Same as image
-     if (this.runtimeProps.announceDrawnObjects) {
-     console.log("Drawing gif: " + curObj.name);
-     }
-     drawImage.call(this, ctx, curObj);
-     } else if (curObj.type == "workspace") {
-     if (this.runtimeProps.announceDrawnObjects) {
-     console.log("Drawing gif: " + curObj.name);
-     }
-     drawWorkspace.call(this, ctx, curObj);
-     } else {
-     error("warm", "draw page", "Unknown object type: " + curObj.type + ". Skipping");
-     }
-     }
-     }
-     for (let l = 0; l < this.data.pages[num].links.length; l++) {
-     let curLnk = this.data.pages[num].links[l];
-     if (curLnk.drawing == "single"
-     || curLnk.drawing == "multiple") {
-     if (curLnk.lines) {
-     for (let ln = 0; ln < curLnk.lines.length; ln++) {
-     drawLine(ctx, curLnk.lines[ln]);
-     }
-     }
-     }
-     }
-     
-     if (this.data.info.display == "composite") {
-     let pUnit = this.data.info.width;
-     let leftCover = $("#canvases").find("div." + canClass + "SpreadLeft")[0];
-     let leftCan = $("#canvases").find("canvas." + canClass + "SpreadLeft");
-     let ltx = leftCan[0].getContext("2d");
-     ltx.width = ltx.width;
-     ltx.drawImage(can, 0, 0);
-     leftCover.removeAttribute("style");
-     let rightCover = $("#canvases").find("div." + canClass + "SpreadRight")[0];
-     let rightCan = $("#canvases").find("canvas." + canClass + "SpreadRight");
-     let rtx = rightCan[0].getContext("2d");
-     rtx.width = rtx.width;
-     rtx.drawImage(can, pUnit * -1, 0);
-     rightCover.removeAttribute("style");
-     }
-     }
-     if (cb) {
-     cb();
-     }
-     }
-     */
     }
-    getElemFrom(fromWhat, searchFor, curPage = this.curPage) {
-        
-    }
-    getElemFromFileName(fileName, curPage = this.curPage) {
-        let assetListLoader = this.pageBuffer.assetListLoaders[curPage];
-        return assetListLoader.byFileName[fileName].elem;
-    }
-    getElemFromRelPath(relPath, curPage = this.curPage) {
-        let assetListLoader = this.pageBuffer.assetListLoaders[curPage];
-        return assetListLoader.byFileSource[relPath].elem;
-    }
+
     draw_readyAndReturnCTX(drawPage, relativeHalf = "") {
         // drawPage >> Page you're targeting to draw. I.E., 5
         // relativeHalf >> right, left, or ""
@@ -988,43 +640,214 @@ class Pubbly {
     }
     draw_image(ctx, curImage, curPage) {
         let img;
-        let fileSource = (curImage.type == "sequence") ?
-                curImage.frames[curImage.at].fileName :
-                curImage.fileName;
-        img = this.getElemFromRelPath(fileSource, curPage);
+        let relPath = (curImage.type == "sequence") ?
+                curImage.frames[curImage.at].relPath :
+                curImage.relPath;
+        img = this.pageBuffer.assetListLoaders[curPage].keys[relPath].elem;
         let objDesc = this.getRealObjDescription(curImage);
+
         if (img !== false) {
-            ctx.globalAlpha = objDesc.opacity;
-            let args = [
-                // Element to be drawn
-                img,
-                // Unfortunately for ctx calls, it's left first, then top
-                parseInt(objDesc.left, 10),
-                parseInt(objDesc.top, 10),
-                parseInt(objDesc.width, 10),
-                parseInt(objDesc.height, 10),
-            ];
-            if (objDesc.angle) {
-                let objRad = objDesc.angle * 360 * (Math.PI / 180);
-                let halfWidth = objDesc.width / 2;
-                let halfHeight = objDesc.height / 2;
-                ctx.save();
-                ctx.translate(objDesc.left + halfWidth, objDesc.top + halfHeight);
-                ctx.rotate(objRad);
-                ctx.translate(-halfWidth, -halfHeight);
-                ctx.drawImage(img, 0, 0, objDesc.width, objDesc.height);
-                ctx.restore();
-            } else {
-                ctx.drawImage.apply(ctx, args);
+            if (objDesc.vis) {
+                ctx.globalAlpha = objDesc.opacity;
+                let args = [
+                    // Element to be drawn
+                    img,
+                    // Unfortunately for ctx calls, it's left first, then top
+                    parseInt(objDesc.left, 10),
+                    parseInt(objDesc.top, 10),
+                    parseInt(objDesc.width, 10),
+                    parseInt(objDesc.height, 10),
+                ];
+                if (objDesc.angle) {
+                    let objRad = objDesc.angle * 360 * (Math.PI / 180);
+                    let halfWidth = objDesc.width / 2;
+                    let halfHeight = objDesc.height / 2;
+                    ctx.save();
+                    ctx.translate(objDesc.left + halfWidth, objDesc.top + halfHeight);
+                    ctx.rotate(objRad);
+                    ctx.translate(-halfWidth, -halfHeight);
+                    ctx.drawImage(img, 0, 0, objDesc.width, objDesc.height);
+                    ctx.restore();
+                } else {
+                    ctx.drawImage.apply(ctx, args);
+                }
+                ctx.globalAlpha = 1;
             }
-            ctx.globalAlpha = 1;
         } else {
             console.error("Pubbly.draw_image: Missing image elem for " + curImage.fileName);
         }
     }
-    draw_field(ctx, curField) {
-        console.log("TODO: Draw field");
-        console.log(curField);
+    draw_field(ctx, curObj, relPage) {
+        let text = curObj.contents || ""; // Default is fixed text.
+        if (curObj.displayType == "points") {
+            let localCheck = this.data.pages[relPage].points[curObj.display];
+            let globalCheck = this.data.points[curObj.display];
+            text = (typeof localCheck == "undefined") ? globalCheck : localCheck;
+            if (typeof text == "undefined") {
+                error("warn", "draw page", "Undefined points reference: " + curObj.display);
+            } else {
+                text = text.toString();
+            }
+        } else if (curObj.displayType == "countdown") {
+            text = this.countdown.at;
+        }
+        let lines = false;
+        let drawTops = [];
+        if (text !== "" || curObj.editing) {
+            lines = text.toString().split('\n') || []; // To string for points
+            let fakeText = !text;
+            if (fakeText) {
+                lines = ["M"];
+            }
+
+            // IF the size of the thing changes, THEN you empty the size and recalculated.
+            // This saves us from having to run time consuming measureText nonsense every redraw.
+            let measureChar = "M";
+            if (curObj.calculated.size || curObj.size !== "auto") {
+                ctx.font = curObj.size + "pt " + curObj.font;
+            } else {
+                // Calculate the best fit font size for the given field dimentions
+                // Ping pong back and forth until one more px font size is too large and one less is too small.
+                // Reasonable starting guess
+                let widthLimit = parseInt(curObj.width / lines[0].length);
+                let curDirection = false,
+                        lastDirection = false,
+                        measured = 0;
+                do {
+                    // RESET HERE ever time, otherwise you gets stucks
+                    measured = 0;
+                    ctx.font = widthLimit + "pt " + curObj.font;
+                    for (let l = 0; l < lines.length; l++) {
+                        measured = Math.max(
+                                ctx.measureText(lines[l]).width,
+                                measured);
+                    }
+                    if (measured > curObj.width) {
+                        curDirection = -1
+                    } else {
+                        curDirection = 1;
+                    }
+                    // first time setting this
+                    if (lastDirection === false) {
+                        lastDirection = curDirection;
+                    }
+
+                    if (lastDirection !== curDirection) {
+                        // Changed directions means we found the size
+                        // If we overshot, undershoot
+                        if (curDirection = -1) {
+                            widthLimit--;
+                        }
+                        // If we undershot, then fine, that's what we want
+                        curDirection = lastDirection = false;
+                    } else {
+                        widthLimit += curDirection;
+                    }
+                } while (curDirection !== false);
+                // switch to "o" maybe later?
+                // For the sake of not blowing my brains out, we're using "M".width as a decent round about method for measuring height
+                let heightLimit = 0;
+                measured = 0;
+                // Maybe flip M and measure the widht of taht? Does measureText measure the thing as it is drawn on a temp canvas, or just do some sort of... fuck it
+
+                // Old books expect garbage.
+                // Therefore, true height font improvements make them look worse.
+                let garbage_adjustment = 0.7;
+                do {
+                    heightLimit++;
+                    ctx.font = heightLimit + "pt " + curObj.font;
+                    measured = ctx.measureText(measureChar).width;
+                } while (measured < (curObj.height * garbage_adjustment) / lines.length);
+                heightLimit--;
+                curObj.calculated.size = Math.min(heightLimit, widthLimit);
+                // Now to get the ACTUAL measurements with whatever size we have
+            }
+            ctx.font = curObj.calculated.size + "pt " + curObj.font;
+            let widestLine = 0;
+            for (let l = 0; l < lines.length; l++) {
+                widestLine = Math.max(
+                        ctx.measureText(lines[l]).width,
+                        widestLine);
+            }
+            curObj.calculated.lineHeight = ctx.measureText(measureChar).width;
+            curObj.calculated.widestLine = widestLine;
+            if (curObj.align == "left") {
+                curObj.calculated.leftMargin = 0;
+            } else if (curObj.align == "center") {
+                curObj.calculated.leftMargin = (curObj.width - widestLine) / 2;
+            } else if (curObj.align == "right") {
+                curObj.calculated.leftMargin = curObj.width - widestLine;
+            } else {
+                error("warn", "draw page", "Unknown text align of " + curObj.align);
+            }
+
+            if (fakeText) {
+                lines = [""];
+            }
+            let insert = {at: 0, line: 0, char: 0};
+            if (curObj.editing) {
+                let top = curObj.loc[0];
+                let left = curObj.loc[1] + curObj.calculated.leftMargin;
+                let height = curObj.calculated.size;
+                insert = {
+                    at: this.events.f.insertionPoint.at,
+                    line: 0,
+                    char: 0,
+                }
+                for (let i = 0; i < insert.at; i++) {
+                    insert.char++;
+                    if (insert.char > lines[insert.line].length) {
+                        insert.char = 0;
+                        insert.line++;
+                    }
+                }
+            }
+            ctx.font = curObj.calculated.size + "pt " + curObj.font;
+            ctx.fillStyle = curObj.color;
+            let drawLeftBase = curObj.loc[1] + curObj.calculated.leftMargin;
+            for (let l = 0; l < lines.length; l++) {
+                let drawLeft = drawLeftBase;
+                let drawTop = curObj.loc[0] + (curObj.calculated.lineHeight * (l + 1));
+                if (curObj.align == "center") {
+                    // move every line over to middle
+                    let width = ctx.measureText(lines[l]).width;
+                    drawLeft += (curObj.calculated.widestLine / 2) - (width / 2);
+                } else if (curObj.align == "right") {
+                    // move every line over to middle
+                    let width = ctx.measureText(lines[l]).width;
+                    drawLeft += curObj.calculated.widestLine - width;
+                }
+                drawTops.push(drawTop);
+                ctx.fillText(
+                        lines[l],
+                        drawLeft,
+                        drawTop,
+                        );
+                if (curObj.editing &&
+                        this.events.f.insertionPoint.on &&
+                        insert.line == l) {
+                    let lineStr = lines[l].substring(0, insert.char);
+                    let strWidth = ctx.measureText(lineStr).width;
+                    let fontsFuckingSuck = drawTop + (curObj.calculated.lineHeight * 0.17);
+                    ctx.beginPath();
+                    ctx.moveTo(drawLeft + strWidth, fontsFuckingSuck - curObj.calculated.lineHeight);
+                    ctx.lineTo(drawLeft + strWidth, fontsFuckingSuck);
+                    ctx.stroke();
+                }
+            }
+        }
+
+        if (this.runtimeProps.drawFieldBorders) {
+            ctx.fillStyle = "black";
+            ctx.beginPath();
+            ctx.lineTo(curObj.loc[1], curObj.loc[0]);
+            ctx.lineTo(curObj.loc[1] + curObj.width, curObj.loc[0]);
+            ctx.lineTo(curObj.loc[1] + curObj.width, curObj.loc[0] + curObj.height);
+            ctx.lineTo(curObj.loc[1], curObj.loc[0] + curObj.height);
+            ctx.lineTo(curObj.loc[1], curObj.loc[0]);
+            ctx.stroke();
+        }
+
     }
     draw_workSpace(ctx, curWorkspace) {
         console.log("TODO: Draw workspace");
@@ -1146,7 +969,11 @@ class Pubbly {
 
         this.launch_dispatch({
             done: function () {
-                this.drawPage_dispatch([0, 1]);
+                let pages = [0];
+                if (this.data.pages[1]) {
+                    pages.push(1);
+                }
+                this.drawPage_dispatch(pages);
                 this.checkOpenPageLinks();
             }.bind(this),
             fail: this.fatalError,

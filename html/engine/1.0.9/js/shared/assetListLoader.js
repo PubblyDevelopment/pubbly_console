@@ -194,13 +194,8 @@ class AssetListLoader {
         this.byFileSource[getFileSourceFromPath(asset.relPath)] = this.keys[asset.relPath];
         this.byFileName[getFileNameFromPath(asset.relPath)] = this.keys[asset.relPath];
     }
-    loaded(asset, loadEvent, cbs) {
-        asset.elem.removeEventListener(loadEvent, this.loaded);
-        this.addLoadedAsset(asset);
-        cbs.done();
-    }
     download(asset, cbs) {
-        let loadEvent = "onload";
+        let loadEvent = "load";
         if (asset.type == "image" || asset.type == "gif") {
             asset.elem = new Image();
         } else if (asset.type == "audio") {
@@ -209,9 +204,25 @@ class AssetListLoader {
             asset.elem.autostart = 0;
             // So... this. We set volume to 1 when we play it. In sequence.js
             asset.elem.volume = 0;
-            loadEvent = "oncanplaythrough";
+            loadEvent = "canplaythrough";
         }
-        asset.elem[loadEvent] = this.loaded.bind(this, asset, loadEvent, cbs);
+        /* Full explanation of this.
+         * 
+         * So why not just bind to an anon function?
+         * Because anon functions can't be removed as event listeners
+         * Why not just bind to a declared method in the class?
+         * Because bounded functions are new functions, created from the original. But you can't remove the eventlistener with a refernce to a function used to create the bounded function, because they ain't the same no more.
+         * 
+         * Solution?
+         * Pre ES6 this-that.
+         * 
+         */
+        let that = this;
+        asset.elem.addEventListener(loadEvent, function loaded() {
+            asset.elem.removeEventListener(loadEvent, loaded);
+            that.addLoadedAsset(asset);
+            cbs.done();
+        });
         asset.elem.onerror = cbs.fail;
         asset.elem.setAttribute("src", asset.relPath);
     }
@@ -237,14 +248,15 @@ class AssetListLoader {
 
     constructor() {
         this.load = this.load.bind(this);
-        this.loaded = this.loaded.bind(this);
         this.unload = this.unload.bind(this);
         this.loadSingleSpecificOrVagueAsset = this.loadSingleSpecificOrVagueAsset.bind(this);
         this.addLoadedAsset = this.addLoadedAsset.bind(this);
         this.download = this.download.bind(this);
         this.searchForVagueAsset = this.searchForVagueAsset.bind(this);
 
-        this.keys = {};
+        this.keys = {
+            
+        };
         this.byFileSource = {};
         this.byFileName = {};
     }
