@@ -148,7 +148,9 @@ class Pubbly {
                     // TODO: This checks inside bounding rect. DOES NOT check for transparency in image.
                     // EXAMPLE: Three circles on top of eachother. You choose the one behind the one in front, but you're still in the transparent rect of the front most circle. Cursor on green, within the blue circle's bounding rect. Start dragging blue. Prob bob.
                     let action = (obj.mobility == "fixed") ? "editText" : obj.mobility;
-                    if (inside(loc, rect)) {
+                    if (inside(loc, rect) 
+                            // Invisible objects are not draggable
+                            && obj.vis === true) {
                         found.push({
                             link: obj,
                             type: "singleAction",
@@ -391,7 +393,7 @@ class Pubbly {
                 obj.layer--;
             }
         });
-        this.drawPage();
+        this.drawPage_dispatch();
     }
     reset(type, loc) {
         if (type == "page") {

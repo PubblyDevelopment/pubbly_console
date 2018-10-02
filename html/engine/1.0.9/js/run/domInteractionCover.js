@@ -10,14 +10,22 @@ class DomInteractionCover {
          style='height: 100%' 
          loop=infinite />
          </div>`);
-        this.container[0].onclick = function () {
-            this.container.find(".domInteractionCoverCont").remove();
-            cb();
-        }.bind(this);
+        this.cb = cb;
+        this.container[0].addEventListener("click", this.clicked);
+    }
+
+    clicked() {
+        this.container.find(".domInteractionCoverCont").remove();
+        this.container[0].removeEventListener("click", this.clicked);
+        this.cb();
+        this.cb = false;
     }
 
     constructor(container) {
         this.container = container;
+        this.clicked = this.clicked.bind(this);
+        
+        this.cb = false;
         this.available = [
             "Bee_exit2.gif",
             "Bee_loop_fast.gif",

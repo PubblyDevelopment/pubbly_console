@@ -622,7 +622,7 @@ function messyTargetToPretty(mess, curPage) {
                 options = options.substring(0, options.length - 1);
             }
             options = options.split(",");
-            random = {
+            let random = {
                 removeChoice: removeChoice,
                 options: options,
                 init: {

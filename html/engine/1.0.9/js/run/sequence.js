@@ -430,15 +430,37 @@ function Sequence(pubblyScope) {
     this.runTarget = function (target) {
         target.chosenDestination = target.destination;
         if (target.random) {
-            let num = rand(target.random.options.length - 1);
-            target.chosenDestination = target.random.options[num];
-            // If remove, remove. Also, refill on empty
-            if (target.random.removeChoice || true) {
-                target.random.options.splice(num, 1);
-                // TODO: Get from info
-                let resetOnRandomEmpty = true;
-                if (!target.random.options.length && resetOnRandomEmpty) {
-                    target.random.options = target.random.init.options.slice();
+            let options = target.random.options.slice();
+            /* Can only send clicks to enabled links  
+             * Meaning, slice the random list
+             * filter for enabled
+             * choose from that
+             * if the filtered enabled list is empty, repopulate
+             * BUT repopulate with the original option list
+             * (Even though some options might still be disabled (currently))
+             * 
+             * To my knowledge, no other "random" requires a filter check.
+             */
+            if (target.type == "send") {
+                options = options.filter(link => _Pubbly.findLink(link).enabled);
+            }
+            if (options.length === 0) {
+                console.warn("All links in random send list are disabled");
+                target.type = "skip";
+                // Don't know where to find this value in XML, so defaulting to true
+            } else {
+                let num = rand(options.length - 1);
+                target.chosenDestination = options[num];
+                if (target.random.removeChoice) {
+                    let at = target.random.options.indexOf(target.chosenDestination);
+                    target.random.options.splice(at, 1);
+                    let resetOnRandomEmpty = true;
+                    // If here, we've chosen a target. 
+                    // If there was only one to choose from, the random array is effectively empty
+                    // Effectively because some links might still be in there but they're disabled so they don't count.
+                    if (options.length === 1 && resetOnRandomEmpty) {
+                        target.random.options = target.random.init.options.slice();
+                    }   
                 }
             }
         }
@@ -449,7 +471,6 @@ function Sequence(pubblyScope) {
         if (this.show) {
             console.log("" + JSON.stringify(target));
         }
-
 
         switch (target.type) {
             case "drawing tool":
@@ -786,6 +807,8 @@ function Sequence(pubblyScope) {
                     console.warn("Unknown set type: ");
                     console.warn("" + JSON.stringify(target));
                 }
+                break;
+            case "skip":
                 break;
             default:
                 console.warn("Unknown target: ");
