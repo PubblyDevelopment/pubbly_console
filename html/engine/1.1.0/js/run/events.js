@@ -478,13 +478,7 @@ function Events(pubblyScope) { // Scopped contstants are _InitCapsCamelCase
 
                 if (this.m.dragging.moved) {
                     this.m.dragging.what.offsets = offsets;
-                    // Move object to front
-                    if (this.m.dragging.what.frontDrag === true) {
-                        // this.m.dragging.what.layer
-                        // TODO: First, pre-sort all object layers from 1-x not skipping any
-                        // THEN, set layer to top is as simple as obj.length
-                        _Pubbly.sendToTop.call(_Pubbly, this.m.dragging.what.name);
-                    }
+
                 }
                 _Pubbly.drawPage_dispatch();
             } else if (this.m.action == "lining") {
@@ -560,6 +554,13 @@ function Events(pubblyScope) { // Scopped contstants are _InitCapsCamelCase
                     what: caught,
                     start: loc,
                     moved: false,
+                }
+                // Move object to front
+                if (this.m.dragging.what.frontDrag === true) {
+                    // this.m.dragging.what.layer
+                    // TODO: First, pre-sort all object layers from 1-x not skipping any
+                    // THEN, set layer to top is as simple as obj.length
+                    _Pubbly.sendToTop.call(_Pubbly, this.m.dragging.what.name);
                 }
                 caught.offsets = [0, 0, 0];
                 // droppedLoc is if the item has been dropped and accepted.

@@ -162,9 +162,7 @@ class Pubbly {
             }
         }
         found.sort(function (a, b) {
-            if (a.link.layer && b.link.layer) {
-                return b.link.layer - a.link.layer;
-            }
+            return b.link.layer - a.link.layer;
         });
         return found;
     }
@@ -385,7 +383,7 @@ class Pubbly {
 
     sendToTop(objName) {
         let page = this.data.pages[this.curPage];
-        let obj = page.objs[page.objKey[objName]];
+        let obj = page.objs.find(o => o.name === objName);
         let origLayer = obj.layer;
         obj.layer = page.objs.length;
         page.objs.forEach(function (obj) {
@@ -603,18 +601,42 @@ class Pubbly {
             console.error("Pubbly.drawPage_dispatch: Can only draw prev, cur or next pages. Please call with a value between " + start + " and " + end + ". Not " + which);
         } else {
             let page = this.data.pages[which];
-            let imagesToDraw = page.objs.filter(o =>
-                (o.type === "image" || o.type === "sequence"));
-            let fieldsToDraw = page.objs.filter(o => o.type === "field");
-            let workspacesToDraw = page.objs.filter(o => o.type === "workspace");
-            let gifsToDraw = page.objs.filter(o => o.type === "gifs");
             let ctx = this.draw_readyAndReturnCTX(which);
 
-            imagesToDraw.map(i => this.draw_image(ctx, i, which));
-            fieldsToDraw.map(f => this.draw_field(ctx, f, which));
-            workspacesToDraw.map(w => this.draw_workSpace(ctx, w, which));
-            gifsToDraw.map(g => this.draw_gif(ctx, g, which));
+            /*  
+             * Boy this would be clean right?
+             * 
+             * But not so fast. Fields and images all have their own layer. And if a field is in between two images, and you draw fields first, the layers are messed up.
+             * So combine everything visual into a grand array, then call the specific draw function based on the type check during the loop
+             */
+            /*
+             let imagesToDraw = page.objs.filter(o =>
+             (o.type === "image" || o.type === "sequence"));
+             let fieldsToDraw = page.objs.filter(o => o.type === "field");
+             let workspacesToDraw = page.objs.filter(o => o.type === "workspace");
+             let gifsToDraw = page.objs.filter(o => o.type === "gifs");
+             
+             imagesToDraw.map(i => this.draw_image(ctx, i, which));
+             fieldsToDraw.map(f => this.draw_field(ctx, f, which));
+             workspacesToDraw.map(w => this.draw_workSpace(ctx, w, which));
+             gifsToDraw.map(g => this.draw_gif(ctx, g, which));
+             */
+            page.objs.sort(function (a, b) {
+                return a.layer - b.layer;
+            });
+            let key = {
+                "image": "draw_image",
+                "sequence": "draw_image",
+                "field": "draw_field",
+                "workspace": "draw_workSpace",
+                "gifs": "draw_gif",
+            }
 
+            page.objs.map(o => {
+                if (typeof this[key[o.type]] == "function") {
+                    this[key[o.type]](ctx, o, which);
+                }
+            });
             if (this.data.info.display == "composite") {
                 this.draw_cloneCanvasToSpread(ctx, which);
             }
