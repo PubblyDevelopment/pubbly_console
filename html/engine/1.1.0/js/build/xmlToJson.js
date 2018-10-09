@@ -37,7 +37,10 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
                     } else {
                         return "";
                     }
-                }]
+                }],
+            ["HighlightLinkColor", "linkHighlightColor", "128,255,255"],
+            ["HighlightLinkTransparency", "linkHighlightAlpha", "50", forceType("int")],
+            ["HighlightLinkTime", false, 500],
         ];
 
         for (let s = 0; (s <= generalSet.length && generalSet[s]); s++) {
@@ -51,6 +54,7 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
             xml.info[setName] = quickGet(nodeName, infoDoc, backupVal, mod);
         }
         xml.info.inrettupt = (xml.info.interrupt == 0);
+        xml.info.HighlightLinkColorRGBA = "RGBA(" + xml.info.HighlightLinkColor.split(",").concat(xml.info.HighlightLinkTransparency/100).join(",") + ")";
 
         // TODO: Tell ray to fix this, it's stupid
         if (xml.info.display == "single") {
@@ -150,7 +154,8 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
                     }
 
                 }],
-            ["clickHighlight", "AutoHighlightLink", false],
+            ["clickHighlight", "AutoHighlightLink", false, forceType("bool")],
+            ["clickHighlightOn", false, false],
         ];
 
         let knownTriggerTypes = ["click"];

@@ -4,7 +4,7 @@ function Links(pubblyScope) {
 
     // Functions for easy future debugging
     this.testing = {
-        outlineAllLinksOnPage: function(p) {
+        outlineAllLinksOnPage: function (p) {
             if (p === null) {
                 p = _Pubbly.curPage;
             }
@@ -24,7 +24,7 @@ function Links(pubblyScope) {
         return links;
     };
     // Returns the first link below the given mouse/touch loc
-    this.checkLocForLinks = function(loc, priority, curPage = _Pubbly.curPage) {
+    this.checkLocForLinks = function (loc, priority, curPage = _Pubbly.curPage) {
         // loc: [ptx,pty], returns first hit or false
         // priority: Gonna have to be something sticky... Cause if you're draggin, you want drop links to take priority, and if you're drawing a line, you want lineend links to be priority... I'm thinking trigger type. In any case, we get ALL possible links, then toss the disabled, then do something with priority.
         let caught = [];
@@ -38,10 +38,10 @@ function Links(pubblyScope) {
         }
 
         // filter out the disabled links
-        caught = caught.filter(function(link) {
+        caught = caught.filter(function (link) {
             if (link.enabled) {
                 return link;
-            }   else    {
+            } else {
                 return false;
             }
         });
@@ -50,32 +50,32 @@ function Links(pubblyScope) {
         return (caught[0]) ? caught[0] : false;
     };
 
-    this.init = function() {
+    this.init = function () {
         let linksMade = 0; // ALL links added from XML
         let totLinks = 0;
 
         for (let p = 0; p < _Pubbly.data.pages.length; p++) {
             let curPage = _Pubbly.data.pages[p];
-            
+
             /*
-            this.links[p] = [];
-            // Each link type by it's own loop
-            for (let gl = 0; gl < curPage.links.graphic.length; gl++, linksMade++) {
-                let curLink = curPage.links.graphic[gl];
-                this.links[p].push(curPage.links.graphic[gl]); // linked not duped
-            }
-
-
-
-            for (var key in curPage.links.keys) {
-                totLinks++;
-            }
-            */
+             this.links[p] = [];
+             // Each link type by it's own loop
+             for (let gl = 0; gl < curPage.links.graphic.length; gl++, linksMade++) {
+             let curLink = curPage.links.graphic[gl];
+             this.links[p].push(curPage.links.graphic[gl]); // linked not duped
+             }
+             
+             
+             
+             for (var key in curPage.links.keys) {
+             totLinks++;
+             }
+             */
         }
 
         // Another check, one in XML already
         if (linksMade !== totLinks) {
-            error("log","Link creation","Some of the links described in the XML were not made. Most likely unrecognized type");
+            error("log", "Link creation", "Some of the links described in the XML were not made. Most likely unrecognized type");
         }
     };
     this.init();

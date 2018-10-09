@@ -1,16 +1,16 @@
 class Pubbly {
 
-    drawLinks(which) {
+    drawLinks(which, color) {
         let ctx = $("canvas.current")[0].getContext('2d');
-        let drawLinkAct = function (poly, ctx, colors = ["#000000", "#505050"]) {
-            ctx.fillStyle = colors[0];
+        let drawLinkAct = function (poly, ctx, color = "RGBA(20,20,20,0.2)") {
+            ctx.fillStyle = color;
+            ctx.strokeStyle = color;
             if (poly && poly[0]) {
                 ctx.beginPath();
                 ctx.moveTo(poly[0][0], poly[0][1]);
                 for (let p = 1; p < poly.length; p++) {
                     ctx.lineTo(poly[p][0], poly[p][1]);
                 }
-                ctx.fillStyle = colors[1];
                 ctx.fill();
                 ctx.closePath();
                 ctx.stroke();
@@ -23,7 +23,7 @@ class Pubbly {
             drawLinkAct(links[which].poly, ctx);
         } else {
             for (let g = 0; g < links.length; g++) {
-                drawLinkAct(links[g].poly, ctx);
+                drawLinkAct(links[g].poly, ctx, color);
             }
         }
     }
@@ -637,6 +637,11 @@ class Pubbly {
                     this[key[o.type]](ctx, o, which);
                 }
             });
+            page.links.map(l => {
+                if (l.clickHighlightOn) {
+                    this.drawLinks(l, this.data.info.HighlightLinkColorRGBA);
+                }
+            })
             if (this.data.info.display == "composite") {
                 this.draw_cloneCanvasToSpread(ctx, which);
             }

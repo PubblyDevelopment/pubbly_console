@@ -219,13 +219,7 @@ var header = {
 };
 
 function getUnitInfo(callback) {
-    var url;
-    if (isTutorial) {
-        url = "ajax/get/getUnitInfo.php?schoolName=" + schoolName + "&unitName=" + unitName + "&isTutorial=true";
-    } else {
-        url = "ajax/get/getUnitInfo.php?schoolName=" + schoolName + "&subjectName=" + subjectName + "&levelName=" + levelName + "&unitName=" + unitName;
-    }
-
+    var url = "ajax/get/getUnitInfo.php?schoolName=" + schoolName + "&unitName=" + unitName;
 
     $.ajax({
         type: "GET",
@@ -320,12 +314,7 @@ var unitInfoForm = {
                         autowidth: true,
                         on: {
                             onItemClick: function () {
-                                var url;
-                                if (isTutorial) {
-                                    url = "ajax/set/setUnitInfo.php?schoolName=" + schoolName + "&unitName=" + unitName + "&isTutorial=true";
-                                } else {
-                                    url = "ajax/set/setUnitInfo.php?schoolName=" + schoolName + "&subjectName=" + subjectName + "&levelName=" + levelName + "&unitName=" + unitName;
-                                }
+                                var url = "ajax/set/setUnitInfo.php?schoolName=" + schoolName + "&unitName=" + unitName;
                                 var data = {};
                                 data.TimeToInterrupt = ($$("interruptsAllowed").getValue()) ? 0 : 1000;
                                 data.PrjNameLong = $$("longName").getValue();
@@ -710,16 +699,7 @@ var unitPageList = {
                     {
                         value: "View Old", id: "viewUnitOld", view: "button", disabled: false, on: {
                             onItemClick: function () {
-                                var url;
-                                if (isTutorial) {
-                                    //url = "schools/" + window.schoolName + "/tutorials/" + window.unitName + "/index.php";
-                                    url = "read.php?t=t&sc=" + btoa(schoolName) + "&u=" + btoa(unitName);
-                                    console.log(url);
-                                } else {
-                                    // url = "schools/" + window.schoolName + "/" + window.subjectName + "/" + window.levelName + "/" + window.unitName + "/index.php";
-                                    url = "read.php?t=u&sc=" + btoa(schoolName) + "&su=" + btoa(subjectName) + "&l=" + btoa(levelName) + "&u=" + btoa(unitName);
-                                    console.log(url);
-                                }
+                                var url = "read.php?t=u&sc=" + btoa(schoolName) + "&u=" + btoa(unitName);
                                 if (window.saveDisabled) {
                                     var win = window.open(url, '_blank');
                                     win.focus();
@@ -735,16 +715,7 @@ var unitPageList = {
                     {
                         value: "View New", id: "viewUnitNew", view: "button", disabled: false, on: {
                             onItemClick: function () {
-                                var url;
-                                if (isTutorial) {
-                                    //url = "schools/" + window.schoolName + "/tutorials/" + window.unitName + "/index.php";
-                                    url = "read.php?engineCode=new&t=t&sc=" + btoa(schoolName) + "&u=" + btoa(unitName);
-                                    console.log(url);
-                                } else {
-                                    // url = "schools/" + window.schoolName + "/" + window.subjectName + "/" + window.levelName + "/" + window.unitName + "/index.php";
-                                    url = "read.php?engineCode=new&t=u&sc=" + btoa(schoolName) + "&su=" + btoa(subjectName) + "&l=" + btoa(levelName) + "&u=" + btoa(unitName);
-                                    console.log(url);
-                                }
+                                var url = "read.php?engineCode=new&t=u&sc=" + btoa(schoolName) + "&u=" + btoa(unitName);
                                 if (window.saveDisabled) {
                                     var win = window.open(url, '_blank');
                                     win.focus();
@@ -784,21 +755,10 @@ function saveUnit(callback) {
     $$("saveUnitPageOrder").refresh();
 
     var stringyPost = JSON.stringify(pageArrForPost);
-    var url;
-    if (isTutorial) {
-        url = "ajax/set/setUnitPageList.php?";
-        url += "schoolName=" + window.schoolName + "&";
-        url += "unitName=" + window.unitName + "&";
-        url += "isTutorial=true&";
-        url += "pageObj=" + stringyPost + "&";
-    } else {
-        url = "ajax/set/setUnitPageList.php?";
-        url += "schoolName=" + window.schoolName + "&";
-        url += "subjectName=" + window.subjectName + "&";
-        url += "levelName=" + window.levelName + "&";
-        url += "unitName=" + window.unitName + "&";
-        url += "pageObj=" + stringyPost + "&";
-    }
+    var url = "ajax/set/setUnitPageList.php?";
+    url += "schoolName=" + window.schoolName + "&";
+    url += "unitName=" + window.unitName + "&";
+    url += "pageObj=" + stringyPost + "&";
 
 
     $.ajax({
@@ -846,18 +806,9 @@ function saveUnit(callback) {
 
 function getUnitPages() {
     var url;
-    if (isTutorial) {
-        url = "ajax/get/getUnitPages.php?";
-        url += "schoolName=" + window.schoolName + "&";
-        url += "unitName=" + window.unitName + "&";
-        url += "isTutorial=true";
-    } else {
-        url = "ajax/get/getUnitPages.php?";
-        url += "schoolName=" + window.schoolName + "&";
-        url += "subjectName=" + window.subjectName + "&";
-        url += "levelName=" + window.levelName + "&";
-        url += "unitName=" + window.unitName + "&";
-    }
+    url = "ajax/get/getUnitPages.php?";
+    url += "schoolName=" + window.schoolName + "&";
+    url += "unitName=" + window.unitName + "&";
 
 
     $.ajax({
@@ -874,7 +825,7 @@ function getUnitPages() {
             if (pageList) {
                 if (pageList.length) {
                     window.unitWidth = Math.round(pageList[0].width);
-                    window.unitHeight = Math.round(pageList[0].height)
+                    window.unitHeight = Math.round(pageList[0].height);
                     for (var i = 0; i < pageList.length; i++) {
                         $$("unitPageOrder").add(pageList[i]);
                     }

@@ -690,6 +690,15 @@ function Events(pubblyScope) { // Scopped contstants are _InitCapsCamelCase
 
                     if (caught[0]) {
                         _Pubbly.sequence.startNew(caught[0], this.m.action);
+                        // sue me
+                        if (caught[0].link.clickHighlight) {
+                            caught[0].link.clickHighlightOn = true;
+                            _Pubbly.drawPage_dispatch();
+                            window.setTimeout(function () {
+                                caught[0].link.clickHighlightOn = false;
+                                _Pubbly.drawPage_dispatch();
+                            }, _Pubbly.data.info.HighlightLinkTime);
+                        }
                     }
                 }
                 this.m.reset();
