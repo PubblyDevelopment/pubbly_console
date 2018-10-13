@@ -481,6 +481,15 @@ function messyTargetToPretty(mess, curPage) {
                         } else if (typeof forceType("int")(lowerDestination) == "number") {
                             ret.attribute = "absolute";
                             ret.value = forceType("int")(lowerDestination) - 1;
+                        } else if (mess.destination.toLowerCase() == "to be determined") {
+                            ret = {
+                                blocking: false,
+                                hold: false,
+                                type: "log",
+                                action: "alert", // warn, error
+                                destination: "window",
+                                value: "URL link undetermined... Please set in Program section of console."
+                            };
                         } else {
                             error("warn", "xmlFormatting", "Unknown page navigation link " + lowerDestination);
                         }
@@ -654,7 +663,7 @@ function messyTargetToPretty(mess, curPage) {
                 hold: false,
                 type: "log",
                 // what:"Could not interpret target: " + mess.type + " " + mess.action + " " + mess.destination + ". Skipping",
-                what: "Could not interpret target in XML.js." + '\n' + JSON.stringify(mess),
+                value: "Could not interpret target in XML.js." + '\n' + JSON.stringify(mess),
             }
         }
     }
@@ -1004,7 +1013,7 @@ function parseObjAnims(partial) {
                     jsAnim.data.push(jsProps);
                 }
                 ret[jsAnim.name] = jsAnim;
-            }   else {
+            } else {
                 console.warn("Cannot parse animation, only one leg");
                 console.warn(dataString);
             }

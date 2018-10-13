@@ -307,6 +307,10 @@ if (count($errList) == 0) {
     $obj = $sql->prepare("UPDATE units SET outdated = 0 WHERE ID = ?");
     $obj->bind_param('s', $unitID);
     $obj->execute();
+    $obj = false;
+    $obj = $sql->prepare("UPDATE schools sch LEFT JOIN units unt ON unt.schoolID = sch.ID SET sch.outdated = 1 WHERE unt.ID = ?");
+    $obj->bind_param('s', $unitID);
+    $obj->execute();
 
     echo "done";
 } else {

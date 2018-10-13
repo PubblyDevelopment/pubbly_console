@@ -123,6 +123,9 @@ function UrlNav() {
                 newVars.push("a=" + encodeURI(url.substring(1)));
                 // Tape
                 this.url = curUrl[0] + "?" + newVars.join("&");
+            } else if (url.substring(0, 1) == "?") {
+                let curUrl = window.location.href.split("?");
+                this.url = curUrl[0] + url;
             } else {
                 this.url = this.clean(url);
             }

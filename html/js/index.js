@@ -38,8 +38,7 @@ $(document).ready(function () {
                         {view: "button", value: "PROGRAMS", height: 200, width: 200, css: "greyBtn",
                             on: {
                                 onItemClick: function () {
-                                    webix.message("Unavailable.");
-                                    // window.location.href="schools/deploy.php";
+                                    window.location.href="select_program.php";
                                 },
                             }
                         },

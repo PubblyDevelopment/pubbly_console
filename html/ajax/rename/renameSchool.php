@@ -15,11 +15,12 @@ if (!$oldName && !$newName) {
     $sqlObj->execute();
     rename("../schools/$oldName", "../schools/$newName");
 
-    include("../php/saveXML.php");
-    $xml = simplexml_load_file("../schools/$newName/school.xml");
-    $xml->name = $newName;
-    saveXML($xml, "../schools/$newName/school.xml");
-
+    /*
+      include("../php/saveXML.php");
+      $xml = simplexml_load_file("../schools/$newName/school.xml");
+      $xml->name = $newName;
+      saveXML($xml, "../schools/$newName/school.xml");
+     */
     echo "done";
 }
 ?>

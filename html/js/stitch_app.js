@@ -1,4 +1,4 @@
-if (typeof window.isTutorial == "undefined") {
+if (typeof window.isTutorial === "undefined") {
     window.isTutorial = false;
 }
 window.unitOrder = [];
@@ -274,41 +274,63 @@ var unitInfoForm = {
                                     }
                                 }
                             },
-                            {view: "checkbox", label: "Save States", id: "saveStates", value: 1, labelWidth: 130, on: {
-                                    onItemClick: function () {
-                                        $$("saveInfo").enable();
-                                    }
-                                }
-                            },
                             {
                                 cols: [
                                     {
-                                        view: "checkbox",
-                                        id: "interruptsAllowed",
-                                        label: "Allow interrupts",
-                                        value: 1,
-                                        labelWidth: 130,
-                                        on: {
-                                            onItemClick: function () {
-                                                $$("saveInfo").enable();
+                                        rows: [
+                                            {view: "checkbox", label: "Save States", id: "saveStates", value: 1, labelWidth: 130, on: {
+                                                    onItemClick: function () {
+                                                        $$("saveInfo").enable();
+                                                    }
+                                                }
+                                            },
+
+                                            {
+                                                view: "checkbox",
+                                                id: "interruptsAllowed",
+                                                label: "Allow interrupts",
+                                                value: 1,
+                                                labelWidth: 130,
+                                                on: {
+                                                    onItemClick: function () {
+                                                        $$("saveInfo").enable();
+                                                    }
+                                                }
+                                            },
+
+                                            {view: "checkbox", label: "Allow navigation", id: "allowNavigation", value: 1, labelWidth: 130, on: {
+                                                    onItemClick: function () {
+                                                        $$("saveInfo").enable();
+                                                    }
+                                                }
                                             }
-                                        }
+                                        ]
+                                    },
+                                    {
+                                        template: genCoverUploaderTemplate(),
                                     },
                                 ]
                             },
-
-                            {view: "checkbox", label: "Allow navigation", id: "allowNavigation", value: 1, labelWidth: 130, on: {
-                                    onItemClick: function () {
-                                        $$("saveInfo").enable();
-                                    }
-                                }
-                            }
                         ]
                     },
                 ]
             },
             {
                 cols: [
+                    {
+                        view: "uploader",
+                        value: "Change cover",
+                        id: "uploadUnitCover",
+                        apiOnly: true,
+                        width: 100,
+                        upload: "ajax/upload/uploadUnitCover.php?" + "sc=" + btoa(schoolName) + "&su=" + btoa(subjectName) + "&l=" + btoa(levelName) + "&u=" + btoa(unitName),
+                        on: {
+                            onFileUpload: function () {
+                                let loc = "schools/" + window.schoolName + "/" + window.subjectName + "/" + window.levelName + "/" + window.unitName;
+                                $("#unitCover").attr("src", loc + "/cover.png");
+                            }
+                        }
+                    },
                     {},
                     {
                         value: "Save info",
@@ -353,6 +375,16 @@ var unitInfoForm = {
     }
 };
 
+function backupCover(e) {
+    $("#unitCover").attr("src", "assets/booknotfound.png");
+}
+function replaceCover() {
+    $("#replaceCover input[type=file]").trigger("click");
+}
+function genCoverUploaderTemplate() {
+    let loc = "schools/" + window.schoolName + "/" + window.subjectName + "/" + window.levelName + "/" + window.unitName;
+    return "<img id=unitCover src='" + loc + "/cover.png' onerror='backupCover()' style='max-height:100%;max-width:100%;display:block;margin:auto;cursor:pointer' onclick='replaceCover()'/>";
+}
 // All available pubbly books you can add to the pull list.
 var library = {
     body: {

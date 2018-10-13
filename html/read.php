@@ -5,12 +5,14 @@ $types = [
     "p" => "parent",
     "c" => "child",
     "u" => "unit",
-    "t" => "tutorial"
+    "t" => "tutorial",
+    "pg" => "programUnit",
 ];
 $type = $types[$_GET['t']];
 require_once("engine/latest.php");
 $engineCode = (isset($_GET['engineCode']) && $_GET['engineCode'] == "new") ? $latestEngineRelease : "old";
 $forceDebug = isset($_GET['fb']) ? $_GET['fb'] : false;
+
 
 
 $postSpecs = [
@@ -56,7 +58,22 @@ if ($type == "book") {
     $postSpecs['schoolName'] = $school;
     $postSpecs['unitName'] = $unit;
     $jsonName = "Main";
+} else if ($type == "programUnit") {
+    $programName = base64_decode($_GET['pn']);
+    if (isset($_GET['ul'])) {
+        $unitLoc = base64_decode($_GET['ul']);
+    } else {
+        $unitLoc = file_get_contents("program/$programName/entry.txt");
+    }
+    $loc = "program/$programName/web/$unitLoc";
+    $xmlName = "MainXML.xml";
+    $jsonName = "Main";
+    $engineCode = $latestEngineRelease;
+    $postSpecs['engineCode'] = $engineCode;
+    $postSpecs['programName'] = $programName;
+    $postSpecs['unitLoc'] = $unitLoc;
 }
+
 require_once("php/site_error/_master.php");
 require_once("php/html_fragments_by_known_types/engine.php");
 $htmlFileName = ($type == "child") ? "$childName.html" : "index.html";
@@ -91,5 +108,4 @@ if ($engineCode == "old") {
         ]);
     }
 }
-
 ?>

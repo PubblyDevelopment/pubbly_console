@@ -546,9 +546,11 @@ function Sequence(pubblyScope) {
                 break;
             case "log":
                 if (typeof console[target.action] == "function") {
-                    console[target.action]("SEQUENCE LOG: " + target.what);
+                    console[target.action]("SEQUENCE LOG: " + target.value);
+                } else if (target.action == "alert") {
+                    window.alert("SEQUENCE ALERT: " + target.value);
                 } else {
-                    console.log("LOG: " + target.what);
+                    console.log("LOG: " + target.value);
                 }
                 break;
             case "send":

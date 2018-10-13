@@ -1,0 +1,117 @@
+<html>
+   <head>
+      <title>Console - NavNodes</title>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!-- Woo jquery -->
+      <script src="includes/jquery-3.3.1.min.js"></script>
+      <link rel="stylesheet" href="includes/fontawesome.css" />
+      <script src="includes/bootstrap.js"></script>
+      <link rel="stylesheet" href="includes/bootstrap.css" />
+
+
+      <link rel="stylesheet" href="NavigationNodesUI/css/main.css">
+      <!-- Navigation node development class -->
+      <!-- (In a production or not-open sourced environment, you would probably minify to a single unreadable copyrighted script. BUT this is all attached to the Xprize project, so keep scripts open like so -->
+      <!-- If you're interested... I used to follow the AirBnB javascript styleguide.
+      
+      https://github.com/airbnb/javascript
+      
+      You're welcome to follow/make your own, but as a jumping off point...
+      Small constructed classes should be InitCapsCamelCase()
+      Big contructed classes should be in their own folder. _main.js ties everything together, one "function" named the name of the class (and folder and everything else).
+      Constructed classes should be Init caps camel case (ExampleClass)
+      Scope constants should be all caps (THIS, NAV_SCOPE)
+
+      Everything else, methods props and vars, are be camel case (this.exampleMethod, exampleHelper, this.exampleProp, exampleVar)
+      
+      If you want to change this up, maybe make methods snake_case instead of camelCase, that's fine. But just be aware... you're coming up with a styleguide even if you aren't fully aware of it.
+      -->
+      <!-- Underscores so it's at the VERY top of the folder -->
+      <script src="NavigationNodesUI/js/_main.js"></script>
+      <!-- Single underscore. It's a super class for what's listed below -->
+      <script src="NavigationNodesUI/js/element.js"></script>
+      <script src="NavigationNodesUI/js/element_Canvas.js"></script>
+      <script src="NavigationNodesUI/js/element_Link.js"></script>
+      <script src="NavigationNodesUI/js/element_Zoom.js"></script>
+      <script src="NavigationNodesUI/js/element_Save.js"></script>
+      <script src="NavigationNodesUI/js/element_Dropdown.js"></script>
+      <script src="NavigationNodesUI/js/canvas-arrow.js"></script>
+      <script src="NavigationNodesUI/js/helper.js"></script>
+
+
+      <script>
+         $(document).ready(function () {
+             let inputs = {
+                 canvas: $("#NavNodesCanvasMain")[0],
+                 saveButton: $("#saveButton")[0],
+                 zoomInButton: $("#zoomInButton")[0],
+                 zoomOutButton: $("#zoomOutButton")[0],
+                 linkButton: $("#linkButton")[0],
+                 linkDropdown: $("#linkSelections")[0]
+             };
+             window.navigationNodes = new NavigationNodes(
+                     "{PROGRAM_NAME}",
+                     {PROGRAM_JSON},
+                     inputs,
+                     {fakeProjectVirgin: false});
+         });
+      </script>
+   </head>
+   <body>
+
+      <!-- For bootstrap, always enclose in a .container (just works that way) -->
+      <div class="container">
+         <!-- bootstrap classname for style="display:block;margin:auto" (center align) -->
+         <!-- spacing -->
+         <!-- bootstrap cols use flex styles. BAD for us, cause the canvas needs to be a set 600px all the time no matter what. So can't use the grid for the canvas. Manual fake grid solution below. -->
+         <div>
+            <div class="d-block m-auto" style="width:910px">
+               <div class="d-inline-block" style="width:50px">
+
+               </div>
+               <div class="d-inline-block" style="width:800px">
+                  <canvas id="NavNodesCanvasMain" 
+                          height=600 width=800></canvas>
+               </div>
+               <div class="d-inline-block" style="width:50px;vertical-align:top">
+                  <button class='button d-block' id="saveButton" type="button" value="SAVE"/><i class="far fa-save"></i></button>
+                  <button class='button d-block' id="zoomInButton" type="button" value="ZOOM IN"/><i class="fas fa-search-plus"></i></button>
+                  <button class='button d-block' id="zoomOutButton" type="button" value="ZOOM OUT"/><i class="fas fa-search-minus"></i></button>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <!-- If no col-number is set, other cols will fill around it -->
+            <div class="col">
+               <!-- d-block m-auto centers image -->
+               <img id="firstBookPhoto" class="d-block m-auto" width=100px
+                    src="NavigationNodesUI/assets/emptybook.png">
+               <!-- text-align:center centers text -->
+               <p id="firstBookSelected" style="text-align:center;">[No book selected]</p>
+            </div>
+            <div class="col-2">
+               <!-- note, this is the poor-boy centershit of css -->
+               <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+                  <select id="linkSelections" style="width:200px">
+                  </select>
+                  <br>
+                  <br>
+                  <div style="text-align: center">
+                     <button class='button' id="linkButton" type="button" value="LINK" style="font-size: 22px">
+                        <i class="fas fa-arrow-alt-circle-right"></i>
+                     </button>
+                  </div>
+               </div>
+            </div>
+            <div class="col">
+               <!-- d-block m-auto centers image -->
+               <img id="secondBookPhoto" class="d-block m-auto" width=100px
+                    src="NavigationNodesUI/assets/emptybook.png">
+               <!-- text-align:center centers text -->
+               <p id="secondBookSelected" style="text-align:center;">[No book selected]</p>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

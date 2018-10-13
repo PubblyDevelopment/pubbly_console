@@ -25,8 +25,12 @@ if ($postSpecs['type'] == "book") {
 
     $bookLoc = "schools/$school/tutorials/$unit";
     $jsonName = "Main";
+} else if ($postSpecs['type'] == "programUnit") {
+    $programName = $postSpecs['programName'];
+    $unitLoc = $postSpecs['unitLoc'];
+    $bookLoc = "program/$programName/web/$unitLoc";
+    $jsonName = "Main";
 }
-
 if ($bookLoc) {
     $engineCode = $postSpecs['engineCode'];
     $bookData = json_decode($data);
