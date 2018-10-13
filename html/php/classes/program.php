@@ -324,7 +324,7 @@ WHERE
             "outdated" => $dbInfo['outdated'],
             "unit_count" => $dbInfo['unit_count'],
             "modified" => $fsInfo['modified'],
-            "status" => ($fsInfo['status']) ? true : false,
+            "status" => $fsInfo['status'],
         ];
     }
 
