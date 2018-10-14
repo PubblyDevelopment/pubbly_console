@@ -38,9 +38,9 @@ let selectProgram = {
                 editable: true,
                 scroll: false,
                 columns: [
-                    {id: "programID", header: "ID", width: 50, editor: false},
-                    {id: "programName", header: "Name", width: 200, editor: "text", },
-                    {id: "unitCount", header: "Unit count", width: 100, editor: false, },
+                    {id: "id", header: "ID", width: 50, editor: false},
+                    {id: "name", header: "Name", width: 200, editor: "text", },
+                    {id: "unit_count", header: "Unit count", width: 100, editor: false, },
                     {id: "status", header: "Status", width: 100, editor: false},
                     {id: "modified", header: "Modified", width: 100, editor: false},
                 ],
@@ -70,10 +70,37 @@ let selectProgram = {
                     },
                     onItemClick: function (id) {
                         let item = this.getItem(id);
-                        window.selectedProgramName = item.programName;
-
-                        $$("viewWeb").enable();
+                        window.selectedProgramName = item.name;
                         $$("editProgram").enable();
+                        item.status = "";
+
+                        for (let exportType in item.export_statuses) {
+                            if ($$("export_" + exportType)) {
+                                let stat = item.export_statuses[exportType];
+                                if (stat == "new") {
+                                    $$("export_" + exportType).show();
+                                    $$("export_" + exportType).disable();
+                                    $$("view_" + exportType).hide();
+                                    $$("view_" + exportType).disable();
+                                    $$("export_" + exportType + "_prerequisite").show();
+                                    $$("export_" + exportType + "_outdated").hide();
+                                } else if (stat == "outdated") {
+                                    $$("export_" + exportType).show();
+                                    $$("export_" + exportType).enable();
+                                    $$("view_" + exportType).hide();
+                                    $$("view_" + exportType).disable();
+                                    $$("export_" + exportType + "_prerequisite").hide();
+                                    $$("export_" + exportType + "_outdated").show();
+                                } else if (stat == "ready") {
+                                    $$("export_" + exportType).hide();
+                                    $$("export_" + exportType).disable();
+                                    $$("view_" + exportType).show();
+                                    $$("view_" + exportType).enable();
+                                    $$("export_" + exportType + "_prerequisite").hide();
+                                    $$("export_" + exportType + "_outdated").hide();
+                                }
+                            }
+                        }
                     },
                 }
             },
@@ -82,32 +109,131 @@ let selectProgram = {
     },
 };
 let actionBar = {
-    cols: [
-        {},
-        {id: "editProgram", view: "button", label: "Edit",
-            disabled: true, on: {
-                onItemClick: function () {
-                    window.location.href = "edit_program.php?programName=" + btoa(window.selectedProgramName);
-                }
-            }
+    rows: [
+        {
+            cols: [
+                {gravity: 0.5},
+                {id: "editProgram", view: "button", label: "Edit program (NavNodeUI)",
+                    disabled: true, on: {
+                        onItemClick: function () {
+                            window.location.href = "edit_program.php?programName=" + btoa(window.selectedProgramName);
+                        }
+                    }
+                },
+                {gravity: 0.5},
+            ]
         },
-        {},
+        {
+            height: 5, template: "<hr>",
+        },
+        {
+            cols: [
+                {
+                    rows: [
+                        {id: "export_server", view: "button", label: "Export Server",
+                            disabled: true, on: {
+                                onItemClick: function () {
+                                    window.location.href = "export_program_server.php?programName=" + btoa(window.selectedProgramName);
+                                }
+                            }
+                        },
+                        {id: "view_server", hidden: true, view: "button", label: "View Server",
+                            disabled: true, on: {
+                                onItemClick: function () {
+                                    window.location.href = "read.php?t=pg&pn=" + btoa(window.selectedProgramName);
+                                }
+                            }
+                        },
+                        {
+                            id: "export_server_prerequisite",
+                            hidden: true,
+                            view: "label",
+                            align: "center",
+                            label: "<i class='fa fa-warning' style='color:red'></i> - Create program first",
+                        },
+                        {
+                            id: "export_server_outdated",
+                            hidden: true,
+                            view: "label",
+                            align: "center",
+                            label: "<i class='fa fa-warning'></i> - Outdated",
+                        },
+                    ]
+                },
 
-        {id: "viewWeb", view: "button", label: "View Web",
-            disabled: true, on: {
-                onItemClick: function () {
-                    window.location.href = "view_program.php?programName=" + btoa(window.selectedProgramName);
-                }
-            }},
-        {},
-        {id: "viewAPK", view: "button", label: "Create APK",
-            disabled: true, on: {
-                onItemClick: function () {
-                    window.location.href = "export_program.php?programName=" + btoa(window.selectedProgramName);
-                }
-            }},
-        {},
+                {gravity: 0.2},
+                {
+                    rows: [
+                        {id: "export_zip", view: "button", label: "Exprt Offline ZIP",
+                            disabled: true, on: {
+                                onItemClick: function () {
+                                    window.location.href = "export_program_offline.php?programName=" + btoa(window.selectedProgramName);
+                                }
+                            }
+                        },
+                        {id: "view_zip", hidden: true, view: "button", label: "Download Offline ZIP",
+                            disabled: true, on: {
+                                onItemClick: function () {
+                                    window.location.href = "program/" + window.selectedProgramName + "/offline.zip";
+                                }
+                            }
+                        },
+                        {
+                            id: "export_zip_prerequisite",
+                            hidden: true,
+                            view: "label",
+                            align: "center",
+                            // label: "<i class='fa fa-warning' style='color:red'></i> - Export/Update server first",
+                            label: "<i class='fa fa-warning' style='color:red'></i> - Feature coming soon",
+                        },
+                        {
+                            id: "export_zip_outdated",
+                            hidden: true,
+                            view: "label",
+                            align: "center",
+                            label: "<i class='fa fa-warning'></i> - Outdated",
+                        },
+                    ]
+                },
+
+                {gravity: 0.2},
+                {
+                    rows: [
+                        {id: "export_apk", view: "button", label: "Export APK",
+                            disabled: true, on: {
+                                onItemClick: function () {
+                                    window.location.href = "export_program_apk.php?programName=" + btoa(window.selectedProgramName);
+                                }
+                            }
+                        },
+                        {id: "view_apk", hidden: true, view: "button", label: "Download APK",
+                            disabled: true, on: {
+                                onItemClick: function () {
+                                    window.location.href = "program/" + window.selectedProgramName + "/apk/development.apk";
+                                }
+                            }
+                        },
+                        {
+                            id: "export_apk_prerequisite",
+                            hidden: true,
+                            view: "label",
+                            align: "center",
+                            // label: "<i class='fa fa-warning' style='color:red'></i> - Export/Update ZIP first",
+                            label: "<i class='fa fa-warning' style='color:red'></i> - Feature coming soon",
+                        },
+                        {
+                            id: "export_apk_outdated",
+                            hidden: true,
+                            view: "label",
+                            align: "center",
+                            label: "<i class='fa fa-warning'></i> - Outdated",
+                        },
+                    ]
+                },
+            ]
+        }
     ]
+
 }
 $(document).ready(function () {
     webix.ui({

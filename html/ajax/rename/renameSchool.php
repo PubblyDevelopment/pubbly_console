@@ -14,6 +14,9 @@ if (!$oldName && !$newName) {
     $sqlObj->bind_param('ss', $newName, $oldName);
     $sqlObj->execute();
     rename("../schools/$oldName", "../schools/$newName");
+    if (is_dir("../program/$oldName")) {
+        rename("../program/$oldName", "../program/$newName");
+    }
 
     /*
       include("../php/saveXML.php");

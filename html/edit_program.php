@@ -7,7 +7,7 @@ if (loginCheck() === true && isset($programName)) {
     require("php/classes/program.php");
     require("php/classes/html_fragment.php");
     $program = new Program($programName);
-    if ($program->info['outdated']) {
+    if ($program->info['export_statuses']['database'] == "outdated") {
         $program->indirectUpdateProgram();
     }
     $frag = new Html_fragment("html/edit_program.html", [

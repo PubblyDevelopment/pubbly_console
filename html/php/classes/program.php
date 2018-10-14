@@ -80,7 +80,7 @@ class Program {
                         }
                     } else {
                         echo "Empty NavNode connection.<br>";
-                        echo " -- Unit: ".$unit['name'] . "<br>";
+                        echo " -- Unit: " . $unit['name'] . "<br>";
                         echo " -- Link: $linkName<br>";
                         echo " -- Page: $page<br>";
                         echo "<br><br><br>";
@@ -90,7 +90,13 @@ class Program {
             }
         }
         reset($possibleEntryPoints);
-        $entryPoint = $possibleEntryPoints[key($possibleEntryPoints)];
+
+        $entryPoint = isset($possibleEntryPoints[key($possibleEntryPoints)]) ?
+                $possibleEntryPoints[key($possibleEntryPoints)] :
+                false;
+        if (!$entryPoint) {
+            echo "Error: Cannot determine program entry point<br>";
+        }
         file_put_contents("program/$programName/entry.txt", $entryPoint);
         return $entryPoint;
     }
@@ -183,7 +189,7 @@ LEFT JOIN subjects sub ON
 LEFT JOIN levels lvl ON
     unt.levelID = lvl.ID
 WHERE
-    sch.name = ?", ["s", $this->programName]);
+    sch.name = ?", ["s", $this->info['name']]);
         return $units;
     }
 
@@ -255,9 +261,10 @@ WHERE
 // unit dependencies have changed indirectly (units restiched, assets re-swapped, new units added to program).
         $jsonWithLocs = $this->indirectUpdateProgram_mergeOldJson();
         $jsonWithLinks = $this->indirectUpdateProgram_addLinksFromServer($jsonWithLocs);
-        $dataLoc = "program/" . $programName = $this->info['name'] . "/data.json";
+        $dataLoc = "program/" . $this->info['name'] . "/data.json";
         file_put_contents($dataLoc, json_encode($jsonWithLinks));
         $this->json = json_encode($jsonWithLinks);
+        $this->indirectUpdateProgram_removeOutdatedFromDB();
     }
 
     private function indirectUpdateProgram_mergeOldJson() {
@@ -313,11 +320,30 @@ WHERE
         return $json;
     }
 
+    private function indirectUpdateProgram_removeOutdatedFromDB() {
+        return $this->sql->execSingle("UPDATE schools SET outdated = 0 WHERE name = ?", ["s", $this->programName]);
+    }
+
     /* ---------------------------------------------------------------------- */
 
     private function getProgramInfo() {
         $dbInfo = $this->getProgramInfo_db();
         $fsInfo = $this->getProgramInfo_fs();
+        $exportStatuses = $this->getProgramInfo_exportStatus($dbInfo['program_name']);
+
+        $exportStatuses['database'] = ($dbInfo['outdated']) ? "outdated" : "ready";
+        // Zip dependent on server, apk dependent on ZIP
+        if ($exportStatuses['database'] !== "ready") {
+            $// exportStatuses['server'] = "new";
+            $exportStatuses['zip'] = "new";
+            $exportStatuses['apk'] = "new";
+        } else if ($exportStatuses['server'] !== "ready") {
+            $exportStatuses['zip'] = "new";
+            $exportStatuses['apk'] = "new";
+        } else if ($exportStatuses['zip'] !== "ready") {
+            $exportStatuses['apk'] = "new";
+        }
+
         $this->info = [
             "id" => $dbInfo['program_id'],
             "name" => $dbInfo['program_name'],
@@ -325,6 +351,7 @@ WHERE
             "unit_count" => $dbInfo['unit_count'],
             "modified" => $fsInfo['modified'],
             "status" => $fsInfo['status'],
+            "export_statuses" => $exportStatuses
         ];
     }
 
@@ -364,6 +391,35 @@ WHERE
         return $fsInfo;
     }
 
+    private function getProgramInfo_exportStatus($programName) {
+        // Possible statuses: ["new", "outdated", "ready"]
+        $statuses = [
+            "server" => "new",
+            "zip" => "new",
+            "apk" => "new",
+        ];
+
+        $jsonLoc = "program/$programName/data.json";
+        $entryPointLoc = "program/$programName/entry.txt";
+        $offlineZipLoc = "program/$programName/offline.zip";
+        $apkLoc = "program/$programName/apk/development.apk";
+
+        if (file_exists($jsonLoc)) {
+            // $timeCheck = filemtime($jsonLoc) < filemtime($entryPointLoc);
+            if (
+            // JSON has been exported (buildWeb)
+                    file_exists($entryPointLoc)
+                    // entry point has been changed more recently than data.json
+                    && filemtime($jsonLoc) < filemtime($entryPointLoc)) {
+                $statuses['server'] = "ready";
+            } else {
+                $statuses['server'] = "outdated";
+            }
+        }
+
+        return $statuses;
+    }
+
     /* ---------------------------------------------------------------------- */
 
     function __construct($programName) {
@@ -372,18 +428,23 @@ WHERE
         require_once("php/saveXML.php");
         require_once("engine/latest.php");
         $this->sql = new Mysql_query();
+
         $this->programName = $programName;
 
-        $this->getProgramInfo();
-// $this->getUnits();
-// $this->info['status'] = "new";
-// $this->info['outdated'] = true;
+        $this->getProgramInfo($programName);
+        if ($this->info['name']) {
+            // $this->getUnits();
+            // $this->info['status'] = "new";
+            // $this->info['outdated'] = true;
 
-        if ($this->info['status'] === "new") {
-            $this->createSkeleton();
+            if ($this->info['status'] === "new") {
+                $this->createSkeleton();
+            }
+
+            $this->json = file_get_contents("program/" . $this->info['name'] . "/data.json");
+        } else {
+            echo "Error: new Program(), but name passed ($programName) not found on server of FS";
         }
-
-        $this->json = file_get_contents("program/" . $this->info['name'] . "/data.json");
     }
 
 }

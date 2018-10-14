@@ -6,7 +6,7 @@ include('../includes/loginCheck.php');
 if (loginCheck() === true && isset($programName)) {
     require("php/classes/program.php");
     $program = new Program($programName);
-    if ($program->info['outdated'] === true) {
+    if ($program->info['export_statuses']['database'] == "outdated") {
         $program->indirectUpdateProgram();
     }
     $program->buildWeb();

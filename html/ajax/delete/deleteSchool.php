@@ -48,7 +48,7 @@ if (loginCheck()) {
 
 
             include('../php/rrmdir.php');
-            if (rrmdir("schools/$schoolName")) {
+            if (rrmdir("schools/$schoolName") && rrmdir("program/$schoolName")) {
                 echo "done";
             };
         }   else    {

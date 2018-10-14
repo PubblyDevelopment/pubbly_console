@@ -242,11 +242,11 @@ class NavigationNodes {
     changeBookPhoto() {
         let empty = "NavigationNodesUI/assets/emptybook.png";
         let firstCoverSrc = (this.curBook && this.curBook.cover) ?
-                "NavigationNodesUI/" + this.curBook.cover : empty;
+                this.curBook.cover : empty;
         document.getElementById("firstBookPhoto").src = firstCoverSrc;
 
         let secondCoverSrc = (this.secondBook && this.secondBook.cover) ?
-                "NavigationNodesUI/" + this.secondBook.cover : empty;
+                this.secondBook.cover : empty;
         document.getElementById("secondBookPhoto").src = secondCoverSrc;
 
 
