@@ -260,11 +260,7 @@ class Pubbly {
         let obj = false;
         let pageXML = this.data.pages[page];
         if (pageXML) {
-            let objKey = pageXML.objKey[name];
-            // falsywalsy
-            if (typeof objKey === "number") {
-                obj = pageXML.objs[objKey];
-            }
+            obj = pageXML.objs.find(o => o.name === name);
         }
         return obj;
     }
@@ -341,10 +337,7 @@ class Pubbly {
         let link = false;
         let pageXML = this.data.pages[page];
         if (pageXML) {
-            let linkKey = pageXML.linkKeys[name];
-            if (typeof linkKey == "number") {
-                link = pageXML.links[linkKey];
-            }
+            link = pageXML.links.find(l => l.name === name)
         }
         return link;
     }
