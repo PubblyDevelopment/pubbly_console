@@ -192,7 +192,7 @@ function unpackParentZip($seriesName) {
         if (is_dir('oldImages/gifFrames')) {
             $oldImages = scandir('oldImages/gifFrames');
             foreach ($oldImages as &$oldImage) {
-                if (!file_exists('images/gifFrames/$oldImage') && $oldImage != "." && $oldImage != "..") {
+                if (!file_exists("images/gifFrames/$oldImage") && $oldImage != "." && $oldImage != "..") {
                     rename("oldImages/gifFrames/$oldImage", "images/gifFrames/$oldImage");
                 }
             }
@@ -203,7 +203,7 @@ function unpackParentZip($seriesName) {
         if (is_dir('oldImages')) {
             $oldImages = scandir('oldImages');
             foreach ($oldImages as &$oldImage) {
-                if (!file_exists('images/$oldImage') && $oldImage != "." && $oldImage != ".." && $oldImage != "gifFrames") {
+                if (!file_exists("images/$oldImage") && $oldImage != "." && $oldImage != ".." && $oldImage != "gifFrames") {
                     rename("oldImages/$oldImage", "images/$oldImage");
                 }
             }
@@ -223,7 +223,7 @@ function unpackParentZip($seriesName) {
         if (is_dir('oldAudio')) {
             $oldAudios = scandir('oldAudio');
             foreach ($oldAudios as &$oldAudio) {
-                if (!file_exists('audio/$oldAudio') && $oldAudio != "." && $oldAudio != "..") {
+                if (!file_exists("audio/$oldAudio") && $oldAudio != "." && $oldAudio != "..") {
                     rename("oldAudio/$oldAudio", "audio/$oldAudio");
                 }
             }

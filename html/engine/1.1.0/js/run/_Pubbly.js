@@ -252,8 +252,6 @@ class Pubbly {
         }
     }
     findObj(name, page) {
-        // TODO: Combine with findLink into findGeneric, swap out "obj" and "link" for a let
-        // this cause screw scoped calls
         if (typeof page === "undefined") {
             page = this.curPage;
         }
