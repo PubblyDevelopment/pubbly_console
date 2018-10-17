@@ -461,7 +461,6 @@ class Pubbly {
             searchStart.map((o, i) => o.layer = i);
 
             this.drawPage_dispatch();
-            console.log(searchStart);
             return toSend;
         } else {
             // Couldn't find what to send or where it was.

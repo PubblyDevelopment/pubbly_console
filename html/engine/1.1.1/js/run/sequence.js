@@ -225,7 +225,7 @@ let Sq_Players_Child = {
         const _This = this;
 
         // Props
-        this.obj = this._Pubbly.find(this.target.chosenDestination, "object");
+        this.objs = this._Pubbly.findAll(this.target.chosenDestination, "object");
         this.flashInt = 100; // Default
         this.states = [];
         // Props requiring loops to set
@@ -236,7 +236,7 @@ let Sq_Players_Child = {
 
         // type flashon -- only type so far
         let last = false;
-        if (this.obj.vis) {
+        if (this.objs[0].vis) {
             this.states.push(false);
         }
         for (let i = 0; i < (this.target.num * 2) - 1; i++) {
@@ -247,7 +247,10 @@ let Sq_Players_Child = {
         // Extension methods
         this.play_child = function () {
             this.flashInt = window.setInterval(function () {
-                _This.obj.vis = _This.states.shift();
+                let newState = _This.states.shift();
+                _This.objs.map(obj => {
+                    obj.vis = newState;
+                });
                 _This._Pubbly.drawPage_dispatch(); // defaults to curPage
                 if (!_This.states.length) {
                     _This.finish();
@@ -468,7 +471,7 @@ function Sequence(pubblyScope) {
         let autoPost = true;
         let autoDraw = false;
         let obj = false;
-        if (this.show || true) {
+        if (this.show) {
             console.log("" + JSON.stringify(target));
         }
 
@@ -527,7 +530,6 @@ function Sequence(pubblyScope) {
                 break;
             case "flash":
                 obj = _Pubbly.find(target.chosenDestination, "object");
-
                 if (obj) {
                     let flash = new Sq_Player(
                             "flash",
@@ -646,15 +648,21 @@ function Sequence(pubblyScope) {
                         things = target.destination.slice();
                     }
                 }
-
-                for (let t = 0; t < things.length; t++) {
-                    let toFind = things[t];
-                    let thing = false;
-                    if (typeof toFind === "object") {
-                        thing = _Pubbly.find(toFind);
+                let foundList = [];
+                // ["ball 1"] but ball 1 has a clone...
+                things.map(thing => {
+                    let things = false;
+                    if (typeof thing === "object") {
+                        things = _Pubbly.findAll(thing);
                     } else {
-                        thing = _Pubbly.find(toFind, target.destinationType);
+                        things = _Pubbly.findAll(thing, target.destinationType);
                     }
+                    if (things) {
+                        foundList = foundList.concat(things);
+                    }
+                });
+                for (let t = 0; t < foundList.length; t++) {
+                    let thing = foundList[t];
                     if (typeof thing[target.attribute] !== "undefined") {
                         // TODO: either a setter that checks types, or a manual type check here.
                         thing[target.attribute] = target.value;
