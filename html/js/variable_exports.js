@@ -448,7 +448,7 @@ getSeries(function (ret) {
         i++;
         let ret = {
             id: "0." + i,
-            open: true,
+            open: false,
             folder: f,
             data: []
         };
