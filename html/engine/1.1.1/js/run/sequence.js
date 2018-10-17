@@ -526,7 +526,7 @@ function Sequence(pubblyScope) {
                 this.players.audios.push(aud);
                 break;
             case "flash":
-                obj = _Pubbly.find(target.chosenDestination, "obj");
+                obj = _Pubbly.find(target.chosenDestination, "object");
 
                 if (obj) {
                     let flash = new Sq_Player(
@@ -636,10 +636,10 @@ function Sequence(pubblyScope) {
                     if (typeof target.destination.pop === "undefined") {
                         if (target.chosenDestination !== target.destination) {
                             // Destination selected at random
-                            things = target.chosenDestination;
+                            things = [target.chosenDestination];
                         } else {
                             // Vanilla single thing destination
-                            things = target.destination;
+                            things = [target.destination];
                         }
                     } else {
                         // Array of destinations

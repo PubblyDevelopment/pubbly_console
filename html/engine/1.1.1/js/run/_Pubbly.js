@@ -440,7 +440,7 @@ class Pubbly {
         let searchStart = false;
         let toSend = this.find(what, type, curPage);
 
-        if (["image", "clone", "gif", "field", "workspace", "obj"].indexOf(type) >= 0) {
+        if (["image", "clone", "gif", "field", "workspace", "object"].indexOf(type) >= 0) {
             searchStart = page.objs;
         } else if (["link"].indexOf(type) >= 0) {
             searchStart = page.links;
