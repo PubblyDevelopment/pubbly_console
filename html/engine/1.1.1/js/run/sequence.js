@@ -560,7 +560,7 @@ function Sequence(pubblyScope) {
                 target.passive = false;
                 let targets = false;
                 let linkLoc = _Pubbly.data;
-                let link = _Pubbly.findLink(target.chosenDestination);
+                let link = _Pubbly.find(target.chosenDestination, "link");
                 if (link && link.triggers[plurals[target.action]]) {
                     if (target.action == "click") {
                         targets = link.triggers[plurals[target.action]][0].targets;
