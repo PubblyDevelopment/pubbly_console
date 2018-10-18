@@ -7,6 +7,7 @@ class DomInteractionCover {
          style='position:absolute;height:${height}px;width:${width}px;background-color:white'> 
          <img src="${this.picked.relPath}"
          class='transformCenter cursor-pointer'
+         style='height: 100%' 
          loop=infinite />
          </div>`);
         this.cb = cb;
