@@ -579,7 +579,7 @@ class Pubbly {
          */
         this.ready = false;
         cbs = assignDefaultCallbacks(cbs);
-        if (typeof newPage == "undefined") {
+        if (typeof newPage === "undefined") {
             console.error("Cannot set curPage: Value passed undefined");
         } else if (newPage < 0 || newPage >= this.data.pages.length) {
             console.error("Cannot set curPage: Value passed should be between 0 and " + this.data.pages.length - 1);
