@@ -411,8 +411,12 @@ function Turns(pubblyScope, display = "single") {
         // What we've done is pass a callback to the pubbly.updatePage function. Once it's done drawing the pages (after the 10th of a second) we can swap style sheets
 
         // Custom style attrs removed in puubbly.changeCurPage_dispatch
-        _Pubbly.changeCurPage_dispatch(newPage);
-    }
+        _Pubbly.changeCurPage_dispatch(newPage, {
+            done: function () {
+                _Pubbly.checkPageFor("openPages");
+            }
+        });
+    };
 
     this.init = function () {
     }

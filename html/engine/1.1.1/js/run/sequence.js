@@ -1001,8 +1001,4 @@ function Sequence(pubblyScope) {
 
     };
     this.init();
-
-    this.test = function () {
-        _Pubbly.reset(_Pubbly.data.pages[_Pubbly.curPage].links);
-    }
 }

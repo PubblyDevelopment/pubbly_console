@@ -166,9 +166,7 @@ class Pubbly {
         });
         return found;
     }
-    checkOpenPageLinks() {
-        this.checkPageFor("openPages");
-    }
+
     checkPageFor(what) {
         let links = this.data.pages[this.curPage].links;
         let points = this.data.pages[this.curPage].points;
@@ -945,7 +943,6 @@ class Pubbly {
         this.drawPage_dispatch = this.drawPage_dispatch.bind(this);
         this.fatalError = this.fatalError.bind(this);
         this.checkPageFor = this.checkPageFor.bind(this);
-        this.checkOpenPageLinks = this.checkOpenPageLinks.bind(this);
         this.loadBufferLead = this.loadBufferLead.bind(this);
         this.find = this.find.bind(this);
         this.findAll = this.findAll.bind(this);
@@ -1055,9 +1052,9 @@ class Pubbly {
                 if (this.data.info.navigation) {
                     this.navigationUI.enable();
                 }
-                this.checkOpenPageLinks();
+                this.checkPageFor("openPages");
             }.bind(this),
-            fail: this.fatalError,
+            fail: this.fatalError
         });
     }
 }

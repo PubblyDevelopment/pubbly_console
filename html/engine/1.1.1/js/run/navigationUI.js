@@ -132,7 +132,6 @@ function NavigationUI(buildSpecs, container) {
             }
 
             this.update(this.specs.startPage);
-            console.log("here");
             this.disable();
 
         }
