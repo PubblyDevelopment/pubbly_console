@@ -11,7 +11,7 @@ $ret = [];
 include('../../includes/dbConnect.php');
 $con = new DBConnect();
 $sql = $con->mysqli;
-$stmt = $sql->prepare("SELECT ID, `name`, `folder` FROM series ORDER BY `priority`, `name`");
+$stmt = $sql->prepare("SELECT ID, `name`, `folder` FROM series ORDER BY `priority` ASC, `ID` DESC");
 $stmt->execute();
 if ($result = $stmt->get_result()) {
     /* fetch associative array */
