@@ -13,7 +13,7 @@ include_once('../../includes/dbConnect.php');
 $con = new dbConnect();
 if ($con) {
     $sql = $con->mysqli;
-    $stmt = $sql->prepare("SELECT ID, `name`, folder FROM series WHERE deleted=0 ORDER BY `priority`, `name`");
+    $stmt = $sql->prepare("SELECT ID, `name`, folder FROM series WHERE deleted=0 ORDER BY `priority` ASC, `ID` DESC");
     $stmt->execute();
     if ($result = $stmt->get_result()) {
         /* fetch associative array */
