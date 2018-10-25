@@ -95,7 +95,12 @@ if ($engineCode == "old") {
     $jsonLoc = "$loc/$jsonName.$engineCode.json";
     $jsonUpdated = (file_exists("$jsonLoc")) ? filemtime("$jsonLoc") : 0;
     $xmlUpdated = (file_exists("$loc/$xmlName")) ? filemtime("$loc/$xmlName") : 0;
-    if ($jsonUpdated <= $xmlUpdated || $forceDebug) {
+    $hotFixTime = file_exists("engine/$engineCode/hotFixCount.txt") ?
+            filemtime("engine/$engineCode/hotFixCount.txt") : 0;
+    if ($jsonUpdated <= $xmlUpdated // JSON outdated from XML
+            || $jsonUpdated <= $hotFixTime // JSON outdated from build process
+            || $forceDebug // Lazy JASON
+    ) {
         new Engine("$engineCode-build", [
             ["BUILD_POST_SPECS", json_encode($postSpecs)],
             ["BUILD_POST_LOC", "build.php"],

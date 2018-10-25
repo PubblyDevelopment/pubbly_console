@@ -237,11 +237,12 @@ function messyTargetToPretty(mess, curPage) {
             case "point":
                 if (lowerType == "points") {
                     if (reservedWords.points.indexOf(mess.destination) >= 0) {
-                        console.error("warn", "XML", "Error interpreting point target. Cannot name custom points '" + mess.destination + "'. Complete list of reserved point names: " + reservedWords.points.join(",").replace(/,+$/, ""));
+                        console.error("Error interpreting point target. Cannot name custom points '" + mess.destination + "'. Complete list of reserved point names: " + reservedWords.points.join(",").replace(/,+$/, ""));
                         ret = false;
                     } else {
-                        // No support for ONCE or EVERY TRIGGER
-                        // Also, not in XML!
+                        let triggerOnlyOnce = lowerAction.split("once").length > 1;
+                        console.log(lowerAction);
+                        console.log(triggerOnlyOnce);
                         ret = {
                             blocking: false,
                             hold: false,
@@ -253,7 +254,14 @@ function messyTargetToPretty(mess, curPage) {
 
                             // We have a [point] target.
                             // It will [+] the [goals]'s ["value"] with [1]
-
+                        };
+                        if (triggerOnlyOnce) {
+                            ret.runLimit = 1;
+                            ret.run = 0;
+                            ret.init = {
+                                runLimit: 1,
+                                run: 0
+                            };
                         }
                     }
                 }
@@ -326,7 +334,7 @@ function messyTargetToPretty(mess, curPage) {
                         let attrs = lowerDestination.split(",");
                         let tool = attrs.shift();
                         let color = attrs.splice(0, 4);
-                        color = color.map(c => c*1);
+                        color = color.map(c => c * 1);
                         let defaultWidths = {"pencil": 5, "chalk": 10, "eraser": 40};
                         let width = attrs[3] || defaultWidths[tool];
                         ret = {

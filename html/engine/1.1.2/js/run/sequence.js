@@ -474,8 +474,16 @@ function Sequence(pubblyScope) {
         if (this.show) {
             console.log("" + JSON.stringify(target));
         }
+        let targType = target.type;
+        if (typeof target.run !== "undefined") {
+            if (target.run >= target.runLimit) {
+                targType = "skip";
+            } else {
+                target.run++;
+            }
+        }
 
-        switch (target.type) {
+        switch (targType) {
             case "drawing tool":
                 let tool = {
                     type: target.chosenDestination,
@@ -762,7 +770,7 @@ function Sequence(pubblyScope) {
                         } else if (typeof level[prop] === "object" &&
                                 // null is type object... Shouldn't have any... but failsafe
                                 level[prop] !== null) {
-                            if (level.constructor.name === "Object") {
+                            if (level.constructor.name === "Object" || level.constructor.name === "Array") {
                                 /* Means it was generated programatically
                                  * (let thing = {};
                                  * (thing.stuff = "string";)
@@ -770,6 +778,7 @@ function Sequence(pubblyScope) {
                                  * (new Audio(); new Workspace())
                                  */
                                 reset(level[prop]);
+
                             }
                         }
                     }
