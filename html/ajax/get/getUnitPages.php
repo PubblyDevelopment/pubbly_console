@@ -44,6 +44,7 @@ for ($p = 0; $p < count($ret); $p++) {
 	$pageList[$p]['type'] = "Book";
 	$bookName = $ret[$p]['refBook'];
 	$pageList[$p]['name'] = $bookName;
+        $pageList[$p]['from'] = "Static export";
 	$sqlObj = $sql->prepare("SELECT ID from books where `name` = ?");
 	$sqlObj->bind_param('s', $bookName);
 	$sqlObj->execute();
@@ -57,6 +58,7 @@ for ($p = 0; $p < count($ret); $p++) {
 	$pageList[$p]['name'] = $childName;
 	$seriesName = $ret[$p]['refSeries'];
 	$pageList[$p]['seriesName'] = $seriesName;
+        $pageList[$p]['from'] = "Parent '$seriesName'";
 	$loc = "../series/$seriesName/$childName.xml";
     }
     $pageInfo = getPageInfoByLoc($loc);
@@ -72,4 +74,3 @@ if (!$errors) {
     echo json_encode($pageList);
 }
 ?>
-

@@ -663,10 +663,12 @@ var unitPageList = {
             {
                 view: "list",
                 id: "unitPageOrder",
-                align: "center", // Doesn't work! Damn!
                 template: "#name# P: #page# (#height#x#width#)",
                 drag: true,
                 select: true,
+                tooltip: {
+                    template: "<span>#seriesName#</span>"
+                },
                 data: [
                     /*
                      {name: "Apples", page: 1, seriesName: "Fruit", type: "Child", height: 460, width:335.5},
@@ -909,6 +911,7 @@ function getUnitPages() {
                     window.unitHeight = Math.round(pageList[0].height)
                     for (var i = 0; i < pageList.length; i++) {
                         $$("unitPageOrder").add(pageList[i]);
+                        console.log(pageList[i]);
                     }
                     $$("uniPageListLabel").setValue("Unit: " + unitName + " (" + pageList[0].height + "x" + pageList[0].width + ")");
                 } else {

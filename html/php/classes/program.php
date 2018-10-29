@@ -276,8 +276,10 @@ WHERE
 // X/Y locations for each cover
             foreach ($oldJSON as $name => $oldUnit) {
                 if (isset($newJSON[$name])) {
-                    $newJSON[$name]["x"] = $oldUnit["x"];
-                    $newJSON[$name]["y"] = $oldUnit["y"];
+                    if (isset($oldUnit["x"])) {
+                        $newJSON[$name]["x"] = $oldUnit["x"];
+                        $newJSON[$name]["y"] = $oldUnit["y"];
+                    }
                     $coverSrc = ($newJSON[$name]["cover"] === false) ?
                             "NavigationNodesUI/assets/booknotfound.png" :
                             $newJSON[$name]["cover"];
@@ -334,7 +336,7 @@ WHERE
         $exportStatuses['database'] = ($dbInfo['outdated']) ? "outdated" : "ready";
         // Zip dependent on server, apk dependent on ZIP
         if ($exportStatuses['database'] !== "ready") {
-            $// exportStatuses['server'] = "new";
+            // exportStatuses['server'] = "new";
             $exportStatuses['zip'] = "new";
             $exportStatuses['apk'] = "new";
         } else if ($exportStatuses['server'] !== "ready") {
