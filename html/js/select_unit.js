@@ -1262,7 +1262,7 @@ function loadSchools() {
             }
     );
 }
-loadSchools();
+
 function loadSubjects(schoolName) {
     $.ajax("ajax/get/getSubjects.php?school=" + schoolName).done(
             function (ret) {
@@ -1444,6 +1444,7 @@ function tutIconError(elem) {
 }
 
 $(document).ready(function () {
+    loadSchools();
     webix.ui({
         view: "uploader",
         id: "uploadTutorialIcon",
