@@ -763,7 +763,7 @@ class Pubbly {
             curWorkspace.workspace.elem.width = curWorkspace.workspace.elem.width * 1;
         }
         let rect = [curWorkspace.loc[1], curWorkspace.loc[0], curWorkspace.width, curWorkspace.height];
-        if (curWorkspace.bgTexture) {
+        if (curWorkspace.bgTexture && curWorkspace.vis) {
             this.draw_texture(ctx, curWorkspace.bgTexture, rect);
         }
         this.draw_general(ctx, curWorkspace, curPage);
