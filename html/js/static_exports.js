@@ -314,40 +314,19 @@ $(document).ready(function () {
                                             $$("bookList").refresh();
                                             return false;
                                         } else {
-                                            var unitName = this.getItem(id).name;
+                                            var unitName = this.getItem(id).value;
                                             window.selectedBook = unitName;
-                                            window.selectedBookID = this.getItem(id).ID;
+                                            window.selectedBookID = this.getItem(id).id;
                                             $$("deleteBook").enable();
                                             $$("viewBookOld").enable();
                                             $$("viewBookNew").enable();
                                             $$("reuploadBook").enable();
                                             $$('reuploadBook').data.upload = "ajax/upload/uploadBook.php?bookName=" + window.selectedBook;
                                             $$("downloadBook").enable();
+                                            $$("renameBook").enable();
                                         }
 
                                     },
-                                    onAfterEditStop: function (state, editor) {
-                                        var THIS = this;
-                                        if (state.value != state.old) {
-                                            // editor.column is name or longname
-                                            $.ajax("ajax/rename/renameBook.php?" + editor.column + "=" + state.value + "&id=" + window.selectedBookID + "&oldname=" + state.old).done(
-                                                    function (ret) {
-                                                        if (ret == "done") {
-                                                            webix.message("Changes to " + editor.column + " saved.");
-                                                        } else if (ret == "taken") {
-                                                            var sel = THIS.getSelectedId();
-                                                            var row = THIS.getItem(sel.row);
-                                                            row.name = state.old;
-                                                            THIS.updateItem(sel.row, row);
-                                                            THIS.refresh();
-                                                            webix.message("Name already taken! Rename to something else.");
-                                                        } else {
-                                                            document.body.innerHTML = ret;
-                                                        }
-                                                    }
-                                            );
-                                        }
-                                    }
                                 }
                             },
                             {
@@ -437,7 +416,6 @@ $(document).ready(function () {
                                             }
                                         },
                                     },
-                                    {},
                                     {
                                         view: "uploader",
                                         id: "reuploadBook",
@@ -454,6 +432,29 @@ $(document).ready(function () {
                                         },
                                     },
                                     {},
+                                    {
+                                        value: "Rename", id: "renameBook", view: "button", disabled: true, on: {onItemClick: function () {
+                                                let newName = window.prompt("New name please: ");
+                                                $.ajax("ajax/rename/renameBook.php?name=" + newName + "&id=" + window.selectedBookID + "&oldname=" + window.selectedBook).done(
+                                                        function (ret) {
+                                                            if (ret == "done") {
+                                                                webix.message("Done.");
+                                                                window.location.href = window.location.href
+                                                            } else if (ret == "taken") {
+                                                                var sel = THIS.getSelectedId();
+                                                                var row = THIS.getItem(sel.row);
+                                                                row.name = state.old;
+                                                                THIS.updateItem(sel.row, row);
+                                                                THIS.refresh();
+                                                                webix.message("Name already taken! Rename to something else.");
+                                                            } else {
+                                                                document.body.innerHTML = ret;
+                                                            }
+                                                        }
+                                                );
+                                            }
+                                        },
+                                    },
                                     {
                                         value: "Delete", id: "deleteBook", view: "button", css: "delete", disabled: true, on: {
                                             onItemClick: function () {
