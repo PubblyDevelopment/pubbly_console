@@ -219,9 +219,9 @@ $(document).ready(function () {
                         return (a.folder === "") ? -1 : 1;
                     } else {
                         if (a.folder < b.folder) {
-                            return 1;
-                        } else {
                             return -1;
+                        } else {
+                            return 1;
                         }
                     }
                 });
