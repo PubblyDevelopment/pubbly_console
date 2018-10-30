@@ -360,7 +360,6 @@ function Events(pubblyScope) { // Scopped contstants are _InitCapsCamelCase
         drag: function (e) {
             let loc = this.getLoc(e, this.offsets);
             this.m.lastMouseLocs.unshift(loc);
-
             if (this.m.action == "dragging" || this.m.action == "cloning") {
                 // This block for either a point (tell user he can drop) or a not-pointer (can't drop)
                 let caught = _Pubbly.checkLocFor(loc, ["dragStops"], this.m.dragging.what.name);
@@ -398,19 +397,19 @@ function Events(pubblyScope) { // Scopped contstants are _InitCapsCamelCase
                 this.m.lining.end = loc;
                 _Pubbly.drawPage_dispatch();
             } else if (["draw-chalk", "draw-eraser", "draw-marker", "draw-pen", "draw-pencil"].indexOf(this.m.action) > -1) {
-                let caught = _Pubbly.checkLocFor(loc, ["lineStarts", "dragStarts", "drawStarts", "editableFields"])[0] || false;
-                if (caught && caught.link) {
+                let caught = _Pubbly.checkLocFor(loc, ["drawStarts", "clicks"])[0] || false;
+                if (caught
+                        && caught.link
+                        && ["draw-chalk", "draw-eraser", "draw-marker", "draw-pen", "draw-pencil"].indexOf(caught.action) > -1) {
                     let curObj = caught.link;
                     let ctx = curObj.workspace.ctx;
                     // don't ask
                     let relLoc = [loc[0] - curObj.loc[1], loc[1] - curObj.loc[0]];
                     _Pubbly.drawingTools.draw(ctx, relLoc);
                     _Pubbly.drawPage_dispatch();
-                    console.log(relLoc);
+                }   else {
+                    _Pubbly.drawingTools.lastLoc = false;
                 }
-                // workspace.draw(tool, relLoc);
-                // Takes image from workspace can and redraws on display can.
-                _Pubbly.drawPage_dispatch();
             } else if (this.m.lastMouseLocs.length > this.dragEventsBeforeTurnDetermination) {
                 this.m.lastMouseLocs.pop();
                 if (!this.m.turning) {
@@ -453,7 +452,7 @@ function Events(pubblyScope) { // Scopped contstants are _InitCapsCamelCase
                 this.f.clear();
             }
 
-            let caught = _Pubbly.checkLocFor(loc, ["lineStarts", "dragStarts", "drawStarts", "editableFields"])[0] || false;
+            let caught = _Pubbly.checkLocFor(loc, ["lineStarts", "dragStarts", "drawStarts", "editableFields", "clicks"])[0] || false;
             // Click, drag or undefined (works formeee)
             let cursorLibrary = "default";
             let cursorAction = caught.action; // for the most part

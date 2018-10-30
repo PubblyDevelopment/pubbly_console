@@ -79,14 +79,17 @@ class Pubbly {
             what = [what];
         }
         let found = [];
+
+
+
         for (let l = 0; l < this.data.pages[this.curPage].links.length; l++) {
             let link = this.data.pages[this.curPage].links[l];
             if (link.enabled && inside(loc, link.poly)) {
                 for (let w = 0; w < what.length; w++) {
                     let linkType = what[w];
-                    if (linkType == "clicks"
-                            || linkType == "dragStops"
-                            || linkType == "lineStops") {
+                    if (linkType === "clicks"
+                            || linkType === "dragStops"
+                            || linkType === "lineStops") {
                         for (let i = 0; i < link.triggers[linkType].length; i++) {
                             let accepts = link.triggers[linkType][i].condition;
                             if (accepts == condition
@@ -100,7 +103,7 @@ class Pubbly {
                                 });
                             }
                         }
-                    } else if (linkType == "lineStarts") {
+                    } else if (linkType === "lineStarts") {
                         if (link.drawing == "multiple" || link.drawing == "single") {
                             found.push({
                                 link: link,
@@ -109,7 +112,7 @@ class Pubbly {
                                 loc: null,
                             });
                         }
-                    } else if (linkType == "dragStarts") {
+                    } else if (linkType === "dragStarts") {
                         // NOT HERE< moved to checkDrag || checkDraw || checkEdit conditional below
                     }
                 }
@@ -122,7 +125,7 @@ class Pubbly {
             for (let o = 0; o < this.data.pages[this.curPage].objs.length; o++) {
                 let obj = this.data.pages[this.curPage].objs[o];
                 if (checkDraw
-                        && obj.type == "workspace"
+                        && obj.type === "workspace"
                         && obj.vis
                         && inside(loc, obj.rect)) {
                     found.push({
@@ -133,8 +136,8 @@ class Pubbly {
                 }
 
                 if (
-                        (checkDrag && (obj.mobility == "clone" || obj.mobility == "drag")) ||
-                        (checkEdit && obj.type == "field" && obj.editable)) {
+                        (checkDrag && (obj.mobility === "clone" || obj.mobility === "drag")) ||
+                        (checkEdit && obj.type === "field" && obj.editable)) {
                     // Why not account for offsets? Because we don't want kids "catching" a dropped object while it animates back to position
                     let objTop = (obj.droppedLoc) ? obj.droppedLoc[0] : obj.loc[0];
                     let objLeft = (obj.droppedLoc) ? obj.droppedLoc[1] : obj.loc[1];
@@ -162,8 +165,14 @@ class Pubbly {
                 }
             }
         }
+        
         found.sort(function (a, b) {
-            return b.link.layer - a.link.layer;
+            // Move workspaces behind all links (so that you can safe zone shit)
+            if (a.link.type === "workspace" || b.link.type === "workspace") {
+                return (a.link.type === "workspace") ? 1 : -1;
+            } else {
+                return b.link.layer - a.link.layer;
+            }
         });
         return found;
     }

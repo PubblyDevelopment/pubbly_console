@@ -1,6 +1,7 @@
 class DrawingTools {
     drawStop() {
         this.lastLoc = false;
+        this.ctxs.map(ctx => ctx.hasBeenInitialized = false);
     }
     draw(ctx, loc) {
         if (typeof this["draw_" + this.tool.type] === "function") {
@@ -23,9 +24,13 @@ class DrawingTools {
         ctx.globalAlpha = this.tool.color[3] / 100;
         ctx.lineWidth = this.tool.width;
         ctx.strokeStyle = 'rgba(' + this.tool.color.slice(0, 3).join(",") + ',' + (0.4 + Math.random() * 0.2) + ')';
-        this.tool.hasBeenInitialized = true;
+        this.ctxs.push(ctx);
+        ctx.hasBeenInitialized = true;
     }
     draw_chalk(ctx, loc) {
+        if (!ctx.hasBeenInitialized) {
+            this.init_chalk(ctx, loc);
+        }
         let width = this.tool.width;
         let brushDiameter = width;
         let last = this.lastLoc;
@@ -52,10 +57,11 @@ class DrawingTools {
         ctx.lineWidth = this.tool.width;
         ctx.globalAlpha = this.tool.color[3] / 100;
         ctx.strokeStyle = "rgba(" + this.tool.color.join(",") + ")";
-        this.tool.hasBeenInitialized = true;
+        this.ctxs.push(ctx);
+        ctx.hasBeenInitialized = true;
     }
     draw_pencil(ctx, loc) {
-        if (!this.tool.hasBeenInitialized) {
+        if (!ctx.hasBeenInitialized) {
             this.init_pencil(ctx, loc);
         }
         ctx.beginPath();
@@ -65,11 +71,11 @@ class DrawingTools {
     }
 
     change(to) {
-        if (["eraser", "chalk", "pencil"].indexOf(to.type) === -1) {
+        if (["eraser", "chalk", "pencil", "none"].indexOf(to.type) === -1) {
             console.error("PubblyDrawingTools.change: Unknown type " + to.type);
         } else {
             // Default alpha of 1 for all
-            if (to.color.length === 3) {
+            if (to.color && to.color.length === 3) {
                 to.color.push(1);
             }
             let defaults = {
@@ -95,7 +101,6 @@ class DrawingTools {
                 }
             };
             this.tool = Object.assign(defaults[to.type], to);
-            this.tool.hasBeenInitialized = false;
             return true;
         }
         return false;
@@ -105,6 +110,8 @@ class DrawingTools {
             type: "none",
             cursor: "draw-none"
         };
+        // List of canvases as draw requests come in.
+        this.ctxs = [];
         if (defaultTool && defaultTool.type) {
             this.change(defaultTool);
         }

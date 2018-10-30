@@ -336,15 +336,27 @@ function messyTargetToPretty(mess, curPage) {
                         let color = attrs.splice(0, 4);
                         color = color.map(c => c * 1);
                         let defaultWidths = {"pencil": 5, "chalk": 10, "eraser": 40};
-                        let width = attrs[0] || defaultWidths[tool];
-                        ret = {
-                            blocking: false,
-                            hold: false,
-                            type: lowerType,
-                            action: lowerAction,
-                            destination: tool,
-                            value: color,
-                            width: width,
+                        let width = attrs[0] * 1 || defaultWidths[tool];
+
+                        // Special hacky case
+                        if (color[3] === 1 && width === 1) {
+                            ret = {
+                                blocking: false,
+                                hold: false,
+                                type: lowerType,
+                                action: lowerAction,
+                                destination: "none",
+                            };
+                        } else {
+                            ret = {
+                                blocking: false,
+                                hold: false,
+                                type: lowerType,
+                                action: lowerAction,
+                                destination: tool,
+                                value: color,
+                                width: width
+                            }
                         }
                     }
                     // We have a [drawing tool] target.
