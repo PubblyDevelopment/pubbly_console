@@ -123,6 +123,7 @@ class Pubbly {
                 let obj = this.data.pages[this.curPage].objs[o];
                 if (checkDraw
                         && obj.type == "workspace"
+                        && obj.vis
                         && inside(loc, obj.rect)) {
                     found.push({
                         link: obj,

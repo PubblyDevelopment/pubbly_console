@@ -18,15 +18,18 @@ class DrawingTools {
         let eraserDims = [90, 75];
         ctx.clearRect(loc[0] + 5, loc[1] - 2, eraserDims[1] + 5, eraserDims[0] + 2);
     }
+    init_chalk(ctx, loc) {
+        ctx.lineCap = "butt";
+        ctx.globalAlpha = this.tool.color[3] / 100;
+        ctx.lineWidth = this.tool.width;
+        ctx.strokeStyle = 'rgba(' + this.tool.color.slice(0, 3).join(",") + ',' + (0.4 + Math.random() * 0.2) + ')';
+        this.tool.hasBeenInitialized = true;
+    }
     draw_chalk(ctx, loc) {
-        let color = this.tool.color;
         let width = this.tool.width;
         let brushDiameter = width;
         let last = this.lastLoc;
 
-        ctx.globalAlpha = color[3] / 100;
-        ctx.lineWidth = width;
-        ctx.strokeStyle = 'rgba(' + color.slice(0, 3).join(",") + ',' + (0.4 + Math.random() * 0.2) + ')';
         ctx.beginPath();
         ctx.moveTo(last[0], last[1]);
         ctx.lineTo(loc[0], loc[1]);
@@ -62,7 +65,6 @@ class DrawingTools {
     }
 
     change(to) {
-        console.log(to);
         if (["eraser", "chalk", "pencil"].indexOf(to.type) === -1) {
             console.error("PubblyDrawingTools.change: Unknown type " + to.type);
         } else {
@@ -70,7 +72,6 @@ class DrawingTools {
             if (to.color.length === 3) {
                 to.color.push(1);
             }
-            ;
             let defaults = {
                 none: {
 
