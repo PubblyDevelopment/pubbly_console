@@ -142,7 +142,7 @@ function messyTargetToPretty(mess, curPage) {
         let check = typeChecks[c];
         switch (check) {
             case "log":
-                if (lowerType == "log") {
+                if (lowerType === "log") {
                     ret = {
                         blocking: false,
                         hold: false,
@@ -156,7 +156,7 @@ function messyTargetToPretty(mess, curPage) {
                 }
                 break;
             case "analytic":
-                if (lowerType == "analytic") {
+                if (lowerType === "analytic") {
                     // dev idea
                     ret = {
                         blocking: false, // ajax call, don't wait to get something back
@@ -176,7 +176,7 @@ function messyTargetToPretty(mess, curPage) {
                 let potentialActions = ["move", "hide", "show", "draggable", "clonable", "static", "disable", "enable"];
                 let splitAction = mess.action.split("|");
                 if (
-                        lowerType == "object"
+                        lowerType === "object"
                         && (
                                 potentialActions.includes(mess.action) ||
                                 (splitAction[0] && potentialActions.includes(splitAction[0].toLowerCase()))
@@ -235,7 +235,7 @@ function messyTargetToPretty(mess, curPage) {
                 }
                 break;
             case "point":
-                if (lowerType == "points") {
+                if (lowerType === "points") {
                     if (reservedWords.points.indexOf(mess.destination) >= 0) {
                         console.error("Error interpreting point target. Cannot name custom points '" + mess.destination + "'. Complete list of reserved point names: " + reservedWords.points.join(",").replace(/,+$/, ""));
                         ret = false;
@@ -269,9 +269,9 @@ function messyTargetToPretty(mess, curPage) {
             case "flash":
                 let split = mess.action.split("|");
                 if (
-                        lowerType == "object"
+                        lowerType === "object"
                         && split.length > 1
-                        && split[0].toLowerCase() == "flash"
+                        && split[0].toLowerCase() === "flash"
                         ) {
                     ret = {
                         blocking: forceType("bool")(split[3]),
@@ -289,7 +289,7 @@ function messyTargetToPretty(mess, curPage) {
                 }
                 break;
             case "countdown":
-                if (lowerType == "countdown") {
+                if (lowerType === "countdown") {
                     let timeValue = false;
                     let possibles = [
                         "stop",
@@ -329,8 +329,8 @@ function messyTargetToPretty(mess, curPage) {
                 // TODO: test project
                 break;
             case "drawing tool":
-                if (lowerType == "drawing tool") {
-                    if (lowerAction == "select") {
+                if (lowerType === "drawing tool") {
+                    if (lowerAction === "select") {
                         let attrs = lowerDestination.split(",");
                         let tool = attrs.shift();
                         let color = attrs.splice(0, 4);

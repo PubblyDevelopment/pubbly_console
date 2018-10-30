@@ -135,7 +135,7 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
                         // ISN"T IT?????
             ],
             "workspace": [
-                ["bgTexture", "BackgroundTransparency", false, translate({"true": "chalkboard"}, false)],
+                ["bgTexture", "BackgroundTransparency", false, translate({"true": "blackBoardBG.png"}, false)],
                 // Workspaces always visible in design, so hard code here
                 ["vis", "", "show"],
                 // Height, width, top and left ALL WRONG. Based off rectangle points ONLY
@@ -167,7 +167,7 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
         let knownTriggerTypes = ["click"];
 
         let pageNodes = xmlDoc.getElementsByTagName("Pages")[0].getElementsByTagName("Page");
-        if (xml.info.display == "composite" && pageNodes.length <= 2) {
+        if (xml.info.display === "composite" && pageNodes.length <= 2) {
             console.error("Fatal", "XML", "Can't have a cover to cover composite. Must have 3 pages");
             console.error("TODO: Update tools so that all pages have a width node, so you can tell if the 2nd page is actually a spread. At this point, we're just assuming that the last page is always a cover, not a spread width");
         } else {

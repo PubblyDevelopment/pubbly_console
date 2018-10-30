@@ -165,7 +165,7 @@ class Pubbly {
                 }
             }
         }
-        
+
         found.sort(function (a, b) {
             // Move workspaces behind all links (so that you can safe zone shit)
             if (a.link.type === "workspace" || b.link.type === "workspace") {
@@ -762,6 +762,10 @@ class Pubbly {
             curWorkspace.clear = false;
             curWorkspace.workspace.elem.width = curWorkspace.workspace.elem.width * 1;
         }
+        let rect = [curWorkspace.loc[1], curWorkspace.loc[0], curWorkspace.width, curWorkspace.height];
+        if (curWorkspace.bgTexture) {
+            this.draw_texture(ctx, curWorkspace.bgTexture, rect);
+        }
         this.draw_general(ctx, curWorkspace, curPage);
     }
     draw_field(ctx, curObj, relPage) {
@@ -948,6 +952,15 @@ class Pubbly {
         let rtx = this.draw_readyAndReturnCTX(curPage, "right");
         rtx.drawImage(ctx.canvas, pUnit * -1, 0);
         // TODO: Remove styles?? Because turning page flicker?
+    }
+    draw_texture(ctx, curTexture, rect) {
+        let image = this.presetAssets.list.find(i => i.relPath === "engine/shared/textures/" + curTexture);
+        if (image && image.elem) {
+            let pattern = ctx.createPattern(image.elem, 'repeat');
+            ctx.rect.apply(ctx, rect); // left top width height
+            ctx.fillStyle = pattern;
+            ctx.fill();
+        }
     }
 
     constructor(data, runtimeProps) {
