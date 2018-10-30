@@ -12,7 +12,7 @@ $returnType = isset($_GET['return']) ? $_GET['return'] : "datagrid";
 include('../../includes/dbConnect.php');
 $con = new DBConnect();
 $sql = $con->mysqli;
-$stmt = $sql->prepare("SELECT ID, `name`, `longname`, pages FROM books ORDER BY `name` ASC");
+$stmt = $sql->prepare("SELECT ID, `name`, `longname`, folder, pages FROM books ORDER BY `priority` ASC, `ID` DESC");
 $stmt->execute();
 if ($result = $stmt->get_result()) {
     /* fetch associative array */

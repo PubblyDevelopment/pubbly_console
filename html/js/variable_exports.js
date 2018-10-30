@@ -469,7 +469,6 @@ getSeries(function (ret) {
         ret.value = f;
         return ret;
     });
-    console.log(treeData);
 
     var seriesList = {
         header: "Series", body: {

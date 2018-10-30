@@ -171,169 +171,305 @@ var newBook = {
     }
 };
 
-var selectBook = {
-    header: "Select Export",
-    id: "selectBook",
-    collapsed: false,
-    body: {
-        rows: [
-            {
-                id: "bookList",
-                view: "datatable",
-                select: "multiselect",
-                width: "100%",
-                autoheight: true,
-                editable: true,
-                scroll: false,
-                columns: [
-                    {id: "ID", header: "", width: 50, },
-                    {id: "name", header: "Name", width: 200, editor: "text", },
-                    {id: "pages", header: "Pages", width: 100, editor: false, },
-                    {id: "longname", header: "Long Name", fillspace: true, editor: "text", },
-                ],
-                url: "ajax/get/getBooks.php",
-                on: {
-                    onItemClick: function (id) {
-                        var unitName = this.getItem(id).name;
-                        window.selectedBook = unitName;
-                        window.selectedBookID = this.getItem(id).ID;
-                        $$("deleteBook").enable();
-                        $$("viewBookOld").enable();
-                        $$("viewBookNew").enable();
-                        $$("reuploadBook").enable();
-                        $$('reuploadBook').data.upload = "ajax/upload/uploadBook.php?bookName=" + window.selectedBook;
-                        $$("downloadBook").enable();
 
-
-                    },
-                    onAfterEditStop: function (state, editor) {
-                        var THIS = this;
-                        if (state.value != state.old) {
-                            // editor.column is name or longname
-                            $.ajax("ajax/rename/renameBook.php?" + editor.column + "=" + state.value + "&id=" + window.selectedBookID + "&oldname=" + state.old).done(
-                                    function (ret) {
-                                        if (ret == "done") {
-                                            webix.message("Changes to " + editor.column + " saved.");
-                                        } else if (ret == "taken") {
-                                            var sel = THIS.getSelectedId();
-                                            var row = THIS.getItem(sel.row);
-                                            row.name = state.old;
-                                            THIS.updateItem(sel.row, row);
-                                            THIS.refresh();
-                                            webix.message("Name already taken! Rename to something else.");
-                                        } else {
-                                            document.body.innerHTML = ret;
-                                        }
-                                    }
-                            );
-                        }
-                    }
-                }
-            },
-            {height: 20},
-            {
-                cols: [
-                    {},
-                    {
-                        value: "New", view: "button", on: {
-                            onItemClick: function () {
-                                $$("newBookCont").expand();
-                                $$("selectBook").collapse();
-                            }
-                        }
-                    },
-                    {},
-
-                    {value: "View old", id: "viewBookOld", view: "button", disabled: true, on: {onItemClick: function () {
-                                window.location.href = "read.php?t=b&id=" + window.selectedBookID;
-                            }
-                        }
-                    },
-                    {value: "View new", id: "viewBookNew", view: "button", disabled: true, on: {onItemClick: function () {
-                                window.location.href = "read.php?engineCode=new&t=b&id=" + window.selectedBookID;
-                            }
-                        }
-                    },
-
-                    {},
-                    {
-                        view: "button",
-                        id: "downloadBook",
-                        disabled: true,
-                        width: 150,
-                        value: "Download",
-                        on: {
-                            onItemClick: function () {
-                                var url = "ajax/download/prepBookDownload.php?id=" + selectedBookID + "&name=" + window.selectedBook;
-                                $$("downloadBook").setValue("Preparing download");
-                                $$("downloadBook").disable();
-                                $$("downloadBook").refresh();
-                                $.ajax(url)
-                                        .done(function (ret) {
-                                            $$("downloadBook").setValue("Done!");
-                                            $$("downloadBook").refresh();
-                                            if (ret == "done") {
-                                                window.location.href = window.selectedBookID + "/" + window.selectedBook + ".zip";
-                                            } else {
-                                                console.log(ret);
-                                            }
-                                            window.setTimeout(function () {
-                                                $$("downloadBook").setValue("Download");
-                                                $$("downloadBook").enable();
-                                                $$("downloadBook").refresh();
-                                            }, 500)
-
-                                        })
-                                        .fail(function () {
-                                            webix.message("error: Bad ajax call");
-                                        })
-                            }
-                        },
-                    },
-                    {},
-                    {
-                        view: "uploader",
-                        id: "reuploadBook",
-                        disabled: true,
-                        view: "uploader",
-                        width: 150,
-                        value: "Reupload",
-                        upload: "ajax/upload/uploadBook.php",
-                        on: {
-                            onUploadComplete: function () {
-                                webix.message("Upload complete!");
-                                window.location.href = window.location.href;
-                            }
-                        },
-                    },
-                    {},
-                    {
-                        value: "Delete", id: "deleteBook", view: "button", css: "delete", disabled: true, on: {
-                            onItemClick: function () {
-                                var url = "ajax/delete/deleteBook.php?bookName=" + window.selectedBook;
-                                deletePrompt(window.selectedBook, "export", url, false)
-                            }
-                        }
-                    },
-                    {},
-                ],
-            },
-            {height: 20},
-        ],
-    },
-};
 
 $(document).ready(function () {
-    webix.ui({
-        view: "scrollview",
-        width: "100%",
-        body: {
-            type: "space",
-            rows: [
-                header,
-                selectBook,
-                newBook,
-            ]
+    $.ajax({
+        type: 'get',
+        url: 'ajax/get/getBooks.php',
+        success: function (ret) {
+            if (ret.substring(0, 6) == "<br />") {
+                document.body.innerHTML = ret;
+            } else {
+                let bookData = window.eval(ret);
+
+                let folders = [];
+                bookData.map(s => {
+                    if (folders.indexOf(s.folder) === -1) {
+                        folders.push(s.folder);
+                    }
+                });
+                let i = 0;
+                let treeData = folders.map(f => {
+                    i++;
+                    let ret = {
+                        id: "0." + i,
+                        open: false,
+                        folder: f,
+                        data: []
+                    };
+                    let ii = 0;
+                    bookData.map(s => {
+                        ii++;
+                        s.folder = (typeof s.folder == "undefined") ? "" : s.folder;
+                        if (s.folder === f) {
+                            let d = {
+                                id: s.ID,
+                                value: s.name,
+                            };
+                            ret.data.push(d);
+                        }
+                    });
+                    ret.value = f;
+                    return ret;
+                });
+                var selectBook = {
+                    header: "Select Export",
+                    id: "selectBook",
+                    collapsed: false,
+                    body: {
+                        cols: [
+                            {
+                                id: "bookList",
+                                view: "tree",
+                                select: true,
+                                drag: true,
+                                autoheight: true,
+                                scroll: "y",
+                                data: treeData,
+                                columns: [
+                                    {id: "ID", header: "", width: 50, },
+                                    {id: "name", header: "Name", width: 200, editor: "text", },
+                                    {id: "pages", header: "Pages", width: 100, editor: false, },
+                                    {id: "longname", header: "Long Name", fillspace: true, editor: "text", },
+                                ],
+                                on: {
+                                    onBeforeDrop: function (context) {
+                                        let seriesID = context.start;
+                                        let pid, spri, folderName;
+                                        if (context.parent > 0) {
+                                            // Dropping on folder
+                                            pid = context.parent;
+                                            spri = context.index + 1;
+                                        } else {
+                                            pid = context.target;
+                                            spri = 0;
+                                        }
+                                        if (seriesID.split(".").length > 1) {
+                                            // Dropping folder
+                                            context.parent = 0;
+                                        } else {
+                                            folderName = this.getItem(pid).folder;
+                                            console.log("Set " + seriesID + " to .folder" + folderName);
+                                            context.parent = pid;
+                                            $.ajax({
+                                                type: 'get',
+                                                url: 'ajax/set/setBooksFolder.php',
+                                                data: {"bookID": seriesID, "folderName": folderName},
+                                                success: function (ret) {
+                                                    if (ret == "done") {
+                                                        // window.location.href = window.location.href;
+                                                        webix.message("Folder changed");
+                                                    } else {
+                                                        window.alert(ret + "</br>Please contact support");
+                                                        document.body.innerHTML = ret;
+                                                    }
+                                                }
+                                            })
+                                        }
+                                    },
+                                    onAfterDrop: function (context) {
+                                        let newOrder = this.data.order.filter(id => {
+                                            if (id.split && id.split(".")[1]) {
+                                                // folder
+                                            } else {
+                                                return id;
+                                            }
+                                        });
+                                        let orderByID = {};
+                                        for (let i = 0; i < newOrder.length; i++) {
+                                            orderByID[newOrder[i]] = i;
+                                        }
+                                        $.ajax({
+                                            type: 'post',
+                                            url: 'ajax/set/setSeriesOrder.php',
+                                            data: {"orderByID": JSON.stringify(orderByID)},
+                                            success: function (ret) {
+                                                if (ret == "done") {
+                                                    // window.location.href = window.location.href;
+                                                    webix.message("Order updated");
+                                                } else {
+                                                    window.alert(ret + "</br>Please contact support");
+                                                    document.body.innerHTML = ret;
+                                                }
+                                            }
+                                        })
+                                    },
+                                    onItemClick: function (id) {
+                                        var obj = this.getItem(id);
+                                        if (typeof obj.folder !== "undefined") {
+                                            obj.open = !obj.open;
+                                            $$("bookList").refresh();
+                                            return false;
+                                        } else {
+                                            var unitName = this.getItem(id).name;
+                                            window.selectedBook = unitName;
+                                            window.selectedBookID = this.getItem(id).ID;
+                                            $$("deleteBook").enable();
+                                            $$("viewBookOld").enable();
+                                            $$("viewBookNew").enable();
+                                            $$("reuploadBook").enable();
+                                            $$('reuploadBook').data.upload = "ajax/upload/uploadBook.php?bookName=" + window.selectedBook;
+                                            $$("downloadBook").enable();
+                                        }
+
+                                    },
+                                    onAfterEditStop: function (state, editor) {
+                                        var THIS = this;
+                                        if (state.value != state.old) {
+                                            // editor.column is name or longname
+                                            $.ajax("ajax/rename/renameBook.php?" + editor.column + "=" + state.value + "&id=" + window.selectedBookID + "&oldname=" + state.old).done(
+                                                    function (ret) {
+                                                        if (ret == "done") {
+                                                            webix.message("Changes to " + editor.column + " saved.");
+                                                        } else if (ret == "taken") {
+                                                            var sel = THIS.getSelectedId();
+                                                            var row = THIS.getItem(sel.row);
+                                                            row.name = state.old;
+                                                            THIS.updateItem(sel.row, row);
+                                                            THIS.refresh();
+                                                            webix.message("Name already taken! Rename to something else.");
+                                                        } else {
+                                                            document.body.innerHTML = ret;
+                                                        }
+                                                    }
+                                            );
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                rows: [
+                                    {},
+                                    {
+                                        value: "New folder", view: "button", on: {
+                                            onItemClick: function () {
+                                                let folderName = prompt("Enter a new folder name. (Note, it will not save until you put a series in it");
+                                                if (folderName) {
+                                                    let found = false;
+                                                    let pull = $$("bookList").data.pull;
+                                                    let fc = 1;
+                                                    for (let i in pull) {
+                                                        let fn = pull[i].folder;
+                                                        if (fn) {
+                                                            fc++;
+                                                        }
+                                                        found = found || (fn == folderName);
+                                                    }
+                                                    fc++;
+                                                    if (!found) {
+                                                        $$("bookList").data.add({
+                                                            id: fc,
+                                                            open: true,
+                                                            folder: folderName,
+                                                            value: folderName
+                                                        });
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        value: "New static export", view: "button", on: {
+                                            onItemClick: function () {
+                                                $$("newBookCont").expand();
+                                                $$("selectBook").collapse();
+                                            }
+                                        }
+                                    },
+                                    {},
+
+                                    {value: "View old", id: "viewBookOld", view: "button", disabled: true, on: {onItemClick: function () {
+                                                window.location.href = "read.php?t=b&id=" + window.selectedBookID;
+                                            }
+                                        }
+                                    },
+                                    {value: "View new", id: "viewBookNew", view: "button", disabled: true, on: {onItemClick: function () {
+                                                window.location.href = "read.php?engineCode=new&t=b&id=" + window.selectedBookID;
+                                            }
+                                        }
+                                    },
+
+                                    {},
+                                    {
+                                        view: "button",
+                                        id: "downloadBook",
+                                        disabled: true,
+                                        width: 150,
+                                        value: "Download",
+                                        on: {
+                                            onItemClick: function () {
+                                                var url = "ajax/download/prepBookDownload.php?id=" + selectedBookID + "&name=" + window.selectedBook;
+                                                $$("downloadBook").setValue("Preparing download");
+                                                $$("downloadBook").disable();
+                                                $$("downloadBook").refresh();
+                                                $.ajax(url)
+                                                        .done(function (ret) {
+                                                            $$("downloadBook").setValue("Done!");
+                                                            $$("downloadBook").refresh();
+                                                            if (ret == "done") {
+                                                                window.location.href = window.selectedBookID + "/" + window.selectedBook + ".zip";
+                                                            } else {
+                                                                console.log(ret);
+                                                            }
+                                                            window.setTimeout(function () {
+                                                                $$("downloadBook").setValue("Download");
+                                                                $$("downloadBook").enable();
+                                                                $$("downloadBook").refresh();
+                                                            }, 500)
+
+                                                        })
+                                                        .fail(function () {
+                                                            webix.message("error: Bad ajax call");
+                                                        })
+                                            }
+                                        },
+                                    },
+                                    {},
+                                    {
+                                        view: "uploader",
+                                        id: "reuploadBook",
+                                        disabled: true,
+                                        view: "uploader",
+                                        width: 150,
+                                        value: "Reupload",
+                                        upload: "ajax/upload/uploadBook.php",
+                                        on: {
+                                            onUploadComplete: function () {
+                                                webix.message("Upload complete!");
+                                                window.location.href = window.location.href;
+                                            }
+                                        },
+                                    },
+                                    {},
+                                    {
+                                        value: "Delete", id: "deleteBook", view: "button", css: "delete", disabled: true, on: {
+                                            onItemClick: function () {
+                                                var url = "ajax/delete/deleteBook.php?bookName=" + window.selectedBook;
+                                                deletePrompt(window.selectedBook, "export", url, false)
+                                            }
+                                        }
+                                    },
+                                    {},
+                                ],
+                            },
+                        ],
+                    },
+                };
+                webix.ui({
+                    view: "scrollview",
+                    width: "100%",
+                    body: {
+                        type: "space",
+                        rows: [
+                            header,
+                            selectBook,
+                            newBook,
+                        ]
+                    }
+                });
+            }
         }
     });
+
 })
