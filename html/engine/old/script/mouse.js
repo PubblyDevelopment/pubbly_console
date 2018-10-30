@@ -1133,6 +1133,7 @@ function drawPencil(x, y, page) {
     ctx.moveTo(last.x, last.y);
     ctx.lineTo(x, y);
     ctx.stroke();
+    console.log(last.x + "-" + x);
     book.drawingTools.lastPos = {x: x, y: y};
     book[page].redraw();
 }
