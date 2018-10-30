@@ -259,7 +259,7 @@ $(document).ready(function () {
                                                 success: function (ret) {
                                                     if (ret == "done") {
                                                         // window.location.href = window.location.href;
-                                                        webix.message("Folder changed");
+                                                        // webix.message("Folder changed");
                                                     } else {
                                                         window.alert(ret + "</br>Please contact support");
                                                         document.body.innerHTML = ret;
@@ -287,7 +287,7 @@ $(document).ready(function () {
                                             success: function (ret) {
                                                 if (ret == "done") {
                                                     // window.location.href = window.location.href;
-                                                    webix.message("Order updated");
+                                                    // webix.message("Order updated");
                                                 } else {
                                                     window.alert(ret + "</br>Please contact support");
                                                     document.body.innerHTML = ret;
