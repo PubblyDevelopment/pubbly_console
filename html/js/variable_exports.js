@@ -469,6 +469,14 @@ getSeries(function (ret) {
         ret.value = f;
         return ret;
     });
+    // Sort folders alphabetasiehoiub
+    treeData.sort(function (a, b) {
+        if (a.folder === "" || b.folder === "") {
+            return (a.folder === "") ? -1 : 1;
+        } else {
+            if (a.folder < b.folder) {return 1;} else {return -1;}
+        }
+    });
 
     var seriesList = {
         header: "Series", body: {
