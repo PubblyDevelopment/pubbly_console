@@ -689,10 +689,12 @@ class Pubbly {
                     this.drawLinks(l, this.data.info.HighlightLinkColorRGBA);
                 }
             });
+
             if (this.data.info.display === "composite") {
                 this.draw_cloneCanvasToSpread(ctx, which);
             }
     }
+
     }
 
     draw_readyAndReturnCTX(drawPage, relativeHalf = "") {
@@ -767,6 +769,9 @@ class Pubbly {
             this.draw_texture(ctx, curWorkspace.bgTexture, rect);
         }
         this.draw_general(ctx, curWorkspace, curPage);
+        if (this.drawingTools.drawCtx === curWorkspace.workspace.ctx) {
+            ctx.drawImage(this.drawingTools.effectCanvas, curWorkspace.loc[1], curWorkspace.loc[0]);
+        }
     }
     draw_field(ctx, curObj, relPage) {
         if (curObj.vis) {

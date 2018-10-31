@@ -135,9 +135,9 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
                         // ISN"T IT?????
             ],
             "workspace": [
-                ["bgTexture", "BackgroundTransparency", false, translate({"true": "blackBoardBG.png"}, false)],
+                ["bgTexture", "BackgroundTransparency", false, translate({"false": "blackBoardBG.png"}, false)],
                 // Workspaces always visible in design, so hard code here
-                ["vis", "", "show"],
+                ["vis", "", true],
                 // Height, width, top and left ALL WRONG. Based off rectangle points ONLY
                 ["rect", "Points", false, messyPointsToPoly],
                 ["clear", "", true]
