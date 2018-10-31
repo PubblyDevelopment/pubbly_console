@@ -22,8 +22,8 @@ class DrawingTools {
     }
     draw_none() {}
     draw_eraser(ctx, loc) {
-        let eraserDims = [90, 75];
-        ctx.clearRect(loc[0] + 5, loc[1] - 2, eraserDims[1] + 5, eraserDims[0] + 2);
+        let eraserDims = [50, 40];
+        ctx.clearRect(loc[0], loc[1], eraserDims[1] + 5, eraserDims[0] + 2);
     }
     init_chalk(ctx, loc) {
         this.drawCtx = ctx;
