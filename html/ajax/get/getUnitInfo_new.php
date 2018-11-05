@@ -1,4 +1,5 @@
 <?php
+require_once("../../config.php");
 
 $unit = $_GET['unitName'];
 $school = $_GET['schoolName'];

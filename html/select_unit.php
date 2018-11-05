@@ -1,17 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Jason
- * Date: 7/22/2016
- * Time: 10:39 AM
- */
 
-include('../includes/loginCheck.php');
-if (loginCheck() === true) {
-    $html = file_get_contents('html/select_unit.html');
-    echo $html;
+require_once("config.php");
+require_once(WEB_ROOT . "/php/main.php");
+require_once(CLASS_ROOT . "/html_fragment.php");
+
+if (!LOGGED_IN) {
+    header("Location: index.php");
 } else {
-    header("Location: login.php");
+    $frag = new Html_fragment("html/select_unit.html", []);
+    $frag->echoOut();
 }
-
-?>

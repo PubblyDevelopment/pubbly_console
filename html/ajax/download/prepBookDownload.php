@@ -1,4 +1,5 @@
 <?php
+require_once("../../config.php");
 
 $id = $_GET['id'];
 $name = $_GET['name'];

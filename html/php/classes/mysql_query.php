@@ -1,6 +1,7 @@
 <?php
 
-require_once("../includes/dbConnect.php");
+require_once(INC_ROOT . "/dbConnect.php");
+require_once(CLASS_ROOT . "/site_error.php");
 
 class Mysql_query {
 
@@ -44,7 +45,7 @@ class Mysql_query {
             return 0;
         }
     }
-    
+
     public function execSingleGetLastID($sql, $binds) {
         $stmt = $this->prepBinds($sql, $binds);
         if ($stmt && $stmt->affected_rows) {
@@ -54,22 +55,13 @@ class Mysql_query {
         }
     }
 
-    public function getSingle($sql, $binds) {
+    public function fetchSingle($sql, $binds) {
         $ret = false;
         $stmt = $this->prepBinds($sql, $binds);
         if ($stmt) {
             $stmt->bind_result($ret);
             $stmt->fetch();
             return $ret;
-        }
-    }
-    
-    public function fetchAssoc($sql, $binds) {
-        $arr = $this->fetchArray($sql, $binds);
-        if (isset($arr[0])) {
-            return $arr[0];
-        }   else    {
-            return false;
         }
     }
 
@@ -81,49 +73,48 @@ class Mysql_query {
             array_push($ret, $row);
         }
         $result->free();
+        if (count($ret) === 1) {
+            $ret = $ret[0];
+        }
         return $ret;
     }
 
     public function fetchArrayAsJSON($sql, $binds) {
-        $retArr = $this->prepBinds($sql, $binds);
-        $result = $retArr->get_result();
-        $dbdata = array();
-        while ($row = $result->fetch_assoc()) {
-            $dbdata[] = $row;
-        }
-        $result->free();
-        return json_encode($dbdata);
+        return json_encode($this->fetchArray($sql, $binds));
     }
 
-    public function import_file($filename) {
-        if ($filename == "content" || $filename == "structure") {
-            $op_data = "";
-            $lines = file(WEB_ROOT . "/../db/$filename.sql");
-            foreach ($lines as $line) {
-                // This IF Remove Comment Inside SQL FILE
-                if (substr($line, 0, 2) == "--" || $line == "") {
-                    continue;
-                }
-                $op_data .= $line;
-                // Breack Line Upto ';' NEW QUERY
-                if (substr(trim($line), -1, 1) == ";") {
-                    $this->sql->query($op_data);
-                    $op_data = "";
-                }
-            }
-            
-            // Check for errors
-            return true;
-        } else {
-            // Error: Only two scripts supported so far.
-            return false;
-        }
-    }
+    /*
+      public function import_file($filename) {
+      if ($filename == "content" || $filename == "structure") {
+      $op_data = "";
+      $lines = file(WEB_ROOT . "/../db/$filename.sql");
+      foreach ($lines as $line) {
+      // This IF Remove Comment Inside SQL FILE
+      if (substr($line, 0, 2) == "--" || $line == "") {
+      continue;
+      }
+      $op_data .= $line;
+      // Breack Line Upto ';' NEW QUERY
+      if (substr(trim($line), -1, 1) == ";") {
+      $this->sql->query($op_data);
+      $op_data = "";
+      }
+      }
+
+      // Check for errors
+      return true;
+      } else {
+      // Error: Only two scripts supported so far.
+      return false;
+      }
+      }
+     */
 
     function __construct() {
         $this->con = new DBConnect();
         $this->sql = $this->con->mysqli;
     }
+
 }
 
 ?>

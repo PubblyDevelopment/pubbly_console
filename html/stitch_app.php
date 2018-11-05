@@ -1,25 +1,18 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: Jason
- * Date: 8/20/2016
- * Time: 3:27 PM
- */
-include('../includes/loginCheck.php');
-if (loginCheck() === true) {
-    $schoolName = $_GET['schoolName'];
-    $isTutorial = isset($_GET['isTutorial']) ? $_GET['isTutorial'] : false;
-    $unitName = $_GET['unitName'];
-    $html = file_get_contents('html/stitch_app.html');
-    if ($isTutorial) {
-	echo "<script>window.schoolName = '$schoolName'; window.unitName = '$unitName'; window.isTutorial = true; </script>" . $html;
-    } else {
-	$subjectName = $_GET['subjectName'];
-	$levelName = isset($_GET['levelName']) ? $_GET['levelName'] : false;
-	echo "<script>window.schoolName = '$schoolName'; window.subjectName = '$subjectName'; window.levelName = '$levelName'; window.unitName = '$unitName'; </script>" . $html;
-    }
+require_once("config.php");
+require_once(WEB_ROOT . "/php/main.php");
+require_once(CLASS_ROOT . "/html_fragment.php");
+
+if (!LOGGED_IN) {
+    header("Location: index.php");
 } else {
-    header("Location: login.php");
+    $frag = new Html_fragment("html/stitch_app.html", [
+        ["SCHOOL_NAME", $_GET['schoolName']],
+        ["SUBJECT_NAME", ($_GET['subjectName']) ? $_GET['subjectName'] : false],
+        ["LEVEL_NAME", ($_GET['levelName']) ? $_GET['levelName'] : false],
+        ["UNIT_NAME", $_GET['schoolName']],
+        ["IS_TUTORIAL", isset($_GET['isTutorial'])],
+    ]);
+    $frag->echoOut();
 }
-?>

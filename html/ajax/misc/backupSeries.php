@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Jason
- * Date: 8/2/2016
- * Time: 3:19 PM
- */
+require_once("../../config.php");
 
 chdir('../');
 $seriesName = $_GET['seriesName'];

@@ -1,17 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Jason
- * Date: 7/7/2016
- * Time: 2:19 PM
- */
 
-include('../includes/loginCheck.php');
-if (loginCheck() === true) {
-    header("Location: selectSeries.php");
-} else {
-    $html = file_get_contents('html/register.html');
-    echo $html;
-}
-
+require("config.php");
+require(CLASS_ROOT . "/html_fragment.php");
+$errors = (isset($_GET['errors'])) ? $_GET['errors'] : "";
+$frag = new Html_fragment("html/register.html", [
+    ["ERROR_LIST", $errors],
+        ]);
+$frag->echoOut();
 ?>

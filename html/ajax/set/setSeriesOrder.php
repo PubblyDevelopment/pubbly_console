@@ -1,11 +1,7 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: Jason
- * Date: 9/23/2016
- * Time: 3:10 PM
- */
+require_once("../../config.php");
+
 chdir('../');
 $seriesOrder = json_decode($_POST['orderByID']);
 

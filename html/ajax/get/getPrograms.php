@@ -1,4 +1,5 @@
 <?php
+require_once("../../config.php");
 
 chdir('../../');
 $ret = [];
@@ -6,7 +7,7 @@ require_once('../includes/dbConnect.php');
 require_once('php/classes/program.php');
 $con = new DBConnect();
 $sql = $con->mysqli;
-$stmt = $sql->prepare("SELECT sch.ID AS programID, sch.outdated AS outdated, sch.name AS programName, count(unt.ID) AS unitCount from schools sch RIGHT JOIN units unt ON unt.schoolID = sch.ID WHERE 1 GROUP BY sch.ID");
+$stmt = $sql->prepare("SELECT sch.school_id AS programID, sch.outdated AS outdated, sch.name AS programName, count(unt.ID) AS unitCount from school sch RIGHT JOIN units unt ON unt.schoolID = sch.school_id WHERE 1 GROUP BY sch.school_id");
 $stmt->execute();
 if ($result = $stmt->get_result()) {
     while ($row = $result->fetch_assoc()) {

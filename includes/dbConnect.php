@@ -1,7 +1,6 @@
 <?php
+class DBConnect {
 
-class DBConnect
-{
     public $status;
     public $mysqli;
     private $HOST;
@@ -9,18 +8,16 @@ class DBConnect
     private $PASSWORD;
     private $DATABASE;
 
-    function DBConnect()
-    {
-        $this->USER = "console";
-        $this->PASSWORD = "UsedToBeCalledFileSwap";
-        $this->DATABASE = "console";
-        $this->HOST = "localhost";
+    function DBConnect() {
+        $this->USER = getenv("DB_USER");
+        $this->PASSWORD = getenv("DB_PASSWORD");
+        $this->DATABASE = getenv("DB_NAME");
+        $this->HOST = getenv("DB_HOST");
         $this->status = false;
         $this->mysqli = new mysqli($this->HOST, $this->USER, $this->PASSWORD, $this->DATABASE);
         if ($this->mysqli->connect_errno) {
             printf("Connection failed: %s\n", $this->mysqli->connect_error);
-            echo "<br>it's probably because you forgot to rename the database in mysql to console when you posted to the server, dummy. (dbConnect in includes)";
-            echo "<br>Also, remember to rename the user to console as well, otherwise it looks stupid..";
+            echo "<br>Make sure mysql user '$this->USER' has full access to the $this->DATABASE db. Also, double check the password for the $this->USER in file includes/dbConnect.php)";
             exit();
         } else {
             // Good connection;
@@ -28,8 +25,7 @@ class DBConnect
         }
     }
 
-    function query($str)
-    {
+    function query($str) {
         if ($request = $this->mysqli->query($str)) {
             $ret = $request->fetch_all();
             $request->close();
@@ -39,6 +35,7 @@ class DBConnect
             printL($str);
         }
     }
+
 }
 
 ?>

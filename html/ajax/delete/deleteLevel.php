@@ -1,4 +1,5 @@
 <?php
+require_once("../../config.php");
 
 chdir('../');
 $schoolName = $_GET['schoolName'];

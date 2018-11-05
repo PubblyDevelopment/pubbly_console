@@ -1,13 +1,13 @@
 <?php
 
-class Program {
+class Map {
 
     public $info = [];
     public $units = [];
     private $sql = false;
 
     public function buildWeb() {
-        $programName = $this->info['name'];
+        $mapName = $this->info['name'];
         $json = json_decode($this->json, true);
         $possibleEntryPoints = [];
         $units = $this->retUnits();
@@ -17,7 +17,7 @@ class Program {
         foreach ($units as $unit) {
             $inProgUnitName = str_replace("/", "-", $unit['loc']);
             $latestEngineRelease;
-            $unitInProgLoc = "program/$programName/web/$inProgUnitName";
+            $unitInProgLoc = "map/$mapName/web/$inProgUnitName";
             $json[$unit['name']]['modified'] = 999999999999999999999999999;
             if (
             // It's been moved before
@@ -32,7 +32,7 @@ class Program {
                 // no update required
             } else {
                 $inProgUnitName = str_replace("/", "-", $unit['loc']);
-                $unitInProgLoc = "program/" . $this->info['name'] . "/web/$inProgUnitName";
+                $unitInProgLoc = "map/" . $this->info['name'] . "/web/$inProgUnitName";
                 rrmdir($unitInProgLoc);
                 rcopy($unit['loc'], $unitInProgLoc);
                 $latestJSON = "$unitInProgLoc/Main." . LATEST_ENGINE_RELEASE . ".json";
@@ -63,7 +63,7 @@ class Program {
                         }
                     }
                     if ($ul) {
-                        $url = "?t=pg&pn=" . base64_encode($programName) . "&ul=" . base64_encode($ul);
+                        $url = "?t=pg&pn=" . base64_encode($mapName) . "&ul=" . base64_encode($ul);
                         $xmlPage = $xml->Pages->Page[$page];
                         foreach ($xmlPage->Links->children() as $xmlLink) {
                             if ((string) $xmlLink->Name == $linkName) {
@@ -95,9 +95,9 @@ class Program {
                 $possibleEntryPoints[key($possibleEntryPoints)] :
                 false;
         if (!$entryPoint) {
-            echo "Error: Cannot determine program entry point<br>";
+            echo "Error: Cannot determine map entry point<br>";
         }
-        file_put_contents("program/$programName/entry.txt", $entryPoint);
+        file_put_contents("map/$mapName/entry.txt", $entryPoint);
         return $entryPoint;
     }
 
@@ -109,17 +109,17 @@ class Program {
     }
 
     private function createSkeleton_fs() {
-        $programName = $this->programName;
-        if (!is_dir("program/$programName")) {
-            mkdir("program/$programName");
-            mkdir("program/$programName/web");
-            mkdir("program/$programName/apk");
+        $mapName = $this->mapName;
+        if (!is_dir("map/$mapName")) {
+            mkdir("map/$mapName");
+            mkdir("map/$mapName/web");
+            mkdir("map/$mapName/apk");
         }
     }
 
     private function createSkeleton_json() {
         $json = $this->generateFreshJson();
-        $dataLoc = "program/" . $programName = $this->info['name'] . "/data.json";
+        $dataLoc = "map/" . $mapName = $this->info['name'] . "/data.json";
         file_put_contents($dataLoc, json_encode($json));
     }
 
@@ -195,43 +195,43 @@ WHERE
 
     /* ---------------------------------------------------------------------- */
 
-    public function directUpdateProgram($newJSON) {
+    public function directUpdateMap($newJSON) {
 // Designers have saved JSON from NavigationNodesUI
 
-        $this->directUpdateProgram_cleanDB();
-        $this->directUpdateProgram_addLinksDB($newJSON);
-        $dataLoc = "program/" . $programName = $this->info['name'] . "/data.json";
+        $this->directUpdateMap_cleanDB();
+        $this->directUpdateMap_addLinksDB($newJSON);
+        $dataLoc = "map/" . $mapName = $this->info['name'] . "/data.json";
         file_put_contents($dataLoc, json_encode($newJSON));
     }
 
-    private function directUpdateProgram_cleanDB() {
+    private function directUpdateMap_cleanDB() {
         return $this->sql->execSingle("
 DELETE 
     plc 
 FROM
-    programlinkconnections plc
+    maplinkconnections plc
 LEFT JOIN
     schools sch
 ON
-    plc.program_id = sch.ID
+    plc.map_id = sch.ID
 WHERE
     sch.name = ?", ["s", $this->info['name']]);
     }
 
-    private function directUpdateProgram_addLinksDB($json) {
+    private function directUpdateMap_addLinksDB($json) {
         foreach ($json as $unit) {
             foreach ($unit['links'] as $link) {
                 if ($link['url'] !== false) {
                     $qry = "
 INSERT INTO
-    programlinkconnections 
-    (fromUnitID, fromUnitPage, fromUnitLinkName, toUnitID, program_id)
+    maplinkconnections 
+    (fromUnitID, fromUnitPage, fromUnitLinkName, toUnitID, map_id)
 SELECT
     funt.ID AS fromUnitID, 
     ? AS fromUnitPage, 
     ? AS fromUnitLinkName,
     tunt.ID AS toUnitID, 
-    sch.ID AS program_id
+    sch.ID AS map_id
 FROM
     schools sch
 LEFT JOIN units funt ON
@@ -257,18 +257,18 @@ WHERE
 
     /* ---------------------------------------------------------------------- */
 
-    public function indirectUpdateProgram() {
-// unit dependencies have changed indirectly (units restiched, assets re-swapped, new units added to program).
-        $jsonWithLocs = $this->indirectUpdateProgram_mergeOldJson();
-        $jsonWithLinks = $this->indirectUpdateProgram_addLinksFromServer($jsonWithLocs);
-        $dataLoc = "program/" . $this->info['name'] . "/data.json";
+    public function indirectUpdateMap() {
+// unit dependencies have changed indirectly (units restiched, assets re-swapped, new units added to map).
+        $jsonWithLocs = $this->indirectUpdateMap_mergeOldJson();
+        $jsonWithLinks = $this->indirectUpdateMap_addLinksFromServer($jsonWithLocs);
+        $dataLoc = "map/" . $this->info['name'] . "/data.json";
         file_put_contents($dataLoc, json_encode($jsonWithLinks));
         $this->json = json_encode($jsonWithLinks);
-        $this->indirectUpdateProgram_removeOutdatedFromDB();
+        $this->indirectUpdateMap_removeOutdatedFromDB();
     }
 
-    private function indirectUpdateProgram_mergeOldJson() {
-        $dataLoc = "program/" . $programName = $this->info['name'] . "/data.json";
+    private function indirectUpdateMap_mergeOldJson() {
+        $dataLoc = "map/" . $mapName = $this->info['name'] . "/data.json";
         $newJSON = $this->generateFreshJson();
         if (file_exists($dataLoc)) {
             $oldJSON = json_decode(file_get_contents($dataLoc), true);
@@ -292,7 +292,7 @@ WHERE
         return $newJSON;
     }
 
-    private function indirectUpdateProgram_addLinksFromServer($json) {
+    private function indirectUpdateMap_addLinksFromServer($json) {
         $unitLinks = $this->sql->fetchArray("
 SELECT
     funt.name AS fromUnitName,
@@ -301,14 +301,14 @@ SELECT
     tunt.name AS toUnitName
 FROM
     schools sch
-RIGHT JOIN programlinkconnections plc ON
-    plc.program_id = sch.ID
+RIGHT JOIN maplinkconnections plc ON
+    plc.map_id = sch.ID
 LEFT JOIN units funt ON
     plc.fromUnitID = funt.ID
 LEFT JOIN units tunt ON
     plc.toUnitID = tunt.ID
 WHERE
-    sch.name = ?", ["s", $this->programName]);
+    sch.name = ?", ["s", $this->mapName]);
         foreach ($unitLinks as $plc) {
             $unitInJson = $json[$plc['fromUnitName']];
             if (isset($unitInJson)) {
@@ -322,16 +322,16 @@ WHERE
         return $json;
     }
 
-    private function indirectUpdateProgram_removeOutdatedFromDB() {
-        return $this->sql->execSingle("UPDATE schools SET outdated = 0 WHERE name = ?", ["s", $this->programName]);
+    private function indirectUpdateMap_removeOutdatedFromDB() {
+        return $this->sql->execSingle("UPDATE schools SET outdated = 0 WHERE name = ?", ["s", $this->mapName]);
     }
 
     /* ---------------------------------------------------------------------- */
 
-    private function getProgramInfo() {
-        $dbInfo = $this->getProgramInfo_db();
-        $fsInfo = $this->getProgramInfo_fs();
-        $exportStatuses = $this->getProgramInfo_exportStatus($dbInfo['program_name']);
+    private function getMapInfo() {
+        $dbInfo = $this->getMapInfo_db();
+        $fsInfo = $this->getMapInfo_fs();
+        $exportStatuses = $this->getMapInfo_exportStatus($dbInfo['map_name']);
 
         $exportStatuses['database'] = ($dbInfo['outdated']) ? "outdated" : "ready";
         // Zip dependent on server, apk dependent on ZIP
@@ -347,8 +347,8 @@ WHERE
         }
 
         $this->info = [
-            "id" => $dbInfo['program_id'],
-            "name" => $dbInfo['program_name'],
+            "id" => $dbInfo['map_id'],
+            "name" => $dbInfo['map_name'],
             "outdated" => $dbInfo['outdated'],
             "unit_count" => $dbInfo['unit_count'],
             "modified" => $fsInfo['modified'],
@@ -357,28 +357,28 @@ WHERE
         ];
     }
 
-    private function getProgramInfo_db() {
-        $dbInfo = $this->sql->fetchAssoc("
+    private function getMapInfo_db() {
+        $dbInfo = $this->sql->fetchArray("
 SELECT
-    sch.ID AS program_id,
+    sch.ID AS map_id,
     sch.outdated AS outdated,
-    sch.name AS program_name,
+    sch.name AS map_name,
     COUNT(unt.ID) AS unit_count
 FROM
     schools sch
 LEFT JOIN units unt ON
     unt.schoolID = sch.ID
 WHERE
-    sch.name = ?", ["s", $this->programName]);
+    sch.name = ?", ["s", $this->mapName]);
         return $dbInfo;
     }
 
-    private function getProgramInfo_fs() {
+    private function getMapInfo_fs() {
         $fsInfo = [];
-        $programName = $this->programName;
-        $jsonLoc = "program/$programName/data.json";
+        $mapName = $this->mapName;
+        $jsonLoc = "map/$mapName/data.json";
         if (file_exists($jsonLoc)) {
-            $apkLoc = "program/$programName/exports/$programName.apk";
+            $apkLoc = "map/$mapName/exports/$mapName.apk";
             if (file_exists($apkLoc)) {
                 $fsInfo['modified'] = filemtime($apkLoc);
                 $fsInfo['status'] = "exported";
@@ -393,7 +393,7 @@ WHERE
         return $fsInfo;
     }
 
-    private function getProgramInfo_exportStatus($programName) {
+    private function getMapInfo_exportStatus($mapName) {
         // Possible statuses: ["new", "outdated", "ready"]
         $statuses = [
             "server" => "new",
@@ -401,10 +401,10 @@ WHERE
             "apk" => "new",
         ];
 
-        $jsonLoc = "program/$programName/data.json";
-        $entryPointLoc = "program/$programName/entry.txt";
-        $offlineZipLoc = "program/$programName/offline.zip";
-        $apkLoc = "program/$programName/apk/development.apk";
+        $jsonLoc = "map/$mapName/data.json";
+        $entryPointLoc = "map/$mapName/entry.txt";
+        $offlineZipLoc = "map/$mapName/offline.zip";
+        $apkLoc = "map/$mapName/apk/development.apk";
 
         if (file_exists($jsonLoc)) {
             // $timeCheck = filemtime($jsonLoc) < filemtime($entryPointLoc);
@@ -424,16 +424,16 @@ WHERE
 
     /* ---------------------------------------------------------------------- */
 
-    function __construct($programName) {
-        require_once("php/classes/mysql_queries.php");
+    function __construct($mapName) {
+        require_once("php/classes/mysql_query.php");
         require_once("php/recursives.php");
         require_once("php/saveXML.php");
         require_once("engine/latest.php");
         $this->sql = new Mysql_query();
 
-        $this->programName = $programName;
+        $this->mapName = $mapName;
 
-        $this->getProgramInfo($programName);
+        $this->getMapInfo($mapName);
         if ($this->info['name']) {
             // $this->getUnits();
             // $this->info['status'] = "new";
@@ -443,9 +443,9 @@ WHERE
                 $this->createSkeleton();
             }
 
-            $this->json = file_get_contents("program/" . $this->info['name'] . "/data.json");
+            $this->json = file_get_contents("map/" . $this->info['name'] . "/data.json");
         } else {
-            echo "Error: new Program(), but name passed ($programName) not found on server of FS";
+            echo "Error: new Map(), but name passed ($mapName) not found on server of FS";
         }
     }
 

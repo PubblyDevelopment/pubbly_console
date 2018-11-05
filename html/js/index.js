@@ -35,10 +35,10 @@ $(document).ready(function () {
                 {},
                 {cols: [
                         {},
-                        {view: "button", value: "PROGRAMS", height: 200, width: 200, css: "greyBtn",
+                        {view: "button", value: "MAPS", height: 200, width: 200, css: "greyBtn",
                             on: {
                                 onItemClick: function () {
-                                    window.location.href="select_program.php";
+                                    window.location.href="select_map.php";
                                 },
                             }
                         },

@@ -25,10 +25,10 @@ if ($postSpecs['type'] == "book") {
 
     $bookLoc = "schools/$school/tutorials/$unit";
     $jsonName = "Main";
-} else if ($postSpecs['type'] == "programUnit") {
-    $programName = $postSpecs['programName'];
-    $unitLoc = $postSpecs['unitLoc'];
-    $bookLoc = "program/$programName/web/$unitLoc";
+} else if ($postSpecs['type'] == "map") {
+    $mapName = $postSpecs['mapName'];
+    $nodeName = $postSpecs['nodeName'];
+    $bookLoc = "map/$mapName/$nodeName";
     $jsonName = "Main";
 }
 if ($bookLoc) {

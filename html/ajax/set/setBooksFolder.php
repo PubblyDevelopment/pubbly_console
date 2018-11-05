@@ -1,11 +1,6 @@
 <?php
+require_once("../../config.php");
 
-/**
- * Created by PhpStorm.
- * User: Jason
- * Date: 9/23/2016
- * Time: 3:10 PM
- */
 chdir('../');
 $id = $_GET['bookID'];
 $folderName = $_GET['folderName'];

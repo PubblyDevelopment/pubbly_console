@@ -1,11 +1,6 @@
 <?php
+require_once("../../config.php");
 
-/**
- * Created by PhpStorm.
- * User: Jason
- * Date: 8/24/2016
- * Time: 4:15 PM
- */
 chdir('../');
 
 $bookName = isset($_GET['bookName']) ? $_GET['bookName'] : false;

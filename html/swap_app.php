@@ -1,13 +1,14 @@
 <?php
 
-$seriesName = base64_decode($_GET['series_name']);
+require_once("config.php");
+require_once(WEB_ROOT . "/php/main.php");
+require_once(CLASS_ROOT . "/html_fragment.php");
 
-include('../includes/loginCheck.php');
-if (loginCheck() === true && isset($seriesName)) {
-    $html = file_get_contents('html/swap_app.html');
-    $html = "<script>window.seriesName = '$seriesName';</script>" . $html;
-    echo $html;
+if (!LOGGED_IN) {
+    header("Location: index.php");
 } else {
-    header("Location: login.php");
+    $frag = new Html_fragment("html/swap_app.html", [
+        ["SERIES_NAME", base64_decode($_GET['series_name'])]
+    ]);
+    $frag->echoOut();
 }
-?>

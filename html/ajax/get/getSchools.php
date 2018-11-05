@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Jason
- * Date: 8/17/2016
- * Time: 10:49 AM
- */
+require_once("../../config.php");
 
 chdir('../');
 include_once('../../includes/dbConnect.php');

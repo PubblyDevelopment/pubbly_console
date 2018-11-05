@@ -1,11 +1,6 @@
 <?php
+require_once("../../config.php");
 
-/**
- * Created by PhpStorm.
- * User: Jason
- * Date: 6/27/2016
- * Time: 2:28 PM
- */
 chdir('../');
 $retObj = [];
 

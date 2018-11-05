@@ -1,4 +1,5 @@
 <?php
+require_once("../../config.php");
 
 $unit = $_GET['unitName'];
 $level = isset($_GET['levelName']) ? $_GET['levelName'] : false;

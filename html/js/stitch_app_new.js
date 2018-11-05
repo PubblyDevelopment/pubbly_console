@@ -559,7 +559,7 @@ var workbenchPageList = {
                 ],
                 on: {
                     onAfterDrop: function (ctx) {
-                        // If dropped from unit page list
+                        // If dropped FROM units page list
                         if (ctx.from.$view.getAttribute("view_id") == "unitPageOrder") {
                             // Don't add the page to the list.
                             $$("workbenchPageList").remove(ctx.start);

@@ -6,7 +6,7 @@ $types = [
     "c" => "child",
     "u" => "unit",
     "t" => "tutorial",
-    "pg" => "programUnit",
+    "m" => "map",
 ];
 $type = $types[$_GET['t']];
 require_once("engine/latest.php");
@@ -58,23 +58,33 @@ if ($type == "book") {
     $postSpecs['schoolName'] = $school;
     $postSpecs['unitName'] = $unit;
     $jsonName = "Main";
-} else if ($type == "programUnit") {
-    $programName = base64_decode($_GET['pn']);
-    if (isset($_GET['ul'])) {
-        $unitLoc = base64_decode($_GET['ul']);
+} else if ($type == "map") {
+    $mapName = $_GET['mn'];
+    $nodeName = false;
+
+    if (isset($_GET['nn'])) {
+        $nodeName = $_GET['nn'];
+        $loc = "map/$mapName/$nodeName";
     } else {
-        $unitLoc = file_get_contents("program/$programName/entry.txt");
+        $entryPointLoc = "map/$mapName/entryPoint.php";
+        if (file_exists($entryPointLoc)) {
+            require("map/$mapName/entryPoint.php");
+            $nodeName = $entryPoint;
+            $loc = "map/$mapName/$entryPoint";
+        }
     }
-    $loc = "program/$programName/web/$unitLoc";
-    $xmlName = "MainXML.xml";
-    $jsonName = "Main";
-    $engineCode = $latestEngineRelease;
-    $postSpecs['engineCode'] = $engineCode;
-    $postSpecs['programName'] = $programName;
-    $postSpecs['unitLoc'] = $unitLoc;
+
+    if (isset($loc)) {
+        $xmlName = "MainXML.xml";
+        $postSpecs['mapName'] = $mapName;
+        $postSpecs['nodeName'] = $nodeName;
+        $jsonName = "Main";
+    } else {
+        echo "Error: No entry point specified for map... Cannot view";
+    }
 }
 
-require_once("php/site_error/_master.php");
+require_once("php/classes/site_error.php");
 require_once("php/html_fragments_by_known_types/engine.php");
 $htmlFileName = ($type == "child") ? "$childName.html" : "index.html";
 

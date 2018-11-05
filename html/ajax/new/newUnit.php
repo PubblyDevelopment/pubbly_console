@@ -1,11 +1,6 @@
 <?php
+require_once("../../config.php");
 
-/**
- * Created by PhpStorm.
- * User: Jason
- * Date: 8/19/2016
- * Time: 10:15 AM
- */
 chdir('../');
 include('../../includes/dbConnect.php');
 $schoolName = $_GET["schoolName"];

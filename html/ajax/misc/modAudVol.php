@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Jason
- * Date: 10/28/2016
- * Time: 4:17 PM
- */
+require_once("../../config.php");
 
 
 

@@ -1,4 +1,5 @@
 <?php
+require_once("../../config.php");
 
 chdir('../');
 $schoolName = $_GET['schoolName'];
@@ -36,7 +37,7 @@ if (loginCheck()) {
             $sqlObj->execute();
 
             $sqlObj = false;
-            $sqlObj = $sql->prepare("DELETE FROM subjects WHERE schoolID = ?");
+            $sqlObj = $sql->prepare("DELETE FROM subjects WHERE school_id = ?");
             $sqlObj->bind_param('s', $schoolID);
             $sqlObj->execute();
 

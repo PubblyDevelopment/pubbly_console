@@ -492,6 +492,7 @@ $(document).ready(function () {
                                             let sn = btoa(window.seriesName);
                                             let cn = btoa(childName);
                                             let url = "read.php?t=c&sn=" + sn + "&cn=" + cn;
+                                            url += "&engineCode=new";
                                             var win = window.open(url, '_blank');
                                             if (audioPlayer) {
                                                 audioPlayer.pause();
@@ -813,20 +814,20 @@ $(document).ready(function () {
                 preview.data[0] = {};
                 if (assetType == "image") {
                     preview.data[0].img = "" +
-                        "<div class='imageCont'>" +
-                        "<span class='helper'></span>" +
-                        "<img src='series/" + seriesName + "/images/" + assetSrc + "' class='preview' />" +
-                        "</div>";
-                }   else if (assetType == "video") {
+                            "<div class='imageCont'>" +
+                            "<span class='helper'></span>" +
+                            "<img src='series/" + seriesName + "/images/" + assetSrc + "' class='preview' />" +
+                            "</div>";
+                } else if (assetType == "video") {
                     preview.data[0].img = "" +
-                        "<div class='imageCont'>" +
-                        "<span class='helper'></span>" +
-                        "<video src='series/" + seriesName + "/videos/" + assetSrc + "' class='preview' controls>" +
-                        "</video>" +
-                        "</div>";
+                            "<div class='imageCont'>" +
+                            "<span class='helper'></span>" +
+                            "<video src='series/" + seriesName + "/videos/" + assetSrc + "' class='preview' controls>" +
+                            "</video>" +
+                            "</div>";
                 }
 
-                
+
                 preview.gravity = 1;
                 preview.id = rootID + "_img";
                 preview.scroll = false;
@@ -959,7 +960,7 @@ $(document).ready(function () {
                     $$(this).refresh();
                     $$(rootID + "_textarea").refresh();
                 }
-            }   else if (assetType == "video") {
+            } else if (assetType == "video") {
                 console.log("here");
             }
 

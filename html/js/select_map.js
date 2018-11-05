@@ -12,7 +12,7 @@ let header = {
         },
         {
             view: "label",
-            template: "<p class='toolbarCenterLabel'>Select Program</p>"
+            template: "<p class='toolbarCenterLabel'>Select Map</p>"
         },
         {
             view: "button", value: "Logout", width: 80, on: {
@@ -23,14 +23,14 @@ let header = {
         }
     ]
 };
-let selectProgram = {
-    header: "Select Program",
-    id: "selectProgram",
+let selectMap = {
+    header: "Select Map",
+    id: "selectMap",
     collapsed: false,
     body: {
         rows: [
             {
-                id: "programList",
+                id: "mapList",
                 view: "datatable",
                 select: "multiselect",
                 width: "100%",
@@ -38,13 +38,13 @@ let selectProgram = {
                 editable: true,
                 scroll: false,
                 columns: [
-                    {id: "id", header: "ID", width: 50, editor: false},
+                    {id: "map_id", header: "ID", width: 50, editor: false},
                     {id: "name", header: "Name", width: 200, editor: "text", },
                     {id: "unit_count", header: "Unit count", width: 100, editor: false, },
                     {id: "status", header: "Status", width: 100, editor: false},
                     {id: "modified", header: "Modified", width: 100, editor: false},
                 ],
-                url: "ajax/get/getPrograms.php",
+                url: "php/ajax/getMaps.php",
                 on: {
                     onAfterEditStop: function (state, editor) {
                         var THIS = this;
@@ -70,10 +70,9 @@ let selectProgram = {
                     },
                     onItemClick: function (id) {
                         let item = this.getItem(id);
-                        window.selectedProgramName = item.name;
-                        $$("editProgram").enable();
+                        window.selectedMapName = item.name;
+                        $$("editMap").enable();
                         item.status = "";
-
                         for (let exportType in item.export_statuses) {
                             if ($$("export_" + exportType)) {
                                 let stat = item.export_statuses[exportType];
@@ -109,38 +108,77 @@ let selectProgram = {
     },
 };
 let actionBar = {
+    width: 150,
     rows: [
         {
-            cols: [
-                {gravity: 0.5},
-                {id: "editProgram", view: "button", label: "Edit program (NavNodeUI)",
+            rows: [
+                {},
+                {view: "button", label: "New",
+                    on: {
+                        onItemClick: function () {
+                            let newName = window.prompt("Enter a name");
+                            if (newName) {
+                                new fake_post("php/process/newMap.php", {
+                                    name: newName,
+                                });
+                            }
+                        }
+                    },
+                },
+                {},
+                {id: "editMap", view: "button", label: "Edit",
                     disabled: true, on: {
                         onItemClick: function () {
-                            window.location.href = "edit_program.php?programName=" + btoa(window.selectedProgramName);
+                            window.location.href = "edit_map.php?mapName=" + btoa(window.selectedMapName);
                         }
                     }
                 },
-                {gravity: 0.5},
+                {},
+                {view: "button", label: "Rename", on: {
+                        onItemClick: function () {
+                            let newName = window.prompt("Enter a name");
+                            if (selectedMapName && newName) {
+                                new fake_post("php/process/renameMap.php", {
+                                    oldName: selectedMapName,
+                                    newName: newName,
+                                });
+                            }
+                        }
+                    }, },
+                {},
+                {view: "button", label: "Delete", css: "delete",
+                    on: {
+                        onItemClick: function () {
+                            if (selectedMapName && window.confirm("You sure?")) {
+                                new fake_post("php/process/deleteMap.php", {
+                                    name: selectedMapName,
+                                });
+                            }
+                        }
+                    },
+                },
+                {},
             ]
         },
         {
-            height: 5, template: "<hr>",
+            template: "<hr>",
+            height: 26,
         },
         {
-            cols: [
+            rows: [
                 {
                     rows: [
-                        {id: "export_server", view: "button", label: "Export Server",
+                        {id: "export_server", view: "button", label: "View Server",
                             disabled: true, on: {
                                 onItemClick: function () {
-                                    window.location.href = "export_program_server.php?programName=" + btoa(window.selectedProgramName);
+                                    window.location.href = "read.php?t=m&mn=" + window.selectedMapName
                                 }
                             }
                         },
                         {id: "view_server", hidden: true, view: "button", label: "View Server",
                             disabled: true, on: {
                                 onItemClick: function () {
-                                    window.location.href = "read.php?t=pg&pn=" + btoa(window.selectedProgramName);
+                                    window.location.href = "read.php?t=pg&pn=" + btoa(window.selectedMapName);
                                 }
                             }
                         },
@@ -149,7 +187,7 @@ let actionBar = {
                             hidden: true,
                             view: "label",
                             align: "center",
-                            label: "<i class='fa fa-warning' style='color:red'></i> - Create program first",
+                            label: "<i class='fa fa-warning' style='color:red'></i> - Create map first",
                         },
                         {
                             id: "export_server_outdated",
@@ -160,21 +198,20 @@ let actionBar = {
                         },
                     ]
                 },
-
                 {gravity: 0.2},
                 {
                     rows: [
                         {id: "export_zip", view: "button", label: "Exprt Offline ZIP",
                             disabled: true, on: {
                                 onItemClick: function () {
-                                    window.location.href = "export_program_offline.php?programName=" + btoa(window.selectedProgramName);
+                                    window.location.href = "export_map_offline.php?mapName=" + btoa(window.selectedMapName);
                                 }
                             }
                         },
                         {id: "view_zip", hidden: true, view: "button", label: "Download Offline ZIP",
                             disabled: true, on: {
                                 onItemClick: function () {
-                                    window.location.href = "program/" + window.selectedProgramName + "/offline.zip";
+                                    window.location.href = "map/" + window.selectedMapName + "/offline.zip";
                                 }
                             }
                         },
@@ -195,21 +232,20 @@ let actionBar = {
                         },
                     ]
                 },
-
                 {gravity: 0.2},
                 {
                     rows: [
                         {id: "export_apk", view: "button", label: "Export APK",
                             disabled: true, on: {
                                 onItemClick: function () {
-                                    window.location.href = "export_program_apk.php?programName=" + btoa(window.selectedProgramName);
+                                    window.location.href = "export_map_apk.php?mapName=" + btoa(window.selectedMapName);
                                 }
                             }
                         },
                         {id: "view_apk", hidden: true, view: "button", label: "Download APK",
                             disabled: true, on: {
                                 onItemClick: function () {
-                                    window.location.href = "program/" + window.selectedProgramName + "/apk/development.apk";
+                                    window.location.href = "map/" + window.selectedMapName + "/apk/development.apk";
                                 }
                             }
                         },
@@ -243,8 +279,12 @@ $(document).ready(function () {
             type: "space",
             rows: [
                 header,
-                selectProgram,
-                actionBar
+                {
+                    cols: [
+                        selectMap,
+                        actionBar
+                    ]
+                }
             ]
         }
     });

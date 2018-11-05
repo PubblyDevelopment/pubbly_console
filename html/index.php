@@ -1,15 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Jason
- * Date: 7/9/2016
- * Time: 1:24 PM
- */
-include('../includes/loginCheck.php');
-if (loginCheck() === true) {
-    $html = file_get_contents('html/index.html');
-    echo $html;
+
+require_once("config.php");
+require_once(INC_ROOT . "/dbConnect.php");
+require_once(CLASS_ROOT . "/mysql_query.php");
+require_once(WEB_ROOT . "/php/main.php");
+
+if (LOGGED_IN) {
+    require_once(CLASS_ROOT . "/html_fragment.php");
+    $html = new Html_fragment("html/index.html", []);
+    $html->echoOut();
 } else {
     header("Location: login.php");
 }
-?>

@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Jason
- * Date: 8/26/2016
- * Time: 11:36 AM
- */
+require_once("../../config.php");
 
 chdir('../');
 $loc = false;

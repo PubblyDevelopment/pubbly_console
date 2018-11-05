@@ -1,11 +1,6 @@
 <?php
+require_once("../../config.php");
 
-/**
- * Created by PhpStorm.
- * User: Jason
- * Date: 6/23/2016
- * Time: 2:12 PM
- */
 chdir('../');
 include('../../includes/loginCheck.php');
 include('../php/saveXML.php');
