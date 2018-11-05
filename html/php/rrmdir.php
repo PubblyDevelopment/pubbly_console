@@ -11,7 +11,7 @@ function rrmdir($dir) {
     // If we got to the web root
     if ($d) {
 	$multiples = explode("/", $dir);
-	$fineFolders = ["schools", "downloads"]; // add to this
+	$fineFolders = ["schools", "downloads", "map"]; // add to this
 	if (in_array($multiples[0], $fineFolders) && count($multiples) > 1) {
 	    // Should be *somewhat* safe to delete
 	    rrmdirAct($dir);

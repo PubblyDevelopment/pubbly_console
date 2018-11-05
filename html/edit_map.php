@@ -10,7 +10,7 @@ $mapName = base64_decode($_GET['mapName']);
 if (LOGGED_IN) {
     $query = new Mysql_query();
     $map_id = $query->fetchSingle("SELECT map_id FROM map WHERE name = ?", ["s", $mapName]);
-    
+
     // Build JSON from sql query
     $nodePathMap = $query->fetchArray("
 SELECT
@@ -48,30 +48,32 @@ WHERE
     $baseCoverSrc = "map/" . $mapName;
     for ($i = 0; $i < count($nodePathMap); $i++) {
         $node = $nodePathMap[$i];
-        $nodeName = $node['nodeName'];
-        if (!isset($map[$nodeName])) {
+        if ($node) {
+            $nodeName = $node['nodeName'];
+            if (!isset($map[$nodeName])) {
 
-            $cover = ($node['hasCover']) ?
-                    "$baseCoverSrc/$nodeName/cover.png" :
-                    false;
-            $map[$nodeName] = [
-                "node_id" => $node['map_node_id'],
-                "name" => $nodeName,
-                "cover" => $cover,
-                "isEntryNode" => $node['isEntryNode'],
-                "links" => []
+                $cover = ($node['hasCover']) ?
+                        "$baseCoverSrc/$nodeName/cover.png" :
+                        "NavigationNodesUI/assets/booknotfound.png";
+                $map[$nodeName] = [
+                    "node_id" => $node['map_node_id'],
+                    "name" => $nodeName,
+                    "cover" => $cover,
+                    "isEntryNode" => $node['isEntryNode'],
+                    "paths" => []
+                ];
+            }
+            $toLinkName = (isset($node['to_node_name'])) ?
+                    $node['to_node_name'] : false;
+            $fromLinkPage = $node['from_link_page'] + 1;
+            $link = [
+                "map_node_path_id" => $node['map_node_path_id'],
+                "name" => $node['from_node_name'],
+                "page" => $fromLinkPage,
+                "url" => $toLinkName
             ];
+            array_push($map[$node['nodeName']]['paths'], $link);
         }
-        $toLinkName = (isset($node['to_node_name'])) ?
-                $node['to_node_name'] : false;
-        $fromLinkPage = $node['from_link_page'] + 1;
-        $link = [
-            "map_node_path_id" => $node['map_node_path_id'],
-            "name" => $node['from_node_name'],
-            "page" => $fromLinkPage,
-            "url" => $toLinkName
-        ];
-        array_push($map[$node['nodeName']]['links'], $link);
     }
     $json = json_encode($map);
     $frag = new Html_fragment("html/edit_map.html", [

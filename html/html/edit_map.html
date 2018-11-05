@@ -32,11 +32,13 @@
       <!-- Single underscore. It's a super class for what's listed below -->
       <script src="NavigationNodesUI/js/element.js"></script>
       <script src="NavigationNodesUI/js/element_Canvas.js"></script>
-      <script src="NavigationNodesUI/js/element_Link.js"></script>
+      <script src="NavigationNodesUI/js/element_Path.js"></script>
       <script src="NavigationNodesUI/js/element_Zoom.js"></script>
       <script src="NavigationNodesUI/js/element_Save.js"></script>
       <script src="NavigationNodesUI/js/element_Dropdown.js"></script>
+      <script src="NavigationNodesUI/js/element_Entry.js"></script>
       <script src="NavigationNodesUI/js/canvas-arrow.js"></script>
+      
       <script src="NavigationNodesUI/js/helper.js"></script>
 
       <link rel="stylesheet" href="skins/webix.css" type="text/css">
@@ -53,7 +55,10 @@
                  zoomOutButton: $("#zoomOutButton")[0],
                  linkButton: $("#linkButton")[0],
                  linkDropdown: $("#linkSelections")[0],
-                 fromNode: $("#firstBookPhoto")[0]
+                 entryNodeButton: $("#entryNodeButton")[0],
+                 pathButton: $("#pathButton")[0],
+                 pathDropdown: $("#pathSelections")[0],
+                 fromNode: $("#firstNodePhoto")[0]
              };
              let data = false;
              try {
@@ -107,6 +112,7 @@
                         <button class='button d-block' id="saveButton" type="button" value="SAVE"/><i class="far fa-save"></i></button>
                         <button class='button d-block' id="zoomInButton" type="button" value="ZOOM IN"/><i class="fas fa-search-plus"></i></button>
                         <button class='button d-block' id="zoomOutButton" type="button" value="ZOOM OUT"/><i class="fas fa-search-minus"></i></button>
+       <button class='button d-block' id="entryNodeButton" type="button" value="SET POINT"/><i class="fas fa-star"></i></button>
                      </div>
                   </div>
                </div>
@@ -114,31 +120,31 @@
                   <!-- If no col-number is set, other cols will fill around it -->
                   <div class="col">
                      <!-- d-block m-auto centers image -->
-                     <img id="firstBookPhoto" class="d-block m-auto" width=100px
-                          src="NavigationNodesUI/assets/emptybook.png">
+                     <img id="firstNodePhoto" class="d-block m-auto" width=100px
+                          src="NavigationNodesUI/assets/emptynode.png">
                      <!-- text-align:center centers text -->
-                     <p id="firstBookSelected" style="text-align:center;">[No book selected]</p>
+                     <p id="firstNodeSelected" style="text-align:center;">[No book selected]</p>
                   </div>
                   <div class="col-2">
                      <!-- note, this is the poor-boy centershit of css -->
                      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
-                        <select id="linkSelections" style="width:200px">
+                        <select id="pathSelections" style="width:200px">
                         </select>
                         <br>
                         <br>
                         <div style="text-align: center">
-                           <button class='button' id="linkButton" type="button" value="LINK" style="font-size: 22px">
-                              <i class="fas fa-arrow-alt-circle-right"></i>
-                           </button>
+                           <button class='button' id="pathButton" type="button" value="LINK" style="font-size: 22px">
+                                <i class="fas fa-arrow-alt-circle-right"></i>
+                            </button>
                         </div>
                      </div>
                   </div>
                   <div class="col">
                      <!-- d-block m-auto centers image -->
-                     <img id="secondBookPhoto" class="d-block m-auto" width=100px
-                          src="NavigationNodesUI/assets/emptybook.png">
+                     <img id="secondNodePhoto" class="d-block m-auto" width=100px
+                          src="NavigationNodesUI/assets/emptynode.png">
                      <!-- text-align:center centers text -->
-                     <p id="secondBookSelected" style="text-align:center;">[No book selected]</p>
+                     <p id="secondNodeSelected" style="text-align:center;">[No book selected]</p>
                   </div>
                </div>
             </div>

@@ -3,32 +3,32 @@ class NavigationNodes {
     // Start of Jason messed around
     // Plus added a line to top of method eventMouseMoveCanvas
 
-    play_getBookInfoByFancyName(fancyName) {
-        for (let bookName in this.json) {
-            if (this.json[bookName].name == fancyName) {
-                return this.json[bookName];
+    play_getNodeInfoByFancyName(fancyName) {
+        for (let nodeName in this.json) {
+            if (this.json[nodeName].name == fancyName) {
+                return this.json[nodeName];
             }
         }
     }
     // 
     play_getLines(mx, my) {
         let lines = [];
-        for (let bookName in this.json) {
-            let book = this.json[bookName];
+        for (let nodeName in this.json) {
+            let node = this.json[nodeName];
 
-            book.links.map(lnk => {
-                if (lnk.url) {
-                    let endBook = this.play_getBookInfoByFancyName(lnk.url);
+            node.paths.map(pth => {
+                if (pth.url) {
+                    let endNode = this.play_getNodeInfoByFancyName(pth.url);
                     lines.push({
                         start: [
-                            book.x + book.width / 2,
-                            book.y + book.height / 2
+                            node.x + node.width / 2,
+                            node.y + node.height / 2
                         ],
-                        // End of whatever we use to calculate where the arrow ends, not where the center book ends.
-                        end: this.determineArrowEndingPoint(book, endBook),
-                        fromBook: book.name,
-                        linkName: lnk.name,
-                        toBook: endBook.name
+                        // End of whatever we use to calculate where the arrow ends, not where the center node ends.
+                        end: this.determineArrowEndingPoint(node, endNode),
+                        fromNode: node.name,
+                        pathName: pth.name,
+                        toNode: endNode.name
                     });
                 }
             });
@@ -52,14 +52,14 @@ class NavigationNodes {
     loadAssets(cb) {
         let needed = 0;
         let recieved = 0;
-        for (let bookName in this.json) {
+        for (let nodeName in this.json) {
             // Counts how many unique images we need to load in to display the project
             needed++;
             // Easier loop
-            let book = this.json[bookName];
-            // Assigning to book (carries backwards to this.json) for later access
-            book.img = new Image();
-            book.img.onload = function () {
+            let node = this.json[nodeName];
+            // Assigning to node (carries backwards to this.json) for later access
+            node.img = new Image();
+            node.img.onload = function () {
                 // Still references the variable declared at top of this.loadAssets
                 recieved++;
                 if (recieved == needed) {
@@ -67,30 +67,32 @@ class NavigationNodes {
                     cb();
                 }
             };
-            let backup = "NavigationNodesUI/assets/booknotfound.png";
-            book.img.onerror = function () {
-                book.img.src = backup;
-            }
-            book.img.src = book.cover || backup;
+            node.img.src = node.cover;
         }
+        this.starImg = new Image();
+        this.starImg.src = "NavigationNodesUI/assets/star.png";
     }
 
-    // Puts books in a grid 
-    placeVirginProjectBooks() {
-        // Assign an XY coordinate to each book (described in json) if brand new program
+    // Puts nodes in a grid 
+    placeVirginProjectNodes() {
+        // Assign an XY coordinate to each node (described in json) if brand new program
         let x = 10;
         let y = 10;
         let counter = 1;
-        for (let bookName in this.json) {
-            let img = this.json[bookName].img;
-            this.json[bookName].x = x;
-            this.json[bookName].y = y;
-            this.json[bookName].width = 150;
-            this.json[bookName].height = 150 * img.height / img.width;
+        let entryNode = undefined;
+        for (let nodeName in this.json) {
+            if (this.json[nodeName].isEntryNode) {
+                entryNode = this.json[nodeName];
+            }
+            let img = this.json[nodeName].img;
+            this.json[nodeName].x = x;
+            this.json[nodeName].y = y;
+            this.json[nodeName].width = 150;
+            this.json[nodeName].height = 150 * img.height / img.width;
             // Changed to just height, width, since there's nothing else with those props.
             // Deletes here to overwrite old format projectJSON
-            delete this.json[bookName].imgHeight;
-            delete this.json[bookName].imgWidth;
+            delete this.json[nodeName].imgHeight;
+            delete this.json[nodeName].imgWidth;
 
             // Logic to build grid
             x += 210;
@@ -100,10 +102,16 @@ class NavigationNodes {
             }
             counter++;
         }
+        if (!entryNode) {
+            this.json[Object.keys(this.json)[0]].isEntryNode = true;
+            this.entryNode = this.json[Object.keys(this.json)[0]];
+            // draw star for that node
+        }
+        // draw star for entry node somewhere else lol
     }
     checkIfProjectVirgin() {
-        for (let bookName in this.json) {
-            if (typeof this.json[bookName].x == "undefined") {
+        for (let nodeName in this.json) {
+            if (typeof this.json[nodeName].x == "undefined") {
                 // Returning auto "breaks";
                 return true;
             }
@@ -113,67 +121,79 @@ class NavigationNodes {
     }
 
     clearCanvas() {
-        this.inputs.bookCanvas.clear();
+        this.inputs.nodeCanvas.clear();
     }
 
-    drawAllBooks() {
-        for (let bookName in this.json) {
-            this.inputs.bookCanvas.drawImage(
-                    this.json[bookName].img,
-                    this.json[bookName].x,
-                    this.json[bookName].y,
-                    this.json[bookName].width,
-                    this.json[bookName].height);
+    drawAllNodes() {
+        for (let nodeName in this.json) {
+            this.inputs.nodeCanvas.drawImage(
+                    this.json[nodeName].img,
+                    this.json[nodeName].x,
+                    this.json[nodeName].y,
+                    this.json[nodeName].width,
+                    this.json[nodeName].height);
+            if (this.json[nodeName].isEntryNode) {
+                this.drawEntryNodeStar(this.json[nodeName]);
+            }
         }
     }
 
-    drawBookRect(color, book) {
-        if (book != undefined) {
-            this.inputs.bookCanvas.drawRect(
+    drawNodeRect(color, node) {
+        if (node !== undefined) {
+            this.inputs.nodeCanvas.drawRect(
                     color,
-                    book.x,
-                    book.y,
-                    book.width,
-                    book.height);
+                    node.x,
+                    node.y,
+                    node.width,
+                    node.height);
         }
     }
 
-    drawBooksRectanglesAndLines() {
+    drawNodesRectanglesAndLines() {
+
         this.clearCanvas();
-        this.determineLinks();
-        this.drawAllBooks();
-        this.drawBookRect("red", this.curBook);
-        this.drawBookRect("green", this.secondBook);
+        this.determinePaths();
+        this.drawAllNodes();
+        //this.drawEntryNodeStar();
+        this.drawNodeRect("red", this.curNode);
+        this.drawNodeRect("green", this.secondNode);
+
     }
 
-    determineLinks() {
-        // Go through each book
-        this.listOfLinks = [];
-        for (let bookName in this.json) {
-            for (let l in this.json[bookName].links) {
+    drawEntryNodeStar(node) {
+        this.inputs.nodeCanvas.drawImage(this.starImg,
+                node.x + node.width / 2 - 25,
+                node.y + node.height / 2 - 25, 50, 50);
+    }
+
+    determinePaths() {
+        // Go through each node
+        this.listOfPaths = [];
+        for (let nodeName in this.json) {
+            for (let l in this.json[nodeName].paths) {
                 ;
-                //this.inputs.bookCanvas.drawLine("black",0,0,book.x,book.y);
-                // Go through each link in that book
-                for (let bookNameAgain in this.json) {
-                    // Go through each book again 
-                    // If a link equals that book, add to array and break. moving on
-                    // to next link
-                    if (this.json[bookName].links[l].url == this.json[bookNameAgain].name) {
-                        this.listOfLinks.push([this.json[bookName], this.json[bookNameAgain]]);
+                //this.inputs.nodeCanvas.drawLine("black",0,0,node.x,node.y);
+                // Go through each path in that node
+                for (let nodeNameAgain in this.json) {
+                    // Go through each node again 
+                    // If a path equals that node, add to array and break. moving on
+                    // to next path
+                    if (this.json[nodeName].paths[l].url == this.json[nodeNameAgain].name) {
+                        this.listOfPaths.push([this.json[nodeName], this.json[nodeNameAgain]]);
 
                         let color = "gray";
-                        if (this.json[bookName] == this.curBook)
-                            // Populate dropdown to show existing link
-                            if (this.json[bookNameAgain] == this.secondBook || this.secondBook == undefined) {
-                                this.inputs.dropDown.setDropdownSelection(this.json[bookName].links[l].name);
+                        if (this.json[nodeName] == this.curNode)
+                            // Populate dropdown to show existing path
+                            if (this.json[nodeNameAgain] == this.secondNode || this.secondNode == undefined) {
+                                this.inputs.dropDown.setDropdownSelection(this.json[nodeName].paths[l].name);
                                 color = "black";
                             }
 
-                        let arrowEndingLoc = this.determineArrowEndingPoint(this.json[bookName], this.json[bookNameAgain]);
+                        let arrowEndingLoc = this.determineArrowEndingPoint(this.json[nodeName], this.json[nodeNameAgain]);
 
-                        this.inputs.bookCanvas.drawArrow(color,
-                                this.json[bookName].x + this.json[bookName].width / 2,
-                                this.json[bookName].y + this.json[bookName].height / 2,
+                        this.inputs.nodeCanvas.drawArrow(color,
+                                this.json[nodeName].x + this.json[nodeName].width / 2,
+                                this.json[nodeName].y + this.json[nodeName].height / 2,
                                 arrowEndingLoc[0],
                                 arrowEndingLoc[1]);
 
@@ -184,33 +204,33 @@ class NavigationNodes {
         }
     }
 
-    determineArrowEndingPoint(book1, book2) {
-        let slope = getSlope(book1.x, book1.y, book2.x, book2.y);
-        let minRadius = Math.max(book2.height, book2.width) / 2;
+    determineArrowEndingPoint(node1, node2) {
+        let slope = getSlope(node1.x, node1.y, node2.x, node2.y);
+        let minRadius = Math.max(node2.height, node2.width) / 2;
         let xMod = 0;
         let yMod = 0;
         let closeX, farX, closeY, farY;
 
-        if (book1.x < book2.x) {
-            closeX = (book2.x + book2.width / 2) - minRadius;
-            farX = (book2.x + book2.width / 2) + minRadius;
+        if (node1.x < node2.x) {
+            closeX = (node2.x + node2.width / 2) - minRadius;
+            farX = (node2.x + node2.width / 2) + minRadius;
         } else {
-            closeX = (book2.x + book2.width / 2) + minRadius;
-            farX = (book2.x + book2.width / 2) - minRadius;
+            closeX = (node2.x + node2.width / 2) + minRadius;
+            farX = (node2.x + node2.width / 2) - minRadius;
         }
 
-        if (book1.y < book2.y) {
-            closeY = (book2.y + book2.height / 2) - minRadius;
-            farY = (book2.y + book2.height / 2) + minRadius;
+        if (node1.y < node2.y) {
+            closeY = (node2.y + node2.height / 2) - minRadius;
+            farY = (node2.y + node2.height / 2) + minRadius;
         } else {
-            closeY = (book2.y + book2.height / 2) + minRadius;
-            farY = (book2.y + book2.height / 2) - minRadius;
+            closeY = (node2.y + node2.height / 2) + minRadius;
+            farY = (node2.y + node2.height / 2) - minRadius;
         }
 
         let avgX = (closeX + farX) / 2;
         let avgY = (closeY + farY) / 2;
 
-        let ang = angle(book1.x, book1.y, book2.x, book2.y);
+        let ang = angle(node1.x, node1.y, node2.x, node2.y);
         if (Math.abs(ang) > 45 && Math.abs(ang) < 125) {
             // Draw to middle top/bottom
             return [avgX, closeY];
@@ -220,156 +240,134 @@ class NavigationNodes {
         }
     }
 
-    generateBookConnectionArrowPoints(book1, book2) {
+    generateNodeConnectionArrowPoints(node1, node2) {
         // TODO 10/4
-        for (let l in book1.links) {
-            if (book1.links[l].url == book2.name) {
+        for (let l in node1.paths) {
+            if (node1.paths[l].url == node2.name) {
                 // Position logic
-                this.inputs.bookCanvas.drawArrow("black", book1.x, book1.y, book2.x, book2.y);
+                this.inputs.nodeCanvas.drawArrow("black", node1.x, node1.y, node2.x, node2.y);
             }
         }
     }
 
     drawAllLines() {
-        for (let bookName in this.json) {
-            if (this.json[bookName] == this.curBook)
-                this.drawLines(this.json[bookName], "black");
+        for (let nodeName in this.json) {
+            if (this.json[nodeName] == this.curNode)
+                this.drawLines(this.json[nodeName], "black");
             else
-                this.drawLines(this.json[bookName], "gray");
+                this.drawLines(this.json[nodeName], "gray");
         }
     }
 
-    changeBookPhoto() {
-        let empty = "NavigationNodesUI/assets/emptybook.png";
-        let firstCoverSrc = (this.curBook && this.curBook.cover) ?
-                this.curBook.cover : empty;
-        document.getElementById("firstBookPhoto").src = firstCoverSrc;
+    changeNodePhoto() {
+        let firstCoverSrc = (this.curNode) ? this.curNode.cover : "NavigationNodesUI/assets/emptynode.png";
+        document.getElementById("firstNodePhoto").src = firstCoverSrc;
 
-        let secondCoverSrc = (this.secondBook && this.secondBook.cover) ?
-                this.secondBook.cover : empty;
-        document.getElementById("secondBookPhoto").src = secondCoverSrc;
+        let secondCoverSrc = (this.secondNode) ? this.secondNode.cover : "NavigationNodesUI/assets/emptynode.png";
+        document.getElementById("secondNodePhoto").src = secondCoverSrc;
 
 
-        if (this.secondBook)
-            document.getElementById("secondBookPhoto").src = secondCoverSrc;
+        if (this.secondNode)
+            document.getElementById("secondNodePhoto").src = this.secondNode.cover;
     }
 
     // Updates the JSON in /project
     saveJSON() {
-        let jsonString = JSON.stringify(this.json);
-        $.ajax({
-            type: "POST",
-            url: "NavigationNodesUI/ajax/saveJSON.php",
-            data: {
-                programName: btoa(this.programName),
-                json: jsonString,
-            },
-            success: function (ret) {
-                if (ret == "done") {
-                    // console.log("woo");
-                } else {
-                    // Probably PHP errors echoed in... better read em
-                    document.innerHTML = ret;
-                }
-            },
-            error: function () {
-                console.error("saveJSON function didn't go through. Check ajax call.");
-            },
-        });
+
     }
 
     // Events to be called back with class NavigationNodes scope.
     // ALL events using 
     //     arg1: relative mouse loc {x, y}
     //     arg12: element where event was generated
-    getFirstBookUnderneathMouseLoc(loc) {
-        let hoveredBooks = [];
+    getFirstNodeUnderneathMouseLoc(loc) {
+        let hoveredNodes = [];
         for (let bn in this.json) {
-            let book = this.json[bn];
+            let node = this.json[bn];
             let poly = [
-                [book.x, book.y],
-                [book.x + book.width, book.y],
-                [book.x + book.width, book.y + book.height],
-                [book.x, book.y + book.height],
+                [node.x, node.y],
+                [node.x + node.width, node.y],
+                [node.x + node.width, node.y + node.height],
+                [node.x, node.y + node.height],
             ]
             if (inside([loc.x, loc.y], poly)) {
-                hoveredBooks.push(book);
+                hoveredNodes.push(node);
             }
         }
-        // TODO: Order hoveredBooks by layer, skim first from top (books could overlap)
-        return hoveredBooks[0]; // either a book, or undefined (which is falsy)
+        // TODO: Order hoveredNodes by layer, skim first from top (nodes could overlap)
+        return hoveredNodes[0]; // either a node, or undefined (which is falsy)
     }
 
     eventMouseUpCanvas(loc, e, elem)
     {
-        this.curMovingBook = false;
+        this.curMovingNode = false;
         this.isPanning = false;
     }
 
     eventMouseDownCanvas(loc, e, elem) {
-        let clickedBook = this.getFirstBookUnderneathMouseLoc(loc);
+        let clickedNode = this.getFirstNodeUnderneathMouseLoc(loc);
         let clickedLine = this.play_getLines(loc.x, loc.y);
 
-        if (this.curBook && this.secondBook) {
-            this.generateBookConnectionArrowPoints(this.curBook, this.secondBook);
+        if (this.curNode && this.secondNode) {
+            this.generateNodeConnectionArrowPoints(this.curNode, this.secondNode);
         }
 
-        if (clickedBook && !e.shiftKey) {
-            if (clickedBook == this.secondBook) {
-                this.secondBook = undefined;
+        if (clickedNode && !e.shiftKey) {
+            if (clickedNode == this.secondNode) {
+                this.secondNode = undefined;
             }
-            this.curBook = clickedBook;
-            let id = clickedBook.node_id;
+            let id = clickedNode.node_id;
             $("#file_upload_form").attr("action", "php/ajax/uploadNodeCover.php?nodeID=" + id);
-            this.curMovingBook = clickedBook;
-            this.inputs.dropDown.populateDropdown(this.curBook);
-            console.log(this.inputs.dropDown.populateDropdown(this.curBook));
-            if (this.inputs.dropDown.populateDropdown(this.curBook) == 0)
-                this.inputs.linkButton.disableEvent("click");
+            this.curNode = clickedNode;
+            this.curMovingNode = clickedNode;
+            this.inputs.dropDown.populateDropdown(this.curNode);
+            console.log(this.inputs.dropDown.populateDropdown(this.curNode));
+            if (this.inputs.dropDown.populateDropdown(this.curNode) == 0)
+                this.inputs.pathButton.disableEvent("click");
             else {
-                this.inputs.linkButton.enableEvent("click");
+                this.inputs.pathButton.enableEvent("click");
             }
 
-            this.changeBookPhoto();
-            this.drawBooksRectanglesAndLines()
-        } else if (clickedBook && e.shiftKey) {
-            this.secondBook = clickedBook;
-            this.curMovingBook = clickedBook;
+            this.changeNodePhoto();
+            this.drawNodesRectanglesAndLines();
+        } else if (clickedNode && e.shiftKey) {
+            this.secondNode = clickedNode;
+            this.curMovingNode = clickedNode;
 
-            if (this.curBook) {
-                if (this.curBook.name == this.secondBook.name) {
-                    this.curBook = undefined;
+            if (this.curNode) {
+                if (this.curNode.name == this.secondNode.name) {
+                    this.curNode = undefined;
                 }
             }
 
-            this.drawBooksRectanglesAndLines();
+            this.drawNodesRectanglesAndLines();
 
-            this.inputs.dropDown.setSecondBookTitle(this.secondBook);
-            this.changeBookPhoto();
+            this.inputs.dropDown.setSecondNodeTitle(this.secondNode);
+            this.changeNodePhoto();
         } else if (clickedLine) {
-            this.curBook = this.play_getBookInfoByFancyName(clickedLine.fromBook)
-            this.secondBook = this.play_getBookInfoByFancyName(clickedLine.toBook)
+            this.curNode = this.play_getNodeInfoByFancyName(clickedLine.fromNode)
+            this.secondNode = this.play_getNodeInfoByFancyName(clickedLine.toNode)
 
-            this.inputs.dropDown.populateDropdown(this.curBook);
-            this.inputs.dropDown.setDropdownSelection(clickedLine.linkName);
+            this.inputs.dropDown.populateDropdown(this.curNode);
+            this.inputs.dropDown.setDropdownSelection(clickedLine.pathName);
 
             this.clearCanvas();
-            this.determineLinks();
-            this.drawAllBooks();
-            this.drawBookRect("red", this.curBook);
-            this.drawBookRect("green", this.secondBook);
+            this.determinePaths();
+            this.drawAllNodes();
+            this.drawNodeRect("red", this.curNode);
+            this.drawNodeRect("green", this.secondNode);
 
-            this.changeBookPhoto();
+            this.changeNodePhoto();
         } else {
-            this.curBook = undefined;
-            this.secondBook = undefined;
+            this.curNode = undefined;
+            this.secondNode = undefined;
             this.clearCanvas();
-            this.determineLinks();
-            this.drawAllBooks();
-            this.changeBookPhoto();
-            this.inputs.linkButton.disableEvent("click");
+            this.determinePaths();
+            this.drawAllNodes();
+            this.changeNodePhoto();
+            this.inputs.pathButton.disableEvent("click");
 
-            this.curMovingBook = false;
+            this.curMovingNode = false;
             this.isPanning = true;
 
             this.initialX = e.offsetX;
@@ -381,58 +379,58 @@ class NavigationNodes {
         let hoveringOnALine = this.play_getLines(loc.x, loc.y);
 
 
-        if (this.curMovingBook && !e.shiftKey) {
-            this.curBook = this.curMovingBook;
-            this.curMovingBook.x = loc.x - this.curMovingBook.width / 2;
-            this.curMovingBook.y = loc.y - this.curMovingBook.height / 2;
+        if (this.curMovingNode && !e.shiftKey) {
+            this.curNode = this.curMovingNode;
+            this.curMovingNode.x = loc.x - this.curMovingNode.width / 2;
+            this.curMovingNode.y = loc.y - this.curMovingNode.height / 2;
 
-            this.drawBooksRectanglesAndLines();
-        } else if (this.curMovingBook && e.shiftKey) {
+            this.drawNodesRectanglesAndLines();
+        } else if (this.curMovingNode && e.shiftKey) {
             // some stuff
-            this.secondBook = this.curMovingBook;
-            this.curMovingBook.x = loc.x - this.curMovingBook.width / 2;
-            this.curMovingBook.y = loc.y - this.curMovingBook.height / 2;
+            this.secondNode = this.curMovingNode;
+            this.curMovingNode.x = loc.x - this.curMovingNode.width / 2;
+            this.curMovingNode.y = loc.y - this.curMovingNode.height / 2;
 
-            this.drawBooksRectanglesAndLines();
+            this.drawNodesRectanglesAndLines();
 
         } else {
-            let hoverBook = this.getFirstBookUnderneathMouseLoc(loc);
+            let hoverNode = this.getFirstNodeUnderneathMouseLoc(loc);
 
-            this.drawBooksRectanglesAndLines();
+            this.drawNodesRectanglesAndLines();
 
-            if (hoverBook) {
-                this.inputs.bookCanvas.changeCursor("pointer");
-                if (hoverBook != this.curBook && hoverBook != this.secondBook) {
-                    this.drawBookRect('white', hoverBook);
+            if (hoverNode) {
+                this.inputs.nodeCanvas.changeCursor("pointer");
+                if (hoverNode != this.curNode && hoverNode != this.secondNode) {
+                    this.drawNodeRect('white', hoverNode);
                 }
             } else {
-                this.inputs.bookCanvas.changeCursor();
+                this.inputs.nodeCanvas.changeCursor();
             }
 
             if (hoveringOnALine) {
-                this.inputs.bookCanvas.changeCursor("pointer");
+                this.inputs.nodeCanvas.changeCursor("pointer");
             }
 
         }
         if (this.isPanning) {
-            this.inputs.bookCanvas.offset[0] += (this.initialX - e.offsetX) / -this.inputs.bookCanvas.zoom;
-            this.inputs.bookCanvas.offset[1] += (this.initialY - e.offsetY) / -this.inputs.bookCanvas.zoom;
+            this.inputs.nodeCanvas.offset[0] += (this.initialX - e.offsetX) / -this.inputs.nodeCanvas.zoom;
+            this.inputs.nodeCanvas.offset[1] += (this.initialY - e.offsetY) / -this.inputs.nodeCanvas.zoom;
 
             this.initialX = e.offsetX;
             this.initialY = e.offsetY;
 
             this.clearCanvas();
-            this.determineLinks();
-            this.drawAllBooks();
+            this.determinePaths();
+            this.drawAllNodes();
 
-            this.drawBookRect("red", this.curBook);
-            this.drawBookRect("green", this.secondBook);
+            this.drawNodeRect("red", this.curNode);
+            this.drawNodeRect("green", this.secondNode);
         }
     }
 
     eventMouseWheelCanvas(loc, e, elem) {
         if (e.deltaY < 0) {
-            this.eventClickZoomIn(loc, e, elem)
+            this.eventClickZoomIn(loc, e, elem);
         } else
             this.eventClickZoomOut(loc, e, elem);
     }
@@ -440,19 +438,19 @@ class NavigationNodes {
     eventClickZoomIn(loc, e, elem) {
         let factor = 0.1;
 
-        this.inputs.bookCanvas.zoom += factor;
+        this.inputs.nodeCanvas.zoom += factor;
 
         this.clearCanvas();
-        this.determineLinks();
-        this.drawAllBooks();
+        this.determinePaths();
+        this.drawAllNodes();
     }
     eventClickZoomOut(loc, e, elem) {
         let factor = 0.1;
-        this.inputs.bookCanvas.zoom -= factor;
+        this.inputs.nodeCanvas.zoom -= factor;
 
         this.clearCanvas();
-        this.determineLinks();
-        this.drawAllBooks();
+        this.determinePaths();
+        this.drawAllNodes();
     }
     eventClickSave(loc, e, elem) {
         // TODO: Please wait, disable everything, callback, enable buttons
@@ -462,43 +460,60 @@ class NavigationNodes {
         this.inputs.save.enableEvent("click");
     }
 
-    eventClickLink(loc, e, elem)
-    {
-        let selLink = this.inputs.dropDown.getDropdownSelection();
+    eventClickPath(loc, e, elem) {
+        let selPath = this.inputs.dropDown.getDropdownSelection();
 
-        if (this.curBook && this.secondBook) {
-            for (let l in this.curBook.links) {
-                if (selLink == this.curBook.links[l].name) {
-                    this.curBook.links[l].url = this.secondBook.name;
-                    ajax_general("addNodeConnectionToMap", {
-                        mapID: window.mapID,
-                        fromPathID: this.curBook.links[l].map_node_path_id,
-                        toNodeID: this.secondBook.node_id,
-                    }, {done: function () {
-                            console.log("done");
-                        }}, "get");
+        if (this.curNode && this.secondNode) {
+            let fromPathId = false;
+            for (let l in this.curNode.paths) {
+                if (selPath == this.curNode.paths[l].name) {
+                    this.curNode.paths[l].url = this.secondNode.name;
+                    fromPathId = this.curNode.paths[l].map_node_path_id;;
                 }
             }
+            ajax_general("addNodeConnectionToMap", {
+                mapID: window.mapID,
+                fromPathID: fromPathId,
+                toNodeID: this.secondNode.node_id,
+            }, {done: function () {
+                    console.log("done");
+                }}, "get");
         }
 
-        this.drawBooksRectanglesAndLines();
+        this.drawNodesRectanglesAndLines();
+    }
+
+    eventClickEntry(loc, e, elem) {
+        for (let nodeName in this.json) {
+            this.json[nodeName].isEntryNode = false;
+        }
+        this.curNode.isEntryNode = true;
+        this.drawNodesRectanglesAndLines();
+        ajax_general("setNodeToEntryPoint", {
+            nodeID: this.curNode.node_id,
+        }, {done: function () {
+                console.log("done");
+            }}, "get");
     }
 
     attachEvents() {
         // Bind attaches the first arg to the function call... essentially cutting out the _This solution or the scope apply callbacks (ES6)
         // https://stackoverflow.com/questions/2236747/use-of-the-javascript-bind-method
-        this.inputs.bookCanvas.attachEvent("mouseup", this.eventMouseUpCanvas.bind(this));
-        this.inputs.bookCanvas.attachEvent("mousedown", this.eventMouseDownCanvas.bind(this));
-        this.inputs.bookCanvas.attachEvent("mousemove", this.eventMouseMoveCanvas.bind(this));
-        this.inputs.bookCanvas.attachEvent("mouseout", this.eventMouseUpCanvas.bind(this));
-        this.inputs.bookCanvas.attachEvent("mousewheel", this.eventMouseWheelCanvas.bind(this));
+        this.inputs.nodeCanvas.attachEvent("mouseup", this.eventMouseUpCanvas.bind(this));
+        this.inputs.nodeCanvas.attachEvent("mousedown", this.eventMouseDownCanvas.bind(this));
+        this.inputs.nodeCanvas.attachEvent("mousemove", this.eventMouseMoveCanvas.bind(this));
+        this.inputs.nodeCanvas.attachEvent("mouseout", this.eventMouseUpCanvas.bind(this));
+        this.inputs.nodeCanvas.attachEvent("mousewheel", this.eventMouseWheelCanvas.bind(this));
 
         this.inputs.zoomIn.attachEvent("click", this.eventClickZoomIn.bind(this));
         this.inputs.zoomOut.attachEvent("click", this.eventClickZoomOut.bind(this));
 
         this.inputs.save.attachEvent("click", this.eventClickSave.bind(this));
 
-        this.inputs.linkButton.attachEvent("click", this.eventClickLink.bind(this));
+        this.inputs.pathButton.attachEvent("click", this.eventClickPath.bind(this));
+
+        this.inputs.entryNodeButton.attachEvent("click", this.eventClickEntry.bind(this));
+
         let that = this;
         $(this.inputElements.fromNode).click(function () {
             if ($("#file_upload_form").attr("action")) {
@@ -508,49 +523,48 @@ class NavigationNodes {
         $("#file_upload").change(function () {
             $("#file_upload_form").submit();
         });
-
     }
 
-    constructor(programName, json, inputElements, debugInfo) {
+    constructor(mapName, json, inputElements, debugInfo) {
         // We've added more classes, and need more "selves". 
-        // As such, use _ClassName to signify the scope lock trick.
+        // As such, use _ClassName to signify the scope lock 
+        // trick.
+        this.mapName = mapName;
         const _NavigationNodes = this;
-        this.programName = programName;
         this.json = json;
         this.inputElements = inputElements;
 
         // Debuggin!
-        this.debugInfo = mergeObjWithDefaults(debugInfo,
-                {fakeProjectVirgin: false}
-        );
+        this.debugInfo = Object.assign({fakeProjectVirgin: false}, debugInfo);
 
         // Default properties for class itself
         this.isDraggable = false;
         this.isPanning = false;
         this.ifPlaced = false;
-        this.curBook;
-        this.secondBook;
-        this.hoverBook;
+        this.curNode;
+        this.secondNode;
+        this.hoverNode;
         this.cleanSlate;
         this.initialX;
         this.initialY;
         this.zoomFactor = 1.0;
         this.isPanning;
-        this.listOfLinks = [];
+        this.listOfPaths = [];
+        this.entryNode;
         // Each input to the NavigationNodes main class
         this.inputs = {};
 
         try {
             // Will tell you if something goes bad with your inputs
-            this.inputs.bookCanvas = new NavigationNodes_Canvas(inputElements.canvas);
+            this.inputs.nodeCanvas = new NavigationNodes_Canvas(inputElements.canvas);
             // Seperate canvas for just the connecting arrows? Cut down on redraw time.
             // this.inputs.connectionsCanvas = new NavigationNodes_Canvas(inputElements.canvas);
             this.inputs.save = new NavigationNodes_Save(inputElements.saveButton);
             this.inputs.zoomIn = new NavigationNodes_Zoom(inputElements.zoomInButton);
             this.inputs.zoomOut = new NavigationNodes_Zoom(inputElements.zoomOutButton);
-            this.inputs.dropDown = new NavigationNodes_Dropdown(inputElements.linkDropdown)
-            this.inputs.linkButton = new NavigationNodes_Link(inputElements.linkButton);
-            this.inputs.fromNode = inputElements.fromBook;
+            this.inputs.dropDown = new NavigationNodes_Dropdown(inputElements.pathDropdown)
+            this.inputs.pathButton = new NavigationNodes_Path(inputElements.pathButton);
+            this.inputs.entryNodeButton = new NavigationNodes_Entry(inputElements.entryNodeButton);
         } catch (e) {
             console.error("Error with NavigationNodes init.");
             console.error(e);
@@ -559,25 +573,17 @@ class NavigationNodes {
 
         // Attach events to each input elements created above
         this.attachEvents();
-        this.inputs.linkButton.disableEvent("click");
+        this.inputs.pathButton.disableEvent("click");
 
         this.loadAssets(function () {
             if (_NavigationNodes.checkIfProjectVirgin() ||
                     _NavigationNodes.debugInfo.fakeProjectVirgin) {
-                _NavigationNodes.placeVirginProjectBooks.call(_NavigationNodes);
+                _NavigationNodes.placeVirginProjectNodes.call(_NavigationNodes);
                 _NavigationNodes.saveJSON.call(_NavigationNodes);
             }
-            _NavigationNodes.determineLinks.call(_NavigationNodes);
-            _NavigationNodes.drawAllBooks.call(_NavigationNodes);
-            _NavigationNodes.saveJSON.call(_NavigationNodes);
+            _NavigationNodes.determinePaths.call(_NavigationNodes);
+            _NavigationNodes.drawAllNodes.call(_NavigationNodes);
         });
     }
 }
 
-function setEntry(ID) {
-    ajax_general("setNodeToEntryPoint", {
-        nodeID: ID,
-    }, {done: function () {
-            console.log("done");
-        }}, "get");
-}

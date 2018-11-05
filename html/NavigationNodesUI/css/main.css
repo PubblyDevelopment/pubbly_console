@@ -22,7 +22,7 @@ body{
 .col-sm {
     padding: 0px;
     text-align: center;
-     margin: 0 auto;
+    margin: 0 auto;
 }
 
 .button {
@@ -55,11 +55,11 @@ body{
 }
 
 .d-block {
-	margin-top: 5px;
-	border-radius: 4px;
+    margin-top: 5px;
+    border-radius: 4px;
 }
 
-#linkButton {
-	border-radius: 4px;
-	width: 150px;
+#pathButton {
+    border-radius: 4px;
+    width: 150px;
 }

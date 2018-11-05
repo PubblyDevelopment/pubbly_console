@@ -63,7 +63,7 @@ class NavigationNodes_Canvas extends NavigationNodes_element {
         } else {
             console.error("Canvas draw error, one of the argments passed was not a number");
         }
-        // this.ctx.arrow(book1.x, book1.y, book2.x, book2.y, [0, 1, -10, 1, -10, 5]);
+        // this.ctx.arrow(node1.x, node1.y, node2.x, node2.y, [0, 1, -10, 1, -10, 5]);
         //this.ctx.fill();
         //this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     }

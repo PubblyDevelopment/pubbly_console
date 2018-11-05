@@ -144,17 +144,11 @@ let actionBar = {
                         {id: "export_server", view: "button", label: "View Server",
                             disabled: true, on: {
                                 onItemClick: function () {
-                                    window.location.href = "read.php?t=m&mn=" + window.selectedMapName
+                                    window.location.href = "read.php?engineCode=new&t=m&mn=" + window.selectedMapName
                                 }
                             }
                         },
-                        {id: "view_server", hidden: true, view: "button", label: "View Server",
-                            disabled: true, on: {
-                                onItemClick: function () {
-                                    window.location.href = "read.php?t=pg&pn=" + btoa(window.selectedMapName);
-                                }
-                            }
-                        },
+    
                         {
                             id: "export_server_prerequisite",
                             hidden: true,
