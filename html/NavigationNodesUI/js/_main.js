@@ -466,9 +466,9 @@ class NavigationNodes {
         if (this.curNode && this.secondNode) {
             let fromPathId = false;
             for (let l in this.curNode.paths) {
-                if (selPath == this.curNode.paths[l].name) {
+                if (selPath == this.curNode.paths[l].link_name) {
                     this.curNode.paths[l].url = this.secondNode.name;
-                    fromPathId = this.curNode.paths[l].map_node_path_id;;
+                    fromPathId = this.curNode.paths[l].map_node_path_id;
                 }
             }
             ajax_general("addNodeConnectionToMap", {
