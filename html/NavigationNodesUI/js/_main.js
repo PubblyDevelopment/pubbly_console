@@ -495,6 +495,17 @@ class NavigationNodes {
                 console.log("done");
             }}, "get");
     }
+    
+    eventClickDelete(loc, e, elem) {
+        if (this.curNode) {
+            ajax_general("deleteNodeFromMap", {
+            nodeID: this.curNode.node_id,
+        }, {done: function () {
+                console.log("done");
+                window.location.href = window.location.href;
+            }}, "get");
+        }
+    }
 
     attachEvents() {
         // Bind attaches the first arg to the function call... essentially cutting out the _This solution or the scope apply callbacks (ES6)
@@ -513,6 +524,7 @@ class NavigationNodes {
         this.inputs.pathButton.attachEvent("click", this.eventClickPath.bind(this));
 
         this.inputs.entryNodeButton.attachEvent("click", this.eventClickEntry.bind(this));
+        this.inputs.deleteNode.attachEvent("click", this.eventClickDelete.bind(this));
 
         let that = this;
         $(this.inputElements.fromNode).click(function () {
@@ -565,6 +577,7 @@ class NavigationNodes {
             this.inputs.dropDown = new NavigationNodes_Dropdown(inputElements.pathDropdown)
             this.inputs.pathButton = new NavigationNodes_Path(inputElements.pathButton);
             this.inputs.entryNodeButton = new NavigationNodes_Entry(inputElements.entryNodeButton);
+            this.inputs.deleteNode = new NavigationNodes_Save(inputElements.deleteNode);
         } catch (e) {
             console.error("Error with NavigationNodes init.");
             console.error(e);

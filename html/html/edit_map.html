@@ -38,7 +38,7 @@
       <script src="NavigationNodesUI/js/element_Dropdown.js"></script>
       <script src="NavigationNodesUI/js/element_Entry.js"></script>
       <script src="NavigationNodesUI/js/canvas-arrow.js"></script>
-      
+
       <script src="NavigationNodesUI/js/helper.js"></script>
 
       <link rel="stylesheet" href="skins/webix.css" type="text/css">
@@ -58,7 +58,8 @@
                  entryNodeButton: $("#entryNodeButton")[0],
                  pathButton: $("#pathButton")[0],
                  pathDropdown: $("#pathSelections")[0],
-                 fromNode: $("#firstNodePhoto")[0]
+                 fromNode: $("#firstNodePhoto")[0],
+                 deleteNode: $("#deleteNodeButton")[0]
              };
              let data = false;
              try {
@@ -112,7 +113,8 @@
                         <button class='button d-block' id="saveButton" type="button" value="SAVE"/><i class="far fa-save"></i></button>
                         <button class='button d-block' id="zoomInButton" type="button" value="ZOOM IN"/><i class="fas fa-search-plus"></i></button>
                         <button class='button d-block' id="zoomOutButton" type="button" value="ZOOM OUT"/><i class="fas fa-search-minus"></i></button>
-       <button class='button d-block' id="entryNodeButton" type="button" value="SET POINT"/><i class="fas fa-star"></i></button>
+                        <button class='button d-block' id="entryNodeButton" type="button" value="SET POINT"/><i class="fas fa-star"></i></button>
+                        <button class='button d-block' id="deleteNodeButton" type="button" value="DELETE NODE"/><i class="fas fa-trash"></i></button>
                      </div>
                   </div>
                </div>
@@ -134,8 +136,8 @@
                         <br>
                         <div style="text-align: center">
                            <button class='button' id="pathButton" type="button" value="LINK" style="font-size: 22px">
-                                <i class="fas fa-arrow-alt-circle-right"></i>
-                            </button>
+                              <i class="fas fa-arrow-alt-circle-right"></i>
+                           </button>
                         </div>
                      </div>
                   </div>
