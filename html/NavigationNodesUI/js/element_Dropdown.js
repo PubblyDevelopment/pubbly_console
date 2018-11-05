@@ -15,7 +15,7 @@ class NavigationNodes_Dropdown extends NavigationNodes_element {
         }
 
         for (let l in node.paths)
-            select.options[select.options.length] = new Option(node.paths[l].name);
+            select.options[select.options.length] = new Option(node.paths[l].link_name);
 
         return select.options.length;
           

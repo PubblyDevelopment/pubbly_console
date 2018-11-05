@@ -69,6 +69,7 @@ WHERE
             $link = [
                 "map_node_path_id" => $node['map_node_path_id'],
                 "name" => $node['from_node_name'],
+                "link_name" => $node['from_link_name'],
                 "page" => $fromLinkPage,
                 "url" => $toLinkName
             ];
