@@ -319,6 +319,8 @@ class NavigationNodes {
                 this.secondBook = undefined;
             }
             this.curBook = clickedBook;
+            let id = clickedBook.node_id;
+            $("#file_upload_form").attr("action", "php/ajax/uploadNodeCover.php?nodeID=" + id);
             this.curMovingBook = clickedBook;
             this.inputs.dropDown.populateDropdown(this.curBook);
             console.log(this.inputs.dropDown.populateDropdown(this.curBook));
@@ -468,6 +470,13 @@ class NavigationNodes {
             for (let l in this.curBook.links) {
                 if (selLink == this.curBook.links[l].name) {
                     this.curBook.links[l].url = this.secondBook.name;
+                    ajax_general("addNodeConnectionToMap", {
+                        mapID: window.mapID,
+                        fromPathID: this.curBook.links[l].map_node_path_id,
+                        toNodeID: this.secondBook.node_id,
+                    }, {done: function () {
+                            console.log("done");
+                        }}, "get");
                 }
             }
         }
@@ -490,6 +499,16 @@ class NavigationNodes {
         this.inputs.save.attachEvent("click", this.eventClickSave.bind(this));
 
         this.inputs.linkButton.attachEvent("click", this.eventClickLink.bind(this));
+        let that = this;
+        $(this.inputElements.fromNode).click(function () {
+            if ($("#file_upload_form").attr("action")) {
+                $("#file_upload").click();
+            }
+        });
+        $("#file_upload").change(function () {
+            $("#file_upload_form").submit();
+        });
+
     }
 
     constructor(programName, json, inputElements, debugInfo) {
@@ -531,6 +550,7 @@ class NavigationNodes {
             this.inputs.zoomOut = new NavigationNodes_Zoom(inputElements.zoomOutButton);
             this.inputs.dropDown = new NavigationNodes_Dropdown(inputElements.linkDropdown)
             this.inputs.linkButton = new NavigationNodes_Link(inputElements.linkButton);
+            this.inputs.fromNode = inputElements.fromBook;
         } catch (e) {
             console.error("Error with NavigationNodes init.");
             console.error(e);
@@ -554,3 +574,10 @@ class NavigationNodes {
     }
 }
 
+function setEntry(ID) {
+    ajax_general("setNodeToEntryPoint", {
+        nodeID: ID,
+    }, {done: function () {
+            console.log("done");
+        }}, "get");
+}

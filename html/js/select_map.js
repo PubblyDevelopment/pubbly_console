@@ -72,34 +72,7 @@ let selectMap = {
                         let item = this.getItem(id);
                         window.selectedMapName = item.name;
                         $$("editMap").enable();
-                        item.status = "";
-                        for (let exportType in item.export_statuses) {
-                            if ($$("export_" + exportType)) {
-                                let stat = item.export_statuses[exportType];
-                                if (stat == "new") {
-                                    $$("export_" + exportType).show();
-                                    $$("export_" + exportType).disable();
-                                    $$("view_" + exportType).hide();
-                                    $$("view_" + exportType).disable();
-                                    $$("export_" + exportType + "_prerequisite").show();
-                                    $$("export_" + exportType + "_outdated").hide();
-                                } else if (stat == "outdated") {
-                                    $$("export_" + exportType).show();
-                                    $$("export_" + exportType).enable();
-                                    $$("view_" + exportType).hide();
-                                    $$("view_" + exportType).disable();
-                                    $$("export_" + exportType + "_prerequisite").hide();
-                                    $$("export_" + exportType + "_outdated").show();
-                                } else if (stat == "ready") {
-                                    $$("export_" + exportType).hide();
-                                    $$("export_" + exportType).disable();
-                                    $$("view_" + exportType).show();
-                                    $$("view_" + exportType).enable();
-                                    $$("export_" + exportType + "_prerequisite").hide();
-                                    $$("export_" + exportType + "_outdated").hide();
-                                }
-                            }
-                        }
+                        $$("export_server").enable();
                     },
                 }
             },

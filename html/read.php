@@ -83,44 +83,45 @@ if ($type == "book") {
         echo "Error: No entry point specified for map... Cannot view";
     }
 }
-
-require_once("php/classes/site_error.php");
-require_once("php/html_fragments_by_known_types/engine.php");
-$htmlFileName = ($type == "child") ? "$childName.html" : "index.html";
+if (isset($loc)) {
+    require_once("php/classes/site_error.php");
+    require_once("php/html_fragments_by_known_types/engine.php");
+    $htmlFileName = ($type == "child") ? "$childName.html" : "index.html";
 
 // Old garbage engine again
-if ($engineCode == "old") {
-    if (!file_exists("$loc/$htmlFileName")) {
-        $oldHTML = file_get_contents("engine/old/index.html");
-        $dots = ($type == "unit") ? "../../../../../" : "../../";
+    if ($engineCode == "old") {
+        if (!file_exists("$loc/$htmlFileName")) {
+            $oldHTML = file_get_contents("engine/old/index.html");
+            $dots = ($type == "unit") ? "../../../../../" : "../../";
 
-        $frag = new Engine("old", [
-            ["XML_NAME", $xmlName],
-            ["DOTS", $dots],
-        ]);
-        file_put_contents("$loc/$htmlFileName", $frag->html);
-    }
-    header("location: $loc/$htmlFileName");
-} else {
-    $jsonLoc = "$loc/$jsonName.$engineCode.json";
-    $jsonUpdated = (file_exists("$jsonLoc")) ? filemtime("$jsonLoc") : 0;
-    $xmlUpdated = (file_exists("$loc/$xmlName")) ? filemtime("$loc/$xmlName") : 0;
-    $hotFixTime = file_exists("engine/$engineCode/hotFixCount.txt") ?
-            filemtime("engine/$engineCode/hotFixCount.txt") : 0;
-    if ($jsonUpdated <= $xmlUpdated // JSON outdated from XML
-            || $jsonUpdated <= $hotFixTime // JSON outdated from build process
-            || $forceDebug // Lazy JASON
-    ) {
-        new Engine("$engineCode-build", [
-            ["BUILD_POST_SPECS", json_encode($postSpecs)],
-            ["BUILD_POST_LOC", "build.php"],
-            ["BOOK_LOC", "$loc"],
-            ["XML_NAME", "$xmlName"],
-        ]);
+            $frag = new Engine("old", [
+                ["XML_NAME", $xmlName],
+                ["DOTS", $dots],
+            ]);
+            file_put_contents("$loc/$htmlFileName", $frag->html);
+        }
+        header("location: $loc/$htmlFileName");
     } else {
-        new Engine("$engineCode-run", [
-            ["PUBBLY_JSON", file_get_contents("$jsonLoc")]
-        ]);
+        $jsonLoc = "$loc/$jsonName.$engineCode.json";
+        $jsonUpdated = (file_exists("$jsonLoc")) ? filemtime("$jsonLoc") : 0;
+        $xmlUpdated = (file_exists("$loc/$xmlName")) ? filemtime("$loc/$xmlName") : 0;
+        $hotFixTime = file_exists("engine/$engineCode/hotFixCount.txt") ?
+                filemtime("engine/$engineCode/hotFixCount.txt") : 0;
+        if ($jsonUpdated <= $xmlUpdated // JSON outdated from XML
+                || $jsonUpdated <= $hotFixTime // JSON outdated from build process
+                || $forceDebug // Lazy JASON
+        ) {
+            new Engine("$engineCode-build", [
+                ["BUILD_POST_SPECS", json_encode($postSpecs)],
+                ["BUILD_POST_LOC", "build.php"],
+                ["BOOK_LOC", "$loc"],
+                ["XML_NAME", "$xmlName"],
+            ]);
+        } else {
+            new Engine("$engineCode-run", [
+                ["PUBBLY_JSON", file_get_contents("$jsonLoc")]
+            ]);
+        }
     }
 }
 ?>

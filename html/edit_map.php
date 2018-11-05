@@ -19,6 +19,7 @@ SELECT
     mn.map_node_id AS map_node_id,
     mn.name AS nodeName,
     mn.has_cover AS hasCover,
+    mn.is_entry AS isEntryNode,
     np.from_node_id AS from_node_id,
     fn.name AS from_node_name,
     np.map_node_path_id AS map_node_path_id,
@@ -38,6 +39,10 @@ LEFT JOIN map_node tn ON
     np.to_node_id = tn.map_node_id
 WHERE
     mp.name = ?", ["s", $mapName]);
+    // see webix_getUnits.php... Same prob.
+    if (!isset($nodePathMap[0]) || !is_array($nodePathMap[0])) {
+        $nodePathMap = [$nodePathMap];
+    }
     // pprint_r($nodePathMap);
     $map = [];
     $baseCoverSrc = "map/" . $mapName;
@@ -53,6 +58,7 @@ WHERE
                 "node_id" => $node['map_node_id'],
                 "name" => $nodeName,
                 "cover" => $cover,
+                "isEntryNode" => $node['isEntryNode'],
                 "links" => []
             ];
         }

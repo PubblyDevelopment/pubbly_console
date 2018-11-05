@@ -29,6 +29,9 @@ let wf_addNodeToMap = function (nodeFromType, nodeFromID) {
             let node = JSON.parse(newNode);
             console.log(node);
             console.log("TODO: Push into map and soft refresh UI");
+            // navigationNodes.json[node.name] = node;
+            window.location.href = window.location.href;
+            
         }
     }, 'get');
 }

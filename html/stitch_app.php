@@ -11,7 +11,7 @@ if (!LOGGED_IN) {
         ["SCHOOL_NAME", $_GET['schoolName']],
         ["SUBJECT_NAME", ($_GET['subjectName']) ? $_GET['subjectName'] : false],
         ["LEVEL_NAME", ($_GET['levelName']) ? $_GET['levelName'] : false],
-        ["UNIT_NAME", $_GET['schoolName']],
+        ["UNIT_NAME", $_GET['unitName']],
         ["IS_TUTORIAL", isset($_GET['isTutorial'])],
     ]);
     $frag->echoOut();

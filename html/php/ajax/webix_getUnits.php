@@ -55,23 +55,20 @@ ORDER BY
         $level = $unit['level_name'];
         $id = $unit['unit_id'];
         $unit = $unit['unit_name'];
-        if (isset($menuBuild[$school])) {
-            if (isset($menuBuild[$school][$subject])) {
-                if (isset($menuBuild[$school][$subject][$level])) {
-                    $obj = [
-                        "value" => $unit,
-                        "unit_id" => $id,
-                    ];
-                    array_push($menuBuild[$school][$subject][$level], $obj);
-                } else {
-                    $menuBuild[$school][$subject][$level] = [];
-                }
-            } else {
-                $menuBuild[$school][$subject] = [];
-            }
-        } else {
+        if (!isset($menuBuild[$school])) {
             $menuBuild[$school] = [];
         }
+        if (!isset($menuBuild[$school][$subject])) {
+            $menuBuild[$school][$subject] = [];
+        }
+        if (!isset($menuBuild[$school][$subject][$level])) {
+            $menuBuild[$school][$subject][$level] = [];
+        }
+        $obj = [
+            "value" => $unit,
+            "unit_id" => $id,
+        ];
+        array_push($menuBuild[$school][$subject][$level], $obj);
     }
 
 

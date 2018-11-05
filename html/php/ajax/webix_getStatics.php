@@ -19,15 +19,14 @@ if (LOGGED_IN) {
         $folder = $static['folder'];
         $name = $static['name'];
         $id = $static['static_id'];
-        if (isset($menuBuild[$folder])) {
-            $obj = [
-                "value" => $name,
-                "static_id" => $id,
-            ];
-            array_push($menuBuild[$folder], $obj);
-        } else {
+        if (!isset($menuBuild[$folder])) {
             $menuBuild[$folder] = [];
         }
+        $obj = [
+            "value" => $name,
+            "static_id" => $id,
+        ];
+        array_push($menuBuild[$folder], $obj);
     }
     $webixElem = [
         "value" => "Statics",
