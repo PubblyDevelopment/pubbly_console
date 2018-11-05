@@ -29,9 +29,9 @@ SELECT
     tn.name AS to_node_name
 FROM
     map mp
-RIGHT JOIN map_node mn ON
+LEFT JOIN map_node mn ON
     mp.map_id = mn.map_id
-RIGHT JOIN map_node_path np ON
+LEFT JOIN map_node_path np ON
     mn.map_node_id = np.from_node_id
 LEFT JOIN map_node fn ON 
     np.from_node_id = fn.map_node_id
