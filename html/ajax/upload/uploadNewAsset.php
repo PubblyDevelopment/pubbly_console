@@ -3,12 +3,14 @@ require_once("../../config.php");
 
 chdir('../');
 include('../../includes/loginCheck.php');
+include('../../includes/secSession.php');
 include('../php/saveXML.php');
 include('../php/splitGif.php');
 include('../php/outdateUnit.php');
 
 $username = false;
-if ($ret = loginCheck() === true) {
+$ret = loginCheck();
+if ($ret === true) {
     $username = $_SESSION['username'];
     include_once('../../includes/dbConnect.php'); // not sure if already included from loginCHeck.
     $seriesName = $_GET['seriesName'];
