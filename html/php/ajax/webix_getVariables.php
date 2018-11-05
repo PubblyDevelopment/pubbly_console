@@ -53,13 +53,13 @@ WHERE
     foreach ($menuBuild as $folderName => $folder) {
         $folderObj = [
             "value" => $folderName,
-            "open" => true,
+            "open" => false,
             "data" => []
         ];
         foreach ($folder as $seriesName => $series) {
             $seriesObj = [
                 "value" => $seriesName,
-                "open" => true,
+                "open" => false,
                 "data" => []
             ];
             foreach ($series as $vExport) {

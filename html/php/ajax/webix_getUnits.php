@@ -79,19 +79,19 @@ ORDER BY
     foreach ($menuBuild as $schoolName => $school) {
         $schoolObj = [
             "value" => $schoolName,
-            "open" => true,
+            "open" => false,
             "data" => []
         ];
         foreach ($school as $subjectName => $subject) {
             $subjectObj = [
                 "value" => $subjectName,
-                "open" => true,
+                "open" => false,
                 "data" => []
             ];
             foreach ($subject as $levelName => $level) {
                 $levelObj = [
                     "value" => $levelName,
-                    "open" => true,
+                    "open" => false,
                     "data" => []
                 ];
                 foreach ($level as $unit) {

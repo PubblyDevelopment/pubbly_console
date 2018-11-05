@@ -35,7 +35,7 @@ if (LOGGED_IN) {
     foreach ($menuBuild as $folderName => $folder) {
         $folderObj = [
             "value" => $folderName,
-            "open" => true,
+            "open" => false,
             "data" => []
         ];
         foreach ($folder as $static) {
