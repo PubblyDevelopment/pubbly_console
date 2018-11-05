@@ -21,19 +21,21 @@ let ajax_general = function (scriptName, info, cbs, type = 'post') {
 }
 
 let wf_addNodeToMap = function (nodeFromType, nodeFromID) {
-    ajax_general("addNodeToMap", {
-        mapID: window.mapID,
-        nodeFromType: nodeFromType,
-        nodeFromID: nodeFromID
-    }, {done: function (newNode) {
-            let node = JSON.parse(newNode);
-            console.log(node);
-            console.log("TODO: Push into map and soft refresh UI");
-            // navigationNodes.json[node.name] = node;
-            window.location.href = window.location.href;
-            
-        }
-    }, 'get');
+    if (nodeFromID) {
+        ajax_general("addNodeToMap", {
+            mapID: window.mapID,
+            nodeFromType: nodeFromType,
+            nodeFromID: nodeFromID
+        }, {done: function (newNode) {
+                let node = JSON.parse(newNode);
+                console.log(node);
+                console.log("TODO: Push into map and soft refresh UI");
+                // navigationNodes.json[node.name] = node;
+                window.location.href = window.location.href;
+
+            }
+        }, 'get');
+    }
 }
 /*
  $.ajax({
