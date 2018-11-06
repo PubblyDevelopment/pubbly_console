@@ -75,7 +75,7 @@ class NavigationNodes {
 
     // Puts nodes in a grid 
     placeVirginProjectNodes() {
-        
+
     }
     checkIfProjectVirgin() {
         for (let nodeName in this.json) {
@@ -242,12 +242,27 @@ class NavigationNodes {
 
     // Updates the JSON in /project
     saveJSON() {
+        let justPoints = {};
+        for (let nodeName in this.json) {
+            let node = this.json[nodeName];
+            if (node.x === node.initX && node.y === node.initY) {
+                // No change
+            } else {
+                justPoints[nodeName] = {
+                    node_id: node.node_id,
+                    x: node.x,
+                    y: node.y
+                }
+            }
+        }
+        justPoints = JSON.stringify(justPoints);
+        let type = (justPoints.length) > 512 ? "POST" : "GET";
         ajax_general("moveNodesOnMap",
-                {nodePlacements: JSON.stringify(this.json)},
+                {nodePlacements: justPoints, mapName: btoa(mapName)},
                 {done: function () {
                         console.log("done");
                     }
-                }, "GET");
+                }, type);
     }
 
     // Events to be called back with class NavigationNodes scope.
@@ -578,6 +593,8 @@ class NavigationNodes {
                 let ratio = node.img.width / node.img.height;
                 node.height = 200;
                 node.width = 200 * ratio;
+                node.initX = node.x;
+                node.initY = node.y;
             }
             this.determinePaths.call(_NavigationNodes);
             this.drawAllNodes.call(_NavigationNodes);

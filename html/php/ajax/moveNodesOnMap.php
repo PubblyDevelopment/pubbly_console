@@ -1,6 +1,6 @@
 <?php
 
-$nodePlacements = $_GET['nodePlacements'];
+$nodePlacements = isset($_GET['nodePlacements']) ? $_GET['nodePlacements'] : $_POST['nodePlacements'];
 $nodePlacements = json_decode($nodePlacements, TRUE);
 chdir("../../");
 require_once("config.php");
@@ -18,5 +18,5 @@ if (LOGGED_IN && isset($nodePlacements)) {
             $query->execSingle("UPDATE map_node SET x = ?, y = ? WHERE map_node_id = ?", ["sss", $x, $y, $nodeID]);
         }
     }
-    echo "done";
+     echo "done";
 }
