@@ -44,9 +44,11 @@
       <link rel="stylesheet" href="skins/webix.css" type="text/css">
       <link rel="styleSheet" href="css/webixPersonalModifications.css"/>
       <script src="includes/webix/webix.js"></script>
+      <script src="js/classes/betterCookies.js"></script>
       <script src="js/edit_map.js"></script>
 
       <script>
+         window.username = "{USERNAME}";
          $(document).ready(function () {
              let inputs = {
                  canvas: $("#NavNodesCanvasMain")[0],

@@ -28,7 +28,7 @@ class NavigationNodes_Canvas extends NavigationNodes_element {
         if (checkArrayForAllValuesOfDesiredType([x1, y1, x2, y2], "number")) {
             this.ctx.scale(this.zoom, this.zoom);
             this.ctx.translate(this.offset[0], this.offset[1]);
-            
+
             this.ctx.beginPath();
             this.ctx.strokeStyle = color;
             this.ctx.moveTo(x1, y1);
@@ -54,7 +54,7 @@ class NavigationNodes_Canvas extends NavigationNodes_element {
 
 
 
-            
+
             this.ctx.beginPath();
             this.ctx.arrow(x1, y1, x2, y2, [0, 1, -10, 1, -10, 5]);
             this.ctx.fill();
@@ -120,7 +120,7 @@ class NavigationNodes_Canvas extends NavigationNodes_element {
         return this.offsetFactor;
     }
 
-    constructor(elem) {
+    constructor(elem, props) {
         super(elem);
 
         this.ctx = elem.getContext('2d');
@@ -134,6 +134,14 @@ class NavigationNodes_Canvas extends NavigationNodes_element {
         // What's the graph value of the very top left? To start, 0,0. If you've panned and everything is a little lower, 0, -50
         this.offsetFactor = [0, 0];
 
-        this.zoom = 0.5;
+
+        if (props.defaultZoom) {
+            this.zoom = props.defaultZoom;
+        } else {
+            this.zoom = 0.25;
+        }
+        if (props.defaultOffset) {
+            this.offset = props.defaultOffset;
+        }
     }
 }

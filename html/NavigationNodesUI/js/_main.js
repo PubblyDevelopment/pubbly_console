@@ -263,6 +263,10 @@ class NavigationNodes {
                         console.log("done");
                     }
                 }, type);
+        let mapZoom = this.inputs.nodeCanvas.zoom;
+        let mapOffset = this.inputs.nodeCanvas.offset;
+        this.cookies.set('edit_map-zoom', mapZoom, 1);
+        this.cookies.set('edit_map-offset', mapOffset, 1);
     }
 
     // Events to be called back with class NavigationNodes scope.
@@ -554,16 +558,38 @@ class NavigationNodes {
         this.cleanSlate;
         this.initialX;
         this.initialY;
-        this.zoomFactor = 1.0;
+        this.zoomFactor = 1;
         this.isPanning;
         this.listOfPaths = [];
         this.entryNode;
         // Each input to the NavigationNodes main class
         this.inputs = {};
 
+        this.cookies = new Cookie();
+        let mapZoom = this.cookies.get('edit_map-zoom');
+        let mapOffset = this.cookies.get('edit_map-offset');
+        if (!mapZoom) {
+            mapZoom = 0.5;
+            this.cookies.set('edit_map-zoom', mapZoom, 1);
+        } else {
+            mapZoom *= 1;
+        }
+
+        if (!mapOffset) {
+            mapOffset = [0, 0];
+            this.cookies.set('edit_map-offset', mapOffset, 1);
+        } else {
+            mapOffset = mapOffset.split(",");
+            mapOffset[0] *= 1;
+            mapOffset[1] *= 1;
+        }
+
+
         try {
             // Will tell you if something goes bad with your inputs
-            this.inputs.nodeCanvas = new NavigationNodes_Canvas(inputElements.canvas);
+            this.inputs.nodeCanvas = new NavigationNodes_Canvas(inputElements.canvas, {
+                defaultZoom: mapZoom,
+                defaultOffset: mapOffset});
             // Seperate canvas for just the connecting arrows? Cut down on redraw time.
             // this.inputs.connectionsCanvas = new NavigationNodes_Canvas(inputElements.canvas);
             this.inputs.save = new NavigationNodes_Save(inputElements.saveButton);

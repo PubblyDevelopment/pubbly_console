@@ -81,7 +81,9 @@ WHERE
         }
     }
     $json = json_encode($map);
+    $username = $_SESSION['username'];
     $frag = new Html_fragment("html/edit_map.html", [
+        ["USERNAME", $username],
         ["MAP_ID", $map_id],
         ["MAP_NAME", $mapName],
         ["MAP_JSON", $json]

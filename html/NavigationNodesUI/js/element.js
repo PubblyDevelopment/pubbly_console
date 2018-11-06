@@ -35,9 +35,6 @@ class NavigationNodes_element {
 
     }
     enableEvent(which) {
-        console.log(which);
-        console.log(this.disabled);
-        console.log(this.disabled.indexOf(which));
         if (which == "all") {
             this.disabled = [];
             $(this.elem).removeClass("all_disabled");
@@ -66,7 +63,6 @@ class NavigationNodes_element {
              * console.low(arr2); // --> [1,2,3,4]
              */
             this.disabled = this.availableEvents.slice();
-            console.log("DISABLING");
             $(this.elem).addClass("all_disabled");
         } else if (this.disabled.indexOf(which) === -1) {
             // Not currently in disabled arr
