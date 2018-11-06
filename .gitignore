@@ -7,7 +7,7 @@
 /html/series/*
 /html/deletedSeries/*
 /html/map/*
-/html/config.php
+html/config.php
 /nbproject/private/
 
 
