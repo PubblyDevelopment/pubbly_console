@@ -495,6 +495,11 @@ class NavigationNodes {
                 }}, "get");
         }
     }
+    eventClickViewAt(loc, e, elem) {
+        if (this.curNode) {
+            window.open("read.php?engineCode=new&t=m&mn=" + window.mapName + "&nn=" + this.curNode.name);
+        }
+    }
 
     attachEvents() {
         // Bind attaches the first arg to the function call... essentially cutting out the _This solution or the scope apply callbacks (ES6)
@@ -514,6 +519,7 @@ class NavigationNodes {
 
         this.inputs.entryNodeButton.attachEvent("click", this.eventClickEntry.bind(this));
         this.inputs.deleteNode.attachEvent("click", this.eventClickDelete.bind(this));
+        this.inputs.viewAt.attachEvent("click", this.eventClickViewAt.bind(this));
 
         let that = this;
         $(this.inputElements.fromNode).click(function () {
@@ -567,6 +573,8 @@ class NavigationNodes {
             this.inputs.pathButton = new NavigationNodes_Path(inputElements.pathButton);
             this.inputs.entryNodeButton = new NavigationNodes_Entry(inputElements.entryNodeButton);
             this.inputs.deleteNode = new NavigationNodes_Save(inputElements.deleteNode);
+            this.inputs.viewAt = new NavigationNodes_Save(inputElements.viewAt);
+
         } catch (e) {
             console.error("Error with NavigationNodes init.");
             console.error(e);
