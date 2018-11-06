@@ -17,6 +17,8 @@ SELECT
     mp.map_id,
     mp.name AS mapName,
     mn.map_node_id AS map_node_id,
+    mn.x AS x,
+    mn.y AS y,
     mn.name AS nodeName,
     mn.has_cover AS hasCover,
     mn.is_entry AS isEntryNode,
@@ -29,7 +31,7 @@ SELECT
     tn.name AS to_node_name
 FROM
     map mp
-LEFT JOIN map_node mn ON
+RIGHT JOIN map_node mn ON
     mp.map_id = mn.map_id
 LEFT JOIN map_node_path np ON
     mn.map_node_id = np.from_node_id
@@ -62,6 +64,10 @@ WHERE
                     "isEntryNode" => $node['isEntryNode'],
                     "paths" => []
                 ];
+                if ($node['x']) {
+                    $map[$nodeName]["x"] = $node['x'];
+                    $map[$nodeName]["y"] = $node['y'];
+                }
             }
             $toLinkName = (isset($node['to_node_name'])) ?
                     $node['to_node_name'] : false;

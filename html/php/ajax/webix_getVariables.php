@@ -28,21 +28,23 @@ WHERE
 
     $menuBuild = [];
     foreach ($vExports as $vExport) {
-        $folder = $vExport['folder'];
-        $seriesName = $vExport['seriesName'];
-        $variableName = $vExport['variableName'];
-        $id = $vExport['variable_id'];
-        if (!isset($menuBuild[$folder])) {
-            $menuBuild[$folder] = [];
+        if ($vExport) {
+            $folder = $vExport['folder'];
+            $seriesName = $vExport['seriesName'];
+            $variableName = $vExport['variableName'];
+            $id = $vExport['variable_id'];
+            if (!isset($menuBuild[$folder])) {
+                $menuBuild[$folder] = [];
+            }
+            if (!isset($menuBuild[$folder][$seriesName])) {
+                $menuBuild[$folder][$seriesName] = [];
+            }
+            $obj = [
+                "value" => $variableName,
+                "variable_id" => $id,
+            ];
+            array_push($menuBuild[$folder][$seriesName], $obj);
         }
-        if (!isset($menuBuild[$folder][$seriesName])) {
-            $menuBuild[$folder][$seriesName] = [];
-        }
-        $obj = [
-            "value" => $variableName,
-            "variable_id" => $id,
-        ];
-        array_push($menuBuild[$folder][$seriesName], $obj);
     }
 
 

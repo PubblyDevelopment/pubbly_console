@@ -91,6 +91,7 @@ function UrlNav() {
         // FIX FIX
     }
     this.home = function () {
+        // TODO: STAR of the map, but from the map shit
         // TODO: Something to figure out console.pubbly and pubbly and everything
     }
 

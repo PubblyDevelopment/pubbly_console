@@ -50,25 +50,27 @@ ORDER BY
      */
     $menuBuild = [];
     foreach ($units as $unit) {
-        $school = $unit['school_name'];
-        $subject = $unit['subject_name'];
-        $level = $unit['level_name'];
-        $id = $unit['unit_id'];
-        $unit = $unit['unit_name'];
-        if (!isset($menuBuild[$school])) {
-            $menuBuild[$school] = [];
+        if ($unit) {
+            $school = $unit['school_name'];
+            $subject = $unit['subject_name'];
+            $level = $unit['level_name'];
+            $id = $unit['unit_id'];
+            $unit = $unit['unit_name'];
+            if (!isset($menuBuild[$school])) {
+                $menuBuild[$school] = [];
+            }
+            if (!isset($menuBuild[$school][$subject])) {
+                $menuBuild[$school][$subject] = [];
+            }
+            if (!isset($menuBuild[$school][$subject][$level])) {
+                $menuBuild[$school][$subject][$level] = [];
+            }
+            $obj = [
+                "value" => $unit,
+                "unit_id" => $id,
+            ];
+            array_push($menuBuild[$school][$subject][$level], $obj);
         }
-        if (!isset($menuBuild[$school][$subject])) {
-            $menuBuild[$school][$subject] = [];
-        }
-        if (!isset($menuBuild[$school][$subject][$level])) {
-            $menuBuild[$school][$subject][$level] = [];
-        }
-        $obj = [
-            "value" => $unit,
-            "unit_id" => $id,
-        ];
-        array_push($menuBuild[$school][$subject][$level], $obj);
     }
 
 

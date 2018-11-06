@@ -16,17 +16,19 @@ if (LOGGED_IN) {
 
     $menuBuild = [];
     foreach ($statics as $static) {
-        $folder = $static['folder'];
-        $name = $static['name'];
-        $id = $static['static_id'];
-        if (!isset($menuBuild[$folder])) {
-            $menuBuild[$folder] = [];
+        if ($static) {
+            $folder = $static['folder'];
+            $name = $static['name'];
+            $id = $static['static_id'];
+            if (!isset($menuBuild[$folder])) {
+                $menuBuild[$folder] = [];
+            }
+            $obj = [
+                "value" => $name,
+                "static_id" => $id,
+            ];
+            array_push($menuBuild[$folder], $obj);
         }
-        $obj = [
-            "value" => $name,
-            "static_id" => $id,
-        ];
-        array_push($menuBuild[$folder], $obj);
     }
     $webixElem = [
         "value" => "Statics",

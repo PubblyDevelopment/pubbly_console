@@ -89,14 +89,9 @@ class NavigationNodes {
             this.json[nodeName].y = y;
             this.json[nodeName].width = 150;
             this.json[nodeName].height = 150 * img.height / img.width;
-            // Changed to just height, width, since there's nothing else with those props.
-            // Deletes here to overwrite old format projectJSON
-            delete this.json[nodeName].imgHeight;
-            delete this.json[nodeName].imgWidth;
-
             // Logic to build grid
             x += 210;
-            if (counter % 5 == 0) {
+            if (counter % 5 === 0) {
                 y += 200;
                 x = 10;
             }
@@ -126,6 +121,7 @@ class NavigationNodes {
 
     drawAllNodes() {
         for (let nodeName in this.json) {
+
             this.inputs.nodeCanvas.drawImage(
                     this.json[nodeName].img,
                     this.json[nodeName].x,
@@ -273,7 +269,12 @@ class NavigationNodes {
 
     // Updates the JSON in /project
     saveJSON() {
-
+        ajax_general("moveNodesOnMap",
+                {nodePlacements: JSON.stringify(this.json)},
+                {done: function () {
+                        console.log("done");
+                    }
+                }, "GET");
     }
 
     // Events to be called back with class NavigationNodes scope.
@@ -495,15 +496,15 @@ class NavigationNodes {
                 console.log("done");
             }}, "get");
     }
-    
+
     eventClickDelete(loc, e, elem) {
         if (this.curNode) {
             ajax_general("deleteNodeFromMap", {
-            nodeID: this.curNode.node_id,
-        }, {done: function () {
-                console.log("done");
-                window.location.href = window.location.href;
-            }}, "get");
+                nodeID: this.curNode.node_id,
+            }, {done: function () {
+                    console.log("done");
+                    window.location.href = window.location.href;
+                }}, "get");
         }
     }
 
@@ -584,19 +585,30 @@ class NavigationNodes {
             console.error("Please ensure all required input elements have been passed in correctly to NavigationNode constructor");
         }
 
+        // force height of 200
+
         // Attach events to each input elements created above
         this.attachEvents();
         this.inputs.pathButton.disableEvent("click");
 
-        this.loadAssets(function () {
-            if (_NavigationNodes.checkIfProjectVirgin() ||
-                    _NavigationNodes.debugInfo.fakeProjectVirgin) {
-                _NavigationNodes.placeVirginProjectNodes.call(_NavigationNodes);
-                _NavigationNodes.saveJSON.call(_NavigationNodes);
+        this.loadAssets(afterLoad.bind(_NavigationNodes));
+        function afterLoad() {
+            
+            if (this.checkIfProjectVirgin() ||
+                    this.debugInfo.fakeProjectVirgin) {
+                this.placeVirginProjectNodes.call(_NavigationNodes);
+                this.saveJSON.call(_NavigationNodes);
             }
-            _NavigationNodes.determinePaths.call(_NavigationNodes);
-            _NavigationNodes.drawAllNodes.call(_NavigationNodes);
-        });
+            // Force height 200 and width of ratio of whatever that comes to
+            for (let nodeName in this.json) {
+                let node = this.json[nodeName];
+                let ratio = node.img.width / node.img.height;
+                node.height = 200;
+                node.width = 200 * ratio;
+            }
+            this.determinePaths.call(_NavigationNodes);
+            this.drawAllNodes.call(_NavigationNodes);
+        }
     }
 }
 

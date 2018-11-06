@@ -75,6 +75,13 @@ let w_header = {
             }
         },
         {
+            view: "button", value: "Select Map", width: 80, on: {
+                onItemClick: function () {
+                    window.location.href = "select_map.php";
+                }
+            }
+        },
+        {
             view: "label",
             template: "<p class='toolbarCenterLabel'>Edit Map</p>"
         },
