@@ -45,7 +45,6 @@ class NavigationNodes_element {
         } else {
             console.warn("Event " + which + " is not currently disabled.");
         }
-
     }
     disableEvent(which) {
         if (which == "all") {
