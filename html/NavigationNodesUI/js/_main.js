@@ -75,34 +75,7 @@ class NavigationNodes {
 
     // Puts nodes in a grid 
     placeVirginProjectNodes() {
-        // Assign an XY coordinate to each node (described in json) if brand new program
-        let x = 10;
-        let y = 10;
-        let counter = 1;
-        let entryNode = undefined;
-        for (let nodeName in this.json) {
-            if (this.json[nodeName].isEntryNode) {
-                entryNode = this.json[nodeName];
-            }
-            let img = this.json[nodeName].img;
-            this.json[nodeName].x = x;
-            this.json[nodeName].y = y;
-            this.json[nodeName].width = 150;
-            this.json[nodeName].height = 150 * img.height / img.width;
-            // Logic to build grid
-            x += 210;
-            if (counter % 5 === 0) {
-                y += 200;
-                x = 10;
-            }
-            counter++;
-        }
-        if (!entryNode) {
-            this.json[Object.keys(this.json)[0]].isEntryNode = true;
-            this.entryNode = this.json[Object.keys(this.json)[0]];
-            // draw star for that node
-        }
-        // draw star for entry node somewhere else lol
+        
     }
     checkIfProjectVirgin() {
         for (let nodeName in this.json) {
@@ -593,7 +566,7 @@ class NavigationNodes {
 
         this.loadAssets(afterLoad.bind(_NavigationNodes));
         function afterLoad() {
-            
+
             if (this.checkIfProjectVirgin() ||
                     this.debugInfo.fakeProjectVirgin) {
                 this.placeVirginProjectNodes.call(_NavigationNodes);

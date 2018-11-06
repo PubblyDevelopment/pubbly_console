@@ -59,15 +59,13 @@ WHERE
                         "NavigationNodesUI/assets/booknotfound.png";
                 $map[$nodeName] = [
                     "node_id" => $node['map_node_id'],
+                    "x" => $node['x'],
+                    "y" => $node['y'],
                     "name" => $nodeName,
                     "cover" => $cover,
                     "isEntryNode" => $node['isEntryNode'],
                     "paths" => []
                 ];
-                if ($node['x']) {
-                    $map[$nodeName]["x"] = $node['x'];
-                    $map[$nodeName]["y"] = $node['y'];
-                }
             }
             $toLinkName = (isset($node['to_node_name'])) ?
                     $node['to_node_name'] : false;
