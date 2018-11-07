@@ -27,15 +27,15 @@ class Pubbly {
             }
         }
     }
-    // When the page changes (or when the book first loads)
+// When the page changes (or when the book first loads)
 
 
 
 
 
-    // Called after a turn to make the .next canvas the .current one, or stuff like that.
+// Called after a turn to make the .next canvas the .current one, or stuff like that.
     setCanvasClasses(curPage) {
-        // curPage can now be a different number than the actual, which means I can call from TURN to set the cover shit for the page I'm about to change to.
+// curPage can now be a different number than the actual, which means I can call from TURN to set the cover shit for the page I'm about to change to.
         if (curPage == null) {
             curPage = this.curPage;
         }
@@ -66,22 +66,19 @@ class Pubbly {
     }
 
     checkLocFor(loc, what, condition) {
-        // Template for found arr
-        // found[0] = {
-        //  link:this.data.pages[0].links[0],
-        //  action:"click",
-        //  loc:1
-        // }
+// Template for found arr
+// found[0] = {
+//  link:this.data.pages[0].links[0],
+//  action:"click",
+//  loc:1
+// }
 
-        // What options:
-        //   clicks, dragStarts, dragStops, lineStarts, lineStops, editableFields
+// What options:
+//   clicks, dragStarts, dragStops, lineStarts, lineStops, editableFields
         if (typeof what !== "object") {
             what = [what];
         }
         let found = [];
-
-
-
         for (let l = 0; l < this.data.pages[this.curPage].links.length; l++) {
             let link = this.data.pages[this.curPage].links[l];
             if (link.enabled && inside(loc, link.poly)) {
@@ -113,7 +110,7 @@ class Pubbly {
                             });
                         }
                     } else if (linkType === "dragStarts") {
-                        // NOT HERE< moved to checkDrag || checkDraw || checkEdit conditional below
+// NOT HERE< moved to checkDrag || checkDraw || checkEdit conditional below
                     }
                 }
             }
@@ -138,7 +135,7 @@ class Pubbly {
                 if (
                         (checkDrag && (obj.mobility === "clone" || obj.mobility === "drag")) ||
                         (checkEdit && obj.type === "field" && obj.editable)) {
-                    // Why not account for offsets? Because we don't want kids "catching" a dropped object while it animates back to position
+// Why not account for offsets? Because we don't want kids "catching" a dropped object while it animates back to position
                     let objTop = (obj.droppedLoc) ? obj.droppedLoc[0] : obj.loc[0];
                     let objLeft = (obj.droppedLoc) ? obj.droppedLoc[1] : obj.loc[1];
                     // Maybe give every obj a rect in the xml interpret part??
@@ -167,7 +164,7 @@ class Pubbly {
         }
 
         found.sort(function (a, b) {
-            // Move workspaces behind all links (so that you can safe zone shit)
+// Move workspaces behind all links (so that you can safe zone shit)
             if (a.link.type === "workspace" || b.link.type === "workspace") {
                 return (a.link.type === "workspace") ? 1 : -1;
             } else {
@@ -244,13 +241,13 @@ class Pubbly {
                 }
             }
         }
-        // If multiple? Don't worry. Do one, then you'll check back here again. Do the next one.
-        // Hopefully the links disable themselves en route so they don't loop back forever.
+// If multiple? Don't worry. Do one, then you'll check back here again. Do the next one.
+// Hopefully the links disable themselves en route so they don't loop back forever.
         if (totLinks[0]) {
             if (what == "points") {
-                // Flag each point's changed prop as false
-                // Because, since we're running the sequence
-                // The change has been accounted for.
+// Flag each point's changed prop as false
+// Because, since we're running the sequence
+// The change has been accounted for.
                 let pointName = totLinks[0][1].condition[0];
                 let p = this.data.pages[this.curPage].points.changed.indexOf(pointName);
                 this.data.pages[this.curPage].points.changed.splice(p, 1);
@@ -261,24 +258,29 @@ class Pubbly {
     }
 
     getRealObjDescription(curObj) {
-        let objTop = (curObj.swapMethod == "loc") ?
+        let objTop, objLeft, objWidth, objHeight;
+        // Combined, never swapping for just size, always swapping for loc.
+        objTop = (curObj.swapMethod) ?
                 curObj.loc[0] + (curObj.height - curObj.swapHeight) / 2 :
                 curObj.loc[0];
-        let objLeft = (curObj.swapMethod == "loc") ?
+        objLeft = (curObj.swapMethod) ?
                 curObj.loc[1] + (curObj.width - curObj.swapWidth) / 2 :
                 curObj.loc[1];
-        let objWidth = (curObj.swapMethod == "loc") ?
-                curObj.swapWidth : curObj.width;
-        let objHeight = (curObj.swapMethod == "loc") ?
-                curObj.swapHeight : curObj.height;
+        objWidth = (curObj.swapMethod) ?
+                curObj.swapWidth :
+                curObj.width;
+        objHeight = (curObj.swapMethod) ?
+                curObj.swapHeight :
+                curObj.height;
+
         let objOpacity = curObj.opacity;
         let objAngle = curObj.angle || 0;
         // TODO: Figure out what happens when you animate a dropped object, then attempt to redrop in a bad spot. Does it go to it's last good drop? Or does it reset to it's home position.
         if (curObj.animations.playing) {
-            // Height/width values for animations are relative to the objs init props.
-            objWidth = (curObj.swapMethod == "loc") ?
+// Height/width values for animations are relative to the objs init props.
+            objWidth = (curObj.swapMethod) ?
                     curObj.swapWidth : curObj.init.width;
-            objHeight = (curObj.swapMethod == "loc") ?
+            objHeight = (curObj.swapMethod) ?
                     curObj.swapHeight : curObj.init.height;
             let anim = curObj.animations[curObj.animations.playing];
             // PICKUP: We can get the current animation leg from a math.floor. We can calculate the rest of the props from how far into that leg we've gotten. After anim is finished (back in player), we need to set the last leg anim props as current props (i.e., do it all again.
@@ -394,14 +396,14 @@ class Pubbly {
         console.error("Pubbly fatal error: " + message)
     }
 
-    // Garbage line
-    // I'm proud of everything below here.
+// Garbage line
+// I'm proud of everything below here.
 
 
-    // Calls:
-    // -- find(this.data.pages[0].objs[0])
-    // -- find("Ball_1", "image")
-    // -- find("Link 1", "link", 2)
+// Calls:
+// -- find(this.data.pages[0].objs[0])
+// -- find("Ball_1", "image")
+// -- find("Link 1", "link", 2)
     find(what, type, curPage) {
         let found = this.findAll(what, type, curPage);
         return (found[0]) ? found[0] : found;
@@ -415,10 +417,8 @@ class Pubbly {
 
     findAll(what, type = what.type, curPage = this.curPage) {
         let page = this.data.pages[curPage];
-
         let searchStart = false;
         let found = false;
-
         if (["image", "clone", "gif", "field", "workspace", "object"].indexOf(type) >= 0) {
             searchStart = page.objs;
         } else if (["link"].indexOf(type) >= 0) {
@@ -427,34 +427,33 @@ class Pubbly {
         if (searchStart) {
             found = searchStart.filter(o => {
                 if (typeof what === "object") {
-                    // (this.data.pages[0].objs[0])
+// (this.data.pages[0].objs[0])
                     return (o === what);
                 } else if (typeof what === "string") {
-                    // ("ball 1", "clone")
-                    // ("ball 1", "object") -- return first object, reguardless of type
+// ("ball 1", "clone")
+// ("ball 1", "object") -- return first object, reguardless of type
                     return (o.name === what &&
                             (o.type === type || type === "object"));
                 }
             });
         } else {
-            // Couldn't figure out where to start the search
+// Couldn't figure out where to start the search
         }
         return found;
     }
 
-    // Private
+// Private
     sendTo(what, type = what.type, curPage = this.curPage, where) {
         let page = this.data.pages[curPage];
         let searchStart = false;
         let toSend = this.find(what, type, curPage);
-
         if (["image", "clone", "gif", "field", "workspace", "object"].indexOf(type) >= 0) {
             searchStart = page.objs;
         } else if (["link"].indexOf(type) >= 0) {
             searchStart = page.links;
         }
         if (searchStart && toSend) {
-            // searchStart is {a: 0, b:1, c:2, d:3}
+// searchStart is {a: 0, b:1, c:2, d:3}
             let origLayer = toSend.layer; // 1;
             if (where === "top") {
                 toSend.layer = searchStart.length;
@@ -462,22 +461,21 @@ class Pubbly {
                 toSend.layer = -1;
                 searchStart.map(o => o.layer++);
             }
-            // searchStart could now have gaps.
-            // {a: 0, b:1, c:4, d:5}
-            // Close gaps, keep relative order.
+// searchStart could now have gaps.
+// {a: 0, b:1, c:4, d:5}
+// Close gaps, keep relative order.
             searchStart = searchStart.sort((a, b) => a.layer - b.layer);
             searchStart.map((o, i) => o.layer = i);
-
             this.drawPage_dispatch();
             return toSend;
         } else {
-            // Couldn't find what to send or where it was.
+// Couldn't find what to send or where it was.
         }
         return false;
     }
 
-    // Do we have enough loaded to draw the current page? 
-    // [prev, cur, next]
+// Do we have enough loaded to draw the current page? 
+// [prev, cur, next]
     getPageArrayNeededForDrawPage(checkPage = this.curPage) {
         let arr = [];
         arr.push(checkPage);
@@ -485,14 +483,14 @@ class Pubbly {
         if (checkPage + 1 < this.data.pages.length) {
             arr.push(checkPage + 1);
         }
-        // Prev page next, third most important
+// Prev page next, third most important
         if (checkPage - 1 >= 0) {
             arr.push(checkPage - 1);
         }
         return arr;
     }
-    // Do we have enough loaded to maintain a comfortable lead?? 
-    // [prev, cur, next, next+1]
+// Do we have enough loaded to maintain a comfortable lead?? 
+// [prev, cur, next, next+1]
     getPageArrayNeededForBufferLead(checkPage = this.curPage) {
         let arr = this.getPageArrayNeededForDrawPage(checkPage);
         if (checkPage + 2 < this.data.pages.length) {
@@ -510,11 +508,11 @@ class Pubbly {
                     return a + miss;
                 }.bind(this), 0);
         if (missingForDraw === 0) {
-            // Buffer in background
+// Buffer in background
             cbs.done();
             this.pageBuffer.loadMultiplePages(neededForLead);
         } else {
-            // Buffer in foreground
+// Buffer in foreground
             this.pageBuffer.loadMultiplePages(neededForLead, {
                 done: cbs.done,
                 fail: cbs.fail,
@@ -541,11 +539,9 @@ class Pubbly {
                 current: atFrontCover || atRearCover,
                 next: (newPage + 1 === this.getLastPage() && !this.getLastPageSpread())
             };
-
             // Set event offset to half width if current canvase is cover
             let eventOffset = canvasesAsCover.current ? this.data.info.width / -2 : 0;
             this.events.offsets.pageOffsetX = eventOffset;
-
             // Restyle all canvases that are covers (could be two (prev and next)
             for (let canName in canvasesAsCover) {
                 let placer = this.dom.canPlacers[canName];
@@ -606,7 +602,6 @@ class Pubbly {
                 fail: cbs.error,
                 prog: this.progressGraph.calculate
             });
-
         }
     }
     launch_dispatch(cbs) {
@@ -648,7 +643,6 @@ class Pubbly {
         } else {
             let page = this.data.pages[which];
             let ctx = this.draw_readyAndReturnCTX(which);
-
             /*  
              * Boy this would be clean right?
              * 
@@ -678,7 +672,6 @@ class Pubbly {
                 "field": "draw_field",
                 "gifs": "draw_gif"
             };
-
             page.objs.map(o => {
                 if (typeof this[key[o.type]] === "function") {
                     this[key[o.type]](ctx, o, which);
@@ -689,7 +682,6 @@ class Pubbly {
                     this.drawLinks(l, this.data.info.HighlightLinkColorRGBA);
                 }
             });
-
             if (this.data.info.display === "composite") {
                 this.draw_cloneCanvasToSpread(ctx, which);
             }
@@ -698,8 +690,8 @@ class Pubbly {
     }
 
     draw_readyAndReturnCTX(drawPage, relativeHalf = "") {
-        // drawPage >> Page you're targeting to draw. I.E., 5
-        // relativeHalf >> right, left, or ""
+// drawPage >> Page you're targeting to draw. I.E., 5
+// relativeHalf >> right, left, or ""
         let baseClass = ["previous", "current", "next"][(drawPage + 1) - this.curPage];
         let spreadClass = "";
         if (relativeHalf === "left") {
@@ -707,7 +699,7 @@ class Pubbly {
         } else if (relativeHalf === "right") {
             spreadClass = "SpreadRight";
         }
-        // TODO: Save as props on turns, access quicker on draw
+// TODO: Save as props on turns, access quicker on draw
         let canCover = $("#canvases").find("div." + baseClass + spreadClass)[0],
                 can = $("#canvases").find("canvas." + baseClass + spreadClass)[0],
                 ctx = can.getContext("2d");
@@ -726,7 +718,6 @@ class Pubbly {
         img = (curObj.type === "workspace") ?
                 curObj.workspace.elem :
                 this.pageBuffer.assetListLoaders[curPage].keys[relPath].elem;
-
         let objDesc = this.getRealObjDescription(curObj);
         if (img !== false) {
             if (objDesc.vis) {
@@ -797,15 +788,15 @@ class Pubbly {
                     lines = ["M"];
                 }
 
-                // IF the size of the thing changes, THEN you empty the size and recalculated.
-                // This saves us from having to run time consuming measureText nonsense every redraw.
+// IF the size of the thing changes, THEN you empty the size and recalculated.
+// This saves us from having to run time consuming measureText nonsense every redraw.
                 let measureChar = "M";
                 if (curObj.calculated.size || curObj.size !== "auto") {
                     ctx.font = curObj.size + "pt " + curObj.font;
                 } else {
-                    // Calculate the best fit font size for the given field dimentions
-                    // Ping pong back and forth until one more px font size is too large and one less is too small.
-                    // Reasonable starting guess
+// Calculate the best fit font size for the given field dimentions
+// Ping pong back and forth until one more px font size is too large and one less is too small.
+// Reasonable starting guess
                     let widthLimit = parseInt(curObj.width / lines[0].length);
                     let curDirection = false,
                             lastDirection = false,
@@ -906,11 +897,11 @@ class Pubbly {
                     let drawLeft = drawLeftBase;
                     let drawTop = curObj.loc[0] + (curObj.calculated.lineHeight * (l + 1));
                     if (curObj.align == "center") {
-                        // move every line over to middle
+// move every line over to middle
                         let width = ctx.measureText(lines[l]).width;
                         drawLeft += (curObj.calculated.widestLine / 2) - (width / 2);
                     } else if (curObj.align == "right") {
-                        // move every line over to middle
+// move every line over to middle
                         let width = ctx.measureText(lines[l]).width;
                         drawLeft += curObj.calculated.widestLine - width;
                     }
@@ -976,7 +967,6 @@ class Pubbly {
         this.find = this.find.bind(this);
         this.findAll = this.findAll.bind(this);
         this.sendToTop = this.sendToTop.bind(this);
-
         this.runtimeProps = Object.assign(runtimeProps,
                 {
                     // Stop the stupid ear splitting recordings we use
@@ -1004,7 +994,6 @@ class Pubbly {
                             // Ambitious! Will playback at double or half speed depending
                             // speedModified: 1
                 });
-
         /*
          * Data of the pubbly book in question... Only variable thing between two books...
          * IN THEORY, we should be able to detach and re-attach new data, call a prelaunch, and get good stuff.
@@ -1018,7 +1007,6 @@ class Pubbly {
         // this.commonElements = {}; WHAT IS THIS FOR?
         // Ready to run a sequence on the displayed page.
         this.ready = false;
-
         // CLASS CALLS
         this.lzwCompress = window.lzwCompress;
         this.dom = new PubblyDom(data);
@@ -1050,8 +1038,6 @@ class Pubbly {
         // Since it's a dirty word for modern browsers, cleaner to keep workarounds in their own obj
         this.urlNav = new UrlNav();
         this.drawingTools = new PubblyDrawingTools(this, this.data.drawingTool);
-
-
         this.data.pages.forEach(p => {
             p.objs.forEach(o => {
                 if (o.type === "workspace") {
@@ -1059,7 +1045,6 @@ class Pubbly {
                 }
             });
         });
-
         // Keeps track of frame rate stuff that requires the page to redraw at a 24fps interval.
         // Ensures that, if two things require redraw ints, you don't set two seperate ints.
         this.redrawDependency = new RedrawDependency(this.drawPage_dispatch.bind(this));
@@ -1067,9 +1052,7 @@ class Pubbly {
         this.presetAssets = new PubblyPresetAssets();
         this.pageBuffer = new PubblyPageBuffer(this.data);
         this.domInteractionCover = new DomInteractionCover(this.dom.canvases);
-
         this.presetAssets.add(this.domInteractionCover.picked);
-
         this.launch_dispatch({
             done: function () {
                 let pages = [0];
