@@ -430,15 +430,18 @@ function messyTargetToPretty(mess, curPage) {
                                                         lowerAction.split("|")[0] == "play" &&
                                                         (lowerAction.split("|")[1] == "passive" || lowerAction.split("|")[1] == "blocking")
                                                         )
-                                                )
+                                                ) ||
+                                        (lowerAction === "play")
                                         )) {
                     let dest = mess.destination;
                     let animObj = dest.split("|")[0];
                     let animName = dest.split("|")[1];
                     let animBlocking;
-                    if (lowerAction.split(" ")[1] == "blocking" ||
+                    if (lowerAction.split(" ")[1] == "blocking"
                             // Yeah really, check above.
-                            lowerAction.split("|")[1] == "passive") {
+                            || lowerAction.split("|")[1] == "passive"
+                            // Also yes really, > 2016
+                            || lowerAction === "play") {
                         animBlocking = ["self"];
                     } else {
                         animBlocking = false;
