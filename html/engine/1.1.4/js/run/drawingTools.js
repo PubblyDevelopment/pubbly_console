@@ -77,7 +77,7 @@ class DrawingTools {
         this.ectx.lineCap = "round";
         this.ectx.lineJoin = "round";
         this.ectx.lineWidth = this.tool.width;
-        this.ectx.globalAlpha = this.tool.color[3] / 100;
+        this.ectx.globalAlpha = this.tool.color[3];
         this.ectx.strokeStyle = "rgba(" + this.tool.color.join(",") + ")";
         this.ectx.globalCompositeOperation = "copy";
         this.ectx.beginPath();

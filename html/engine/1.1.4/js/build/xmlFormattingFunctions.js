@@ -334,6 +334,10 @@ function messyTargetToPretty(mess, curPage) {
                         let attrs = lowerDestination.split(",");
                         let tool = attrs.shift();
                         let color = attrs.splice(0, 4);
+                        // No opacity sometimes, woo
+                        if (!color[3]) {
+                            color.push(100);
+                        }
                         color = color.map(c => c * 1);
                         let defaultWidths = {"pencil": 5, "chalk": 10, "eraser": 40};
                         let width = attrs[0] * 1 || defaultWidths[tool];

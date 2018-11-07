@@ -18,5 +18,5 @@ if (LOGGED_IN && isset($nodePlacements)) {
             $query->execSingle("UPDATE map_node SET x = ?, y = ? WHERE map_node_id = ?", ["sss", $x, $y, $nodeID]);
         }
     }
-     echo "done";
+    echo "done";
 }
