@@ -258,19 +258,27 @@ class Pubbly {
     }
 
     getRealObjDescription(curObj) {
-        let objTop, objLeft, objWidth, objHeight;
+        // MAX height/width to the objHeightWidth for swapped.
+        let objTop, objLeft, objWidth, objHeight, swapHeight, swapWidth;
         // Combined, never swapping for just size, always swapping for loc.
+        if (curObj.swapMethod) {
+            let heightOverage = curObj.swapHeight / curObj.height;
+            let widthOverage = curObj.swapWidth / curObj.width;
+            let scaleDown = Math.max(heightOverage, widthOverage, 1);
+            swapHeight = curObj.swapHeight / scaleDown;
+            swapWidth = curObj.swapWidth / scaleDown;
+        }
         objTop = (curObj.swapMethod) ?
-                curObj.loc[0] + (curObj.height - curObj.swapHeight) / 2 :
+                curObj.loc[0] + (curObj.height - swapHeight) / 2 :
                 curObj.loc[0];
         objLeft = (curObj.swapMethod) ?
-                curObj.loc[1] + (curObj.width - curObj.swapWidth) / 2 :
+                curObj.loc[1] + (curObj.width - swapWidth) / 2 :
                 curObj.loc[1];
         objWidth = (curObj.swapMethod) ?
-                curObj.swapWidth :
+                swapWidth :
                 curObj.width;
         objHeight = (curObj.swapMethod) ?
-                curObj.swapHeight :
+                swapHeight :
                 curObj.height;
 
         let objOpacity = curObj.opacity;
@@ -279,9 +287,9 @@ class Pubbly {
         if (curObj.animations.playing) {
 // Height/width values for animations are relative to the objs init props.
             objWidth = (curObj.swapMethod) ?
-                    curObj.swapWidth : curObj.init.width;
+                    swapWidth : curObj.init.width;
             objHeight = (curObj.swapMethod) ?
-                    curObj.swapHeight : curObj.init.height;
+                    swapHeight : curObj.init.height;
             let anim = curObj.animations[curObj.animations.playing];
             // PICKUP: We can get the current animation leg from a math.floor. We can calculate the rest of the props from how far into that leg we've gotten. After anim is finished (back in player), we need to set the last leg anim props as current props (i.e., do it all again.
             let leg = -1, time = 0;

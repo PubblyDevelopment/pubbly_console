@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    webix.ui({
+    let logosAndLogout = webix.ui({
         container: "logoAndLogout",
         css: "whiteBG",
         height: 150,
@@ -28,7 +28,7 @@ $(document).ready(function () {
             {},
         ],
     })
-    webix.ui({
+    let consoleSections = webix.ui({
         container: "consoleSections",
         css: "whiteBG",
         rows: [
@@ -85,5 +85,9 @@ $(document).ready(function () {
                 ]},
             {},
         ]
+    });
+    $(window).resize(function() {
+        logosAndLogout.resize();
+        consoleSections.resize();
     });
 })

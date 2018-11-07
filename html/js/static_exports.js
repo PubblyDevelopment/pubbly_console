@@ -399,7 +399,7 @@ $(document).ready(function () {
                                                             $$("downloadBook").setValue("Done!");
                                                             $$("downloadBook").refresh();
                                                             if (ret == "done") {
-                                                                window.location.href = window.selectedBookID + "/" + window.selectedBook + ".zip";
+                                                                window.location.href = "books/" + window.selectedBookID + "/" + window.selectedBook + ".zip";
                                                             } else {
                                                                 console.log(ret);
                                                             }
