@@ -420,7 +420,7 @@ function Events(pubblyScope) { // Scopped contstants are _InitCapsCamelCase
                         _Pubbly.drawingTools.temporaryDrawData.pencilPath.push(false);
                     }
                 }
-            } else if (this.m.lastMouseLocs.length > this.dragEventsBeforeTurnDetermination) {
+            } else if (this.m.lastMouseLocs.length > this.dragEventsBeforeTurnDetermination && _Pubbly.data.info.navigation) {
                 this.m.lastMouseLocs.pop();
                 if (!this.m.turning) {
                     // check for consistant left or right in last 5
@@ -444,6 +444,7 @@ function Events(pubblyScope) { // Scopped contstants are _InitCapsCamelCase
                     percent = Math.min(percent, 1);
 
                     _Pubbly.turns.handlers.set.call(_Pubbly.turns, this.m.turning, percent);
+
                 }
             }
         },
