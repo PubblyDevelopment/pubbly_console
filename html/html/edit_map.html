@@ -63,6 +63,7 @@
                  fromNode: $("#firstNodePhoto")[0],
                  deleteNode: $("#deleteNodeButton")[0],
                  viewAt: $("#viewAtButton")[0],
+                 allPathButton: $("#allPathButton")[0],
              };
              let data = false;
              try {
@@ -117,8 +118,9 @@
                         <button class='button d-block' id="zoomInButton" type="button" value="ZOOM IN"/><i class="fas fa-search-plus"></i></button>
                         <button class='button d-block' id="zoomOutButton" type="button" value="ZOOM OUT"/><i class="fas fa-search-minus"></i></button>
                         <button class='button d-block' id="entryNodeButton" type="button" value="SET POINT"/><i class="fas fa-star"></i></button>
-                        <button class='button d-block' id="deleteNodeButton" type="button" value="DELETE NODE"/><i class="fas fa-trash"></i></button>
                         <button class='button d-block' id="viewAtButton" type="button" value="VIEW MAP AT NODE"/><i class="fas fa-glasses"></i></button>
+                        <button class='button d-block' id="deleteNodeButton" type="button" value="DELETE NODE"/><i class="fas fa-trash"></i></button>
+                       
                      </div>
                   </div>
                </div>
@@ -139,8 +141,11 @@
                         <br>
                         <br>
                         <div style="text-align: center">
-                           <button class='button' id="pathButton" type="button" value="LINK" style="font-size: 22px">
-                              <i class="fas fa-arrow-alt-circle-right"></i>
+                           <button class='button' id="pathButton" type="button" value="PATH" style="font-size: 22px">
+                              <i class="fas fa-angle-right"></i>
+                           </button>
+                           <button class='button' id="allPathButton" type="button" value="ALLPATH" style="font-size: 22px">
+                              <i class="fas fa-angle-double-right"></i>
                            </button>
                         </div>
                      </div>

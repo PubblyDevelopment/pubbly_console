@@ -315,10 +315,15 @@ class NavigationNodes {
             this.curMovingNode = clickedNode;
             this.inputs.dropDown.populateDropdown(this.curNode);
             console.log(this.inputs.dropDown.populateDropdown(this.curNode));
-            if (this.inputs.dropDown.populateDropdown(this.curNode) == 0)
+            if (this.inputs.dropDown.populateDropdown(this.curNode) == 0) {
                 this.inputs.pathButton.disableEvent("click");
+                this.inputs.allPathButton.disableEvent("click");
+            }
             else {
+                //Re-enable relevant buttons
                 this.inputs.pathButton.enableEvent("click");
+                this.inputs.allPathButton.enableEvent("click");
+                this.inputs.viewAt.enableEvent("click");
             }
 
             this.changeNodePhoto();
@@ -358,7 +363,11 @@ class NavigationNodes {
             this.determinePaths();
             this.drawAllNodes();
             this.changeNodePhoto();
+
+            // disable relevant buttons here:
             this.inputs.pathButton.disableEvent("click");
+            this.inputs.allPathButton.disableEvent("click");
+            this.inputs.viewAt.disableEvent("click");
 
             this.curMovingNode = false;
             this.isPanning = true;
@@ -455,11 +464,14 @@ class NavigationNodes {
 
     eventClickPath(loc, e, elem) {
         let selPath = this.inputs.dropDown.getDropdownSelection();
-
+        this.attachOne(selPath);
+        this.drawNodesRectanglesAndLines();
+    }
+    attachOne(which) {
         if (this.curNode && this.secondNode) {
             let fromPathId = false;
             for (let l in this.curNode.paths) {
-                if (selPath == this.curNode.paths[l].link_name) {
+                if (which == this.curNode.paths[l].link_name) {
                     this.curNode.paths[l].url = this.secondNode.name;
                     fromPathId = this.curNode.paths[l].map_node_path_id;
                 }
@@ -470,10 +482,16 @@ class NavigationNodes {
                 toNodeID: this.secondNode.node_id,
             }, {done: function () {
                     console.log("done");
-                }}, "get");
+                }
+            }, "get");
         }
+    }
 
-        this.drawNodesRectanglesAndLines();
+    attachAllPaths() {
+        for (let path in this.curNode.paths) {
+            let fromName = this.curNode.paths[path].link_name;
+            this.attachOne(fromName);
+        }
     }
 
     eventClickEntry(loc, e, elem) {
@@ -505,6 +523,10 @@ class NavigationNodes {
         }
     }
 
+    eventClickAllPath(loc, e, elem) {
+        this.attachAllPaths();
+    }
+
     attachEvents() {
         // Bind attaches the first arg to the function call... essentially cutting out the _This solution or the scope apply callbacks (ES6)
         // https://stackoverflow.com/questions/2236747/use-of-the-javascript-bind-method
@@ -524,6 +546,8 @@ class NavigationNodes {
         this.inputs.entryNodeButton.attachEvent("click", this.eventClickEntry.bind(this));
         this.inputs.deleteNode.attachEvent("click", this.eventClickDelete.bind(this));
         this.inputs.viewAt.attachEvent("click", this.eventClickViewAt.bind(this));
+
+        this.inputs.allPathButton.attachEvent("click", this.eventClickAllPath.bind(this));
 
         let that = this;
         $(this.inputElements.fromNode).click(function () {
@@ -600,6 +624,7 @@ class NavigationNodes {
             this.inputs.entryNodeButton = new NavigationNodes_Entry(inputElements.entryNodeButton);
             this.inputs.deleteNode = new NavigationNodes_Save(inputElements.deleteNode);
             this.inputs.viewAt = new NavigationNodes_Save(inputElements.viewAt);
+            this.inputs.allPathButton = new NavigationNodes_Path(inputElements.allPathButton);
 
         } catch (e) {
             console.error("Error with NavigationNodes init.");
@@ -612,6 +637,8 @@ class NavigationNodes {
         // Attach events to each input elements created above
         this.attachEvents();
         this.inputs.pathButton.disableEvent("click");
+        this.inputs.allPathButton.disableEvent("click");
+        this.inputs.viewAt.disableEvent("click");
 
         this.loadAssets(afterLoad.bind(_NavigationNodes));
         function afterLoad() {
