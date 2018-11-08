@@ -414,7 +414,7 @@ function unpackParentZip($seriesName) {
 
         return true;
     } else {
-        return "error: Missing zip -or- Bad sql connection, you figure it out.";
+        return "error: Uploaded file in incorrect format, please upload only zips exported from the Pubbly design tools";
     }
 }
 

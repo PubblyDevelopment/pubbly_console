@@ -21,35 +21,44 @@ $(document).ready(function () {
     window.pagesInChildBooks = {};
 
     createAudioPlayer = function () {
-        window.audioPlayer = document.createElement("audio");
-        audioPlayer.setAttribute("hidden", "true");
-        document.body.appendChild(window.audioPlayer);
-        audioPlayer.onerror = function (e, msg) {
-            if (audioPlayer.extTried.length >= 3) {
-                var src = decodeURI(e.srcElement.src.split("/").pop());
-                webix.message('Error: Audio file "' + src + '" is missing or corrupted');
-            } else {
-                if (audioPlayer.extTried.length == 1) {
-                    audioPlayer.src = audioPlayer.root + ".wav?" + Math.random();
-                    ;
-                    audioPlayer.extTried.push(".wav");
-                    audioPlayer.play();
-                } else {
-                    audioPlayer.src = audioPlayer.root + ".ogg?" + Math.random();
-                    ;
-                    audioPlayer.extTried.push(".ogg");
-                    audioPlayer.play();
-                }
+        window.audioPlayers = [];
+        for (let i = 0; i < 3; i++) {
+            window.audioPlayers.push(document.createElement("audio"));
+            window.audioPlayers[i].setAttribute("hidden", "true");
+            document.body.appendChild(window.audioPlayers[i]);
+            window.audioPlayers[i].onerror = function (e, msg) {
+                console.log(msg);
             }
         }
+        /*
+         * 
+         *  if (audioPlayer.extTried.length >= 3) {
+         var src = decodeURI(e.srcElement.src.split("/").pop());
+         webix.message('Error: Audio file "' + src + '" is missing or corrupted');
+         } else {
+         if (audioPlayer.extTried.length == 1) {
+         audioPlayer.src = audioPlayer.root + ".wav?" + Math.random();
+         ;
+         audioPlayer.extTried.push(".wav");
+         audioPlayer.play();
+         } else {
+         audioPlayer.src = audioPlayer.root + ".ogg?" + Math.random();
+         ;
+         audioPlayer.extTried.push(".ogg");
+         audioPlayer.play();
+         }
+         }
+         */
+
     }();
     function playAud(src) {
-        audioPlayer.root = "series/" + window.seriesName + "/audio/" + src;
-        audioPlayer.extTried = [];
-        audioPlayer.src = "series/" + window.seriesName + "/audio/" + src + ".mp3?" + Math.random();
-        ;
-        audioPlayer.extTried.push(".mp3");
-        audioPlayer.play();
+        let exts = ["wav", "mp3", "ogg"];
+        for (let i = 0; i < exts.length; i++) {
+            let ext = exts[i];
+            window.audioPlayers[i].src = "series/" + window.seriesName + "/audio/" + src + "." + ext + "?" + Math.random();;
+            window.audioPlayers[i].play();
+        }
+        
     }
     function setNoteAjax(series, child, page, assetSrc, type, val) {
         var dataObj = {};
@@ -722,7 +731,7 @@ $(document).ready(function () {
                                             url: assetType + "/" + assetSrc + ".mp3",
                                             type: 'HEAD',
                                             error: function () {
-                                                webix.message("Error: Can't find file on server, sorry folks");
+                                                webix.message("Error: Can't find file on server");
                                             },
                                             success: function () {
                                                 downloadFile(assetType + "/" + assetSrc + ".mp3");
@@ -738,7 +747,7 @@ $(document).ready(function () {
                                     url: "series/" + seriesName + "/images/" + assetSrc,
                                     type: 'HEAD',
                                     error: function () {
-                                        webix.message("Error: Can't find " + assetType + "/" + assetSrc + " on server, sorry folks");
+                                        webix.message("Error: Can't find " + assetType + "/" + assetSrc + " on server");
                                     },
                                     success: function () {
                                         downloadFile("series/" + seriesName + "/images/" + assetSrc);
