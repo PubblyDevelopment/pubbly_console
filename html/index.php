@@ -7,7 +7,15 @@ require_once(WEB_ROOT . "/php/main.php");
 
 if (LOGGED_IN) {
     require_once(CLASS_ROOT . "/html_fragment.php");
-    $html = new Html_fragment("html/index.html", []);
+    if (ENVIRONMENT === "fastrackids") {
+        $html = new Html_fragment("html/index.html", [
+            ["HOMEPAGE_LOGO", "assets/fastracKids.png"]
+        ]);
+    }   else    {
+        $html = new Html_fragment("html/index.html", [
+            ["HOMEPAGE_LOGO", "assets/logo.png"]
+        ]);
+    }
     $html->echoOut();
 } else {
     header("Location: login.php");

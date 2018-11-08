@@ -1,16 +1,5 @@
 class fake_post {
-    /*
-     new fake_post("php/process/register.php", {
-     username: "jason",
-     password: {
-     type: "password",
-     value: "asdfasdf"
-     },
-     hint: "it's asdf",
-     email: "jason@jason.jason",
-     age: 25
-     });
-     */
+
     makeForm(url) {
         let form = document.createElement("form");
         form.method = "post";

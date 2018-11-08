@@ -6,9 +6,10 @@
         <script src="includes/webix/webix.js"></script>
       -->
       <link rel="stylesheet" href="skins/webix.css" type="text/css">
+      <script src="includes/jquery.js"></script>
       <script src="includes/webix/webix.js"></script>
       <script src="skins/skin.js"></script>
-            <script src="js/classes/fake_post.js"></script>
+      <script src="js/classes/fake_post.js"></script>
 
       <script src="includes/sha512.js"></script>
       <script src="js/branding.js"></script>
@@ -38,6 +39,7 @@
    <body>
       <div>
          <script>
+
             function initCaps(string) {
                 return string.charAt(0).toUpperCase() + string.slice(1);
             }
@@ -117,7 +119,13 @@
                     {},
                 ]
             };
-            webix.ui(loginCont);
+            $(document).ready(function () {
+                let errorMessage = "{ERROR_MESSAGE}";
+                if (errorMessage) {
+                   webix.message(errorMessage);
+                }
+                webix.ui(loginCont);
+            })
 
             function login() {
                 var data = $$("loginForm").getValues();

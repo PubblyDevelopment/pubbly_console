@@ -5,9 +5,9 @@ $(document).ready(function () {
         height: 150,
         cols: [
             {},
-            {width: 200, 
+            {width: 200,
                 rows: [
-                    {template: "<img id=logo src='assets/logo.png'/>"},
+                    {template: "<img id=logo style='height:150px' src='" + window.homepageLogoSrc + "' />"},
                 ]
             },
             {},
@@ -86,8 +86,10 @@ $(document).ready(function () {
             {},
         ]
     });
-    $(window).resize(function() {
+    $(window).resize(function () {
         logosAndLogout.resize();
         consoleSections.resize();
     });
+    logosAndLogout.resize();
+    consoleSections.resize();
 })
