@@ -78,7 +78,7 @@ $(document).ready(function () {
                     {},
                     {
                         cols: [
-                            {template: "<img style='position:absolute;height:48;width:200' src='assets/powered_by_pubbly.png' />", "width": 200, },
+                            {template: "<img style='height:48;width:200' src='assets/powered_by_pubbly.png' />", width: 200, height:48},
                         ]
                     },
                     {},

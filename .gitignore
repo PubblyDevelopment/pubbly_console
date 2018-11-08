@@ -9,6 +9,8 @@
 /html/map/*
 html/config.php
 /nbproject/private/
+html/js/branding.js
+html/js/favicon.ico
 
 
 !*/.gitkeep
