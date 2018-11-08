@@ -379,7 +379,6 @@ $(document).ready(function () {
                                 context.parent = 0;
                             } else {
                                 folderName = this.getItem(pid).folder;
-                                console.log("Set " + seriesID + " to .folder" + folderName);
                                 context.parent = pid;
                                 $.ajax({
                                     type: 'get',
@@ -485,14 +484,16 @@ $(document).ready(function () {
                             found = found || (fn == folderName);
                         }
                         fc++;
-                        console.log(fc);
                         if (!found) {
                             $$("seriesList").data.add({
-                                id: fc,
+                                id: "forceFolderIcon",
                                 open: true,
                                 folder: folderName,
-                                value: folderName
+                                value: folderName,
+                                data: [],
                             });
+                            $$("seriesList").refresh();
+                            // css override rule for .webix_tree_branch_1 > .webix_tree_item  .webix_tree_file -- force all 1st level "files" to show folder icons.
                         }
                     }
                 }

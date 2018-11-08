@@ -76,3 +76,8 @@ h1, h2, h3, h4 {
     border-color: #A5A8A0 !important;
     color:#aaa !important;
 }
+
+
+.webix_tree_branch_1 > .webix_tree_item  .webix_tree_file {
+    background-image: url(data:image/gif;base64,R0lGODlhEgASAIABAI6Pj////yH5BAEKAAEALAAAAAASABIAAAIhjI+py90AI3Syvoqj27mfnn2gZYxkYEpiCqypa27yTC8FADs=) !important;
+}
