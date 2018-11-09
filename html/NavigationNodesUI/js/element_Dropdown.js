@@ -21,6 +21,7 @@ class NavigationNodes_Dropdown extends NavigationNodes_element {
             let name = node.paths[l].link_name;
             if (name) {
                 select.options[select.options.length] = new Option(name);
+                select.options[select.options.length-1].setAttribute("node-id", node.paths[l].map_node_path_id);
             }
         }
         if (node.paths.length === 1 && !node.paths[0].link_name) {
@@ -36,7 +37,18 @@ class NavigationNodes_Dropdown extends NavigationNodes_element {
         // Get select element
         let select = document.getElementById("pathSelections");
 
-        return select.value;
+        return select.options[select.selectedIndex].getAttribute("node-id");
+    }
+
+    makeDropdownEmpty() {
+        document.getElementById('firstNodeSelected').innerHTML = "[No node selected]";
+        document.getElementById('secondNodeSelected').innerHTML = "[No node selected]";
+        
+        let select = document.getElementById("pathSelections");
+
+        for (let o in select.options) {
+            select.options.remove(o);
+        }
     }
 
     setSecondNodeTitle(node) {

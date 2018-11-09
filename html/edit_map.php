@@ -56,7 +56,7 @@ WHERE
 
                 $cover = ($node['hasCover']) ?
                         "$baseCoverSrc/$nodeName/cover.png" :
-                        "NavigationNodesUI/assets/booknotfound.png";
+                        "NavigationNodesUI/assets/covernotfound.png";
                 $map[$nodeName] = [
                     "node_id" => $node['map_node_id'],
                     "x" => $node['x'],

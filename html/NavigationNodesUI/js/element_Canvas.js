@@ -40,7 +40,7 @@ class NavigationNodes_Canvas extends NavigationNodes_element {
             console.error("Canvas draw error, one of the argments passed was not a number");
         }
     }
-    drawArrow(color, x1, y1, x2, y2) {
+    drawArrow(color, x1, y1, x2, y2, lw=1) {
         if (checkArrayForAllValuesOfDesiredType([x1, y1, x2, y2], "number")) {
 
             this.ctx.scale(this.zoom, this.zoom);
@@ -48,7 +48,7 @@ class NavigationNodes_Canvas extends NavigationNodes_element {
             //TODO 10/3
             this.ctx.beginPath();
 
-            this.ctx.lineWidth = 1;
+            this.ctx.lineWidth = lw;
             this.ctx.strokeStyle = color;
             this.ctx.fillStyle = color;
 
@@ -57,6 +57,7 @@ class NavigationNodes_Canvas extends NavigationNodes_element {
 
             this.ctx.beginPath();
             this.ctx.arrow(x1, y1, x2, y2, [0, 1, -10, 1, -10, 5]);
+            this.ctx.stroke();
             this.ctx.fill();
 
             this.ctx.setTransform(1, 0, 0, 1, 0, 0);

@@ -63,6 +63,7 @@
                  fromNode: $("#firstNodePhoto")[0],
                  deleteNode: $("#deleteNodeButton")[0],
                  viewAt: $("#viewAtButton")[0],
+                 allPathButton: $("#allPathButton")[0],
              };
              let data = false;
              try {
@@ -117,40 +118,44 @@
                         <button class='button d-block' id="zoomInButton" type="button" value="ZOOM IN"/><i class="fas fa-search-plus"></i></button>
                         <button class='button d-block' id="zoomOutButton" type="button" value="ZOOM OUT"/><i class="fas fa-search-minus"></i></button>
                         <button class='button d-block' id="entryNodeButton" type="button" value="SET POINT"/><i class="fas fa-star"></i></button>
-                        <button class='button d-block' id="deleteNodeButton" type="button" value="DELETE NODE"/><i class="fas fa-trash"></i></button>
                         <button class='button d-block' id="viewAtButton" type="button" value="VIEW MAP AT NODE"/><i class="fas fa-glasses"></i></button>
+                        <button class='button d-block' id="deleteNodeButton" type="button" value="DELETE NODE"/><i class="fas fa-trash"></i></button>
+                       
                      </div>
                   </div>
                </div>
                <div class="row">
                   <!-- If no col-number is set, other cols will fill around it -->
-                  <div class="col">
+                  <div class="col" style="top: 25;">
                      <!-- d-block m-auto centers image -->
                      <img id="firstNodePhoto" class="d-block m-auto" width=100px
-                          src="NavigationNodesUI/assets/emptynode.png">
+                          src="NavigationNodesUI/assets/nonodeselected.png">
                      <!-- text-align:center centers text -->
-                     <p id="firstNodeSelected" style="text-align:center;">[No book selected]</p>
+                     <p id="firstNodeSelected" style="text-align:center;">[No node selected]</p>
                   </div>
                   <div class="col-2">
                      <!-- note, this is the poor-boy centershit of css -->
-                     <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+                     <div style="position:absolute;top:100%;left:50%;transform:translate(-50%,-50%);">
                         <select id="pathSelections" style="width:200px">
                         </select>
                         <br>
                         <br>
                         <div style="text-align: center">
-                           <button class='button' id="pathButton" type="button" value="LINK" style="font-size: 22px">
-                              <i class="fas fa-arrow-alt-circle-right"></i>
+                           <button class='button' id="pathButton" type="button" value="PATH" style="font-size: 22px">
+                              <i class="fas fa-angle-right"></i>
+                           </button>
+                           <button class='button' id="allPathButton" type="button" value="ALLPATH" style="font-size: 22px">
+                              <i class="fas fa-angle-double-right"></i>
                            </button>
                         </div>
                      </div>
                   </div>
-                  <div class="col">
+                  <div class="col" style="top: 25;">
                      <!-- d-block m-auto centers image -->
                      <img id="secondNodePhoto" class="d-block m-auto" width=100px
-                          src="NavigationNodesUI/assets/emptynode.png">
+                          src="NavigationNodesUI/assets/nonodeselected.png">
                      <!-- text-align:center centers text -->
-                     <p id="secondNodeSelected" style="text-align:center;">[No book selected]</p>
+                     <p id="secondNodeSelected" style="text-align:center;">[No node selected]</p>
                   </div>
                </div>
             </div>

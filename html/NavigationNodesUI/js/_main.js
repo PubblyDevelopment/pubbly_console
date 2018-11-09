@@ -138,9 +138,10 @@ class NavigationNodes {
     determinePaths() {
         // Go through each node
         this.listOfPaths = [];
+        let paths = {};
         for (let nodeName in this.json) {
             for (let l in this.json[nodeName].paths) {
-                ;
+                
                 //this.inputs.nodeCanvas.drawLine("black",0,0,node.x,node.y);
                 // Go through each path in that node
                 for (let nodeNameAgain in this.json) {
@@ -151,29 +152,47 @@ class NavigationNodes {
                         this.listOfPaths.push([this.json[nodeName], this.json[nodeNameAgain]]);
 
                         let color = "gray";
-                        if (this.json[nodeName] == this.curNode)
+                        if (this.json[nodeName] == this.curNode) {
                             // Populate dropdown to show existing path
                             if (this.json[nodeNameAgain] == this.secondNode || this.secondNode == undefined) {
                                 this.inputs.dropDown.setDropdownSelection(this.json[nodeName].paths[l].name);
                                 color = "black";
                             }
+                        }
 
                         let arrowEndingLoc = this.determineArrowEndingPoint(this.json[nodeName], this.json[nodeNameAgain]);
-
-                        this.inputs.nodeCanvas.drawArrow(color,
-                                this.json[nodeName].x + this.json[nodeName].width / 2,
-                                this.json[nodeName].y + this.json[nodeName].height / 2,
-                                arrowEndingLoc[0],
-                                arrowEndingLoc[1]);
-
-                        break;
+                        let pathName = nodeName + "-" + nodeNameAgain;
+                        if (paths[pathName]) {
+                            paths[pathName].lineWidth+=5;
+                        }   else{
+                            paths[pathName] = {
+                                start: [
+                                    this.json[nodeName].x + this.json[nodeName].width / 2,
+                                    this.json[nodeName].y + this.json[nodeName].height / 2,
+                                ],
+                                end: [
+                                    arrowEndingLoc[0],
+                                    arrowEndingLoc[1]
+                                ],
+                                color:color,
+                                lineWidth:1
+                            }
+                        }
                     }
                 }
             }
         }
+        for (let path in paths) {
+            this.inputs.nodeCanvas.drawArrow(paths[path].color,
+                                paths[path].start[0],
+                                paths[path].start[1],
+                                paths[path].end[0],
+                                paths[path].end[1],
+                                Math.min(30, paths[path].lineWidth));
+        }
     }
 
-    determineArrowEndingPoint(node1, node2) {
+    determineArrowEndingPoint_backup(node1, node2) {
         let slope = getSlope(node1.x, node1.y, node2.x, node2.y);
         let minRadius = Math.max(node2.height, node2.width) / 2;
         let xMod = 0;
@@ -209,6 +228,35 @@ class NavigationNodes {
         }
     }
 
+    determineArrowEndingPoint(node1, node2) {
+        if (node1.y + node1.height < node2.y) {
+            if (node1.x+node1.width/2 < node2.x) {
+                return [node2.x, node2.y];
+            } else if (node1.x+node1.width/2 < node2.x+node2.width) {
+                return [node2.x+node2.width/2, node2.y];
+            } else {
+                return [node2.x+node2.width, node2.y];  
+            }
+        } else if (node1.y < node2.y + node2.height) {
+            if (node1.x+node1.width/2 < node2.x) {
+                return [node2.x, node2.y+node2.height/2];
+               
+            } else {
+                return [node2.x+node2.width, node2.y+node2.height/2];
+            }
+        } else {
+            if (node1.x+node1.width/2 < node2.x) {
+                return [node2.x, node2.y+node2.height]; 
+                
+            } else if (node1.x+node1.width/2 < node2.x+node2.width) {
+                return [node2.x+node2.width/2, node2.y+node2.height]; 
+               
+            } else {
+                return [node2.x+node2.width, node2.y+node2.height];
+            }
+        }
+    }
+
     generateNodeConnectionArrowPoints(node1, node2) {
         // TODO 10/4
         for (let l in node1.paths) {
@@ -229,10 +277,10 @@ class NavigationNodes {
     }
 
     changeNodePhoto() {
-        let firstCoverSrc = (this.curNode) ? this.curNode.cover : "NavigationNodesUI/assets/emptynode.png";
+        let firstCoverSrc = (this.curNode) ? this.curNode.cover : "NavigationNodesUI/assets/nonodeselected.png";
         document.getElementById("firstNodePhoto").src = firstCoverSrc;
 
-        let secondCoverSrc = (this.secondNode) ? this.secondNode.cover : "NavigationNodesUI/assets/emptynode.png";
+        let secondCoverSrc = (this.secondNode) ? this.secondNode.cover : "NavigationNodesUI/assets/nonodeselected.png";
         document.getElementById("secondNodePhoto").src = secondCoverSrc;
 
 
@@ -295,9 +343,17 @@ class NavigationNodes {
     {
         this.curMovingNode = false;
         this.isPanning = false;
+
+        this.theTimer = window.setTimeout(function() {
+            console.log("auto saving...");
+            this.saveJSON();
+        }.bind(this), 5000);
+
     }
 
     eventMouseDownCanvas(loc, e, elem) {
+        window.clearTimeout(this.theTimer);
+
         let clickedNode = this.getFirstNodeUnderneathMouseLoc(loc);
         let clickedLine = this.play_getLines(loc.x, loc.y);
 
@@ -314,11 +370,15 @@ class NavigationNodes {
             this.curNode = clickedNode;
             this.curMovingNode = clickedNode;
             this.inputs.dropDown.populateDropdown(this.curNode);
-            console.log(this.inputs.dropDown.populateDropdown(this.curNode));
-            if (this.inputs.dropDown.populateDropdown(this.curNode) == 0)
+            if (this.inputs.dropDown.populateDropdown(this.curNode) == 0) {
                 this.inputs.pathButton.disableEvent("click");
+                this.inputs.allPathButton.disableEvent("click");
+            }
             else {
+                //Re-enable relevant buttons
                 this.inputs.pathButton.enableEvent("click");
+                this.inputs.allPathButton.enableEvent("click");
+                this.inputs.viewAt.enableEvent("click");
             }
 
             this.changeNodePhoto();
@@ -338,11 +398,12 @@ class NavigationNodes {
             this.inputs.dropDown.setSecondNodeTitle(this.secondNode);
             this.changeNodePhoto();
         } else if (clickedLine) {
-            this.curNode = this.play_getNodeInfoByFancyName(clickedLine.fromNode)
-            this.secondNode = this.play_getNodeInfoByFancyName(clickedLine.toNode)
+            this.curNode = this.play_getNodeInfoByFancyName(clickedLine.fromNode);
+            this.secondNode = this.play_getNodeInfoByFancyName(clickedLine.toNode);
 
             this.inputs.dropDown.populateDropdown(this.curNode);
             this.inputs.dropDown.setDropdownSelection(clickedLine.pathName);
+            this.inputs.dropDown.setSecondNodeTitle(this.secondNode);
 
             this.clearCanvas();
             this.determinePaths();
@@ -352,13 +413,19 @@ class NavigationNodes {
 
             this.changeNodePhoto();
         } else {
+            // Clicking empty canvas space
             this.curNode = undefined;
             this.secondNode = undefined;
             this.clearCanvas();
             this.determinePaths();
             this.drawAllNodes();
             this.changeNodePhoto();
+            this.inputs.dropDown.makeDropdownEmpty();
+
+            // disable relevant buttons here:
             this.inputs.pathButton.disableEvent("click");
+            this.inputs.allPathButton.disableEvent("click");
+            this.inputs.viewAt.disableEvent("click");
 
             this.curMovingNode = false;
             this.isPanning = true;
@@ -455,25 +522,36 @@ class NavigationNodes {
 
     eventClickPath(loc, e, elem) {
         let selPath = this.inputs.dropDown.getDropdownSelection();
+        this.attachOne(selPath); 
+        this.drawNodesRectanglesAndLines();
+    }
 
+    attachOne(which) {
         if (this.curNode && this.secondNode) {
-            let fromPathId = false;
+            
             for (let l in this.curNode.paths) {
-                if (selPath == this.curNode.paths[l].link_name) {
+                if (which == this.curNode.paths[l].map_node_path_id) {
                     this.curNode.paths[l].url = this.secondNode.name;
-                    fromPathId = this.curNode.paths[l].map_node_path_id;
                 }
             }
+
+            let fromPathId = which;
+            
             ajax_general("addNodeConnectionToMap", {
                 mapID: window.mapID,
                 fromPathID: fromPathId,
                 toNodeID: this.secondNode.node_id,
             }, {done: function () {
                     console.log("done");
-                }}, "get");
+                }
+            }, "get");
         }
+    }
 
-        this.drawNodesRectanglesAndLines();
+    attachAllPaths() {
+        for (let path in this.curNode.paths) {
+            this.attachOne(this.curNode.paths[path].map_node_path_id);
+        }
     }
 
     eventClickEntry(loc, e, elem) {
@@ -505,6 +583,10 @@ class NavigationNodes {
         }
     }
 
+    eventClickAllPath(loc, e, elem) {
+        this.attachAllPaths();
+    }
+
     attachEvents() {
         // Bind attaches the first arg to the function call... essentially cutting out the _This solution or the scope apply callbacks (ES6)
         // https://stackoverflow.com/questions/2236747/use-of-the-javascript-bind-method
@@ -524,6 +606,8 @@ class NavigationNodes {
         this.inputs.entryNodeButton.attachEvent("click", this.eventClickEntry.bind(this));
         this.inputs.deleteNode.attachEvent("click", this.eventClickDelete.bind(this));
         this.inputs.viewAt.attachEvent("click", this.eventClickViewAt.bind(this));
+
+        this.inputs.allPathButton.attachEvent("click", this.eventClickAllPath.bind(this));
 
         let that = this;
         $(this.inputElements.fromNode).click(function () {
@@ -600,6 +684,7 @@ class NavigationNodes {
             this.inputs.entryNodeButton = new NavigationNodes_Entry(inputElements.entryNodeButton);
             this.inputs.deleteNode = new NavigationNodes_Save(inputElements.deleteNode);
             this.inputs.viewAt = new NavigationNodes_Save(inputElements.viewAt);
+            this.inputs.allPathButton = new NavigationNodes_Path(inputElements.allPathButton);
 
         } catch (e) {
             console.error("Error with NavigationNodes init.");
@@ -612,6 +697,8 @@ class NavigationNodes {
         // Attach events to each input elements created above
         this.attachEvents();
         this.inputs.pathButton.disableEvent("click");
+        this.inputs.allPathButton.disableEvent("click");
+        this.inputs.viewAt.disableEvent("click");
 
         this.loadAssets(afterLoad.bind(_NavigationNodes));
         function afterLoad() {

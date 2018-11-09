@@ -8,7 +8,7 @@ class DBConnect {
     private $PASSWORD;
     private $DATABASE;
 
-    function DBConnect() {
+    function __construct() {
         $this->USER = getenv("DB_USER");
         $this->PASSWORD = getenv("DB_PASSWORD");
         $this->DATABASE = getenv("DB_NAME");
