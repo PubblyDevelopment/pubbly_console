@@ -19,8 +19,11 @@ class NavigationNodes_Dropdown extends NavigationNodes_element {
 
         for (let l in node.paths) {
             let name = node.paths[l].link_name;
+            console.log("******");
+            console.log(node.paths[l]);
             if (name) {
                 select.options[select.options.length] = new Option(name);
+                select.options[select.options.length-1].setAttribute("node-id", node.paths[l].map_node_path_id);
             }
         }
         if (node.paths.length === 1 && !node.paths[0].link_name) {
@@ -36,7 +39,7 @@ class NavigationNodes_Dropdown extends NavigationNodes_element {
         // Get select element
         let select = document.getElementById("pathSelections");
 
-        return select.value;
+        return select.options[select.selectedIndex].getAttribute("node-id");
     }
 
     makeDropdownEmpty() {
