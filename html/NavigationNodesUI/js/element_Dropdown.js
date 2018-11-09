@@ -19,8 +19,6 @@ class NavigationNodes_Dropdown extends NavigationNodes_element {
 
         for (let l in node.paths) {
             let name = node.paths[l].link_name;
-            console.log("******");
-            console.log(node.paths[l]);
             if (name) {
                 select.options[select.options.length] = new Option(name);
                 select.options[select.options.length-1].setAttribute("node-id", node.paths[l].map_node_path_id);

@@ -182,9 +182,7 @@ class NavigationNodes {
                 }
             }
         }
-        console.log(paths);
         for (let path in paths) {
-            console.log(path);
             this.inputs.nodeCanvas.drawArrow(paths[path].color,
                                 paths[path].start[0],
                                 paths[path].start[1],
@@ -372,7 +370,6 @@ class NavigationNodes {
             this.curNode = clickedNode;
             this.curMovingNode = clickedNode;
             this.inputs.dropDown.populateDropdown(this.curNode);
-            console.log(this.inputs.dropDown.populateDropdown(this.curNode));
             if (this.inputs.dropDown.populateDropdown(this.curNode) == 0) {
                 this.inputs.pathButton.disableEvent("click");
                 this.inputs.allPathButton.disableEvent("click");
@@ -530,7 +527,6 @@ class NavigationNodes {
     }
 
     attachOne(which) {
-        console.log(which);
         if (this.curNode && this.secondNode) {
             
             for (let l in this.curNode.paths) {
@@ -539,7 +535,6 @@ class NavigationNodes {
                 }
             }
 
-            console.log(which);
             let fromPathId = which;
             
             ajax_general("addNodeConnectionToMap", {
