@@ -229,10 +229,10 @@ class NavigationNodes {
     }
 
     changeNodePhoto() {
-        let firstCoverSrc = (this.curNode) ? this.curNode.cover : "NavigationNodesUI/assets/emptynode.png";
+        let firstCoverSrc = (this.curNode) ? this.curNode.cover : "NavigationNodesUI/assets/nonodeselected.png";
         document.getElementById("firstNodePhoto").src = firstCoverSrc;
 
-        let secondCoverSrc = (this.secondNode) ? this.secondNode.cover : "NavigationNodesUI/assets/emptynode.png";
+        let secondCoverSrc = (this.secondNode) ? this.secondNode.cover : "NavigationNodesUI/assets/nonodeselected.png";
         document.getElementById("secondNodePhoto").src = secondCoverSrc;
 
 
@@ -357,12 +357,14 @@ class NavigationNodes {
 
             this.changeNodePhoto();
         } else {
+            // Clicking empty canvas space
             this.curNode = undefined;
             this.secondNode = undefined;
             this.clearCanvas();
             this.determinePaths();
             this.drawAllNodes();
             this.changeNodePhoto();
+            this.inputs.dropDown.makeDropdownEmpty();
 
             // disable relevant buttons here:
             this.inputs.pathButton.disableEvent("click");

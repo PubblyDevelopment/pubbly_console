@@ -39,6 +39,17 @@ class NavigationNodes_Dropdown extends NavigationNodes_element {
         return select.value;
     }
 
+    makeDropdownEmpty() {
+        document.getElementById('firstNodeSelected').innerHTML = "[No node selected]";
+        document.getElementById('secondNodeSelected').innerHTML = "[No node selected]";
+        
+        let select = document.getElementById("pathSelections");
+
+        for (let o in select.options) {
+            select.options.remove(o);
+        }
+    }
+
     setSecondNodeTitle(node) {
         document.getElementById('secondNodeSelected').innerHTML = node.name;
     }
