@@ -405,7 +405,7 @@ function messyTargetToPretty(mess, curPage) {
                 }
                 break;
             case "video":
-                if (lowerType === "object" && lowerAction === "play") {
+                if (lowerType === "object" && lowerAction === "play" && mess.destination.split("|").length === 1) {
                     let forceShow = {
                         blocking: false,
                         hold: false,
