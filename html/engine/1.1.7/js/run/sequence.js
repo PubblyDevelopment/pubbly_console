@@ -387,10 +387,12 @@ let Sq_Players_Child = {
         };
         this.on_playing = function () {
             _This.elem.removeEventListener("playing", _This.on_playing);
+            _This.elem.volume = 1;
             _This.play();
         };
         this.on_ended = function () {
             _This.elem.removeEventListener("ended", _This.on_ended);
+            _This.elem.volume = 0;
             _This.finish();
         };
         this.on_error = function () {
