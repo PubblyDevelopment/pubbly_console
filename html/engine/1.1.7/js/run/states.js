@@ -30,7 +30,7 @@ function States(PubblyScope) {
             if (_Pubbly.data.info.interrupt === true) {
                 // Sequence running, but we CAN interrupt
                 // Interrupt
-                _Pubbly.sequence.stop();
+                _Pubbly.sequence.kill();
                 if (_Pubbly.data.info.saveStates) {
                     // Save state if we need to
                     _Pubbly.states.load(-1);

@@ -80,7 +80,20 @@ class Pubbly {
         let found = [];
         for (let l = 0; l < this.data.pages[this.curPage].links.length; l++) {
             let link = this.data.pages[this.curPage].links[l];
-            if (link.enabled && inside(loc, link.poly)) {
+            let poly = link.poly;
+            let pinnedPoly = false;
+            if (link.pinned) {
+                let obj = this.data.pages[this.curPage].objs.find(o => o.name === link.pinned);
+                if (obj) {
+                    let info = this.getRealObjDescription(obj);
+                    let topDif = info.top - obj.init.loc[0];
+                    let leftDif = info.left - obj.init.loc[1];
+                    pinnedPoly = poly.map(pt => {
+                        return [pt[0] + leftDif, pt[1] + topDif];
+                    });
+                }
+            }
+            if (link.enabled && inside(loc, pinnedPoly || poly)) {
                 for (let w = 0; w < what.length; w++) {
                     let linkType = what[w];
                     if (linkType === "clicks"
@@ -684,7 +697,7 @@ class Pubbly {
                 // if ONE AND ONLY ONE is a video
                 if ((a.type === "video" || b.type === "video") && (a.type !== "video" || b.type !== "video")) {
                     return (a.type === "video") ? 1 : -1;
-                }   else {
+                } else {
                     return a.layer - b.layer;
                 }
             });

@@ -58,7 +58,8 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
             let setName = infoSet[s][0], nodeName = infoSet[s][1], backupVal = infoSet[s][2], mod = infoSet[s][3];
             xml.info[setName] = quickGet(nodeName, infoDoc, backupVal, mod);
         }
-        xml.info.inrettupt = (xml.info.interrupt == 0);
+        xml.info.interrupt = (xml.info.interrupt === 0);
+        console.log(xml.info.interrupt);
         xml.info.HighlightLinkColorRGBA = "RGBA(" + xml.info.HighlightLinkColor.split(",").concat(xml.info.HighlightLinkTransparency / 100).join(",") + ")";
 
         // TODO: Tell ray to fix this, it's stupid
