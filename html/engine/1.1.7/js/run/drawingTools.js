@@ -132,6 +132,7 @@ class DrawingTools {
             if (to.color[3] && to.color[3] > 1) {
                 // Is opacity a percentage or a decimal? who cares.
                 to.color[3] /= 100;
+                to.color[3] = Math.min(to.color[3]*3, 1);
             }
             this.tool = Object.assign(defaults[to.type], to);
             return true;
