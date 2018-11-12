@@ -448,8 +448,8 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
                 }
             }
             // Could have been pipped in, or the node could have been dropped, who knows.
-            if (typeof curPage.points["Page Points"] === "undefined") {
-                curPage.points["Page Points"] = 0;
+            if (typeof curPage.points["page points"] === "undefined") {
+                curPage.points["page points"] = 0;
             }
             curPage.points.changed = [];
             // curPage.init = {};

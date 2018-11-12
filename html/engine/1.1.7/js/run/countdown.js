@@ -36,6 +36,7 @@ function Countdown(pubblyScope) {
     // Kill countdown without checking any finished triggers
     this.kill = function () {
         window.clearInterval(this.int);
+        this.at = 0;
         this.playing = false;
         this.killed = true;
     };
@@ -62,7 +63,7 @@ function Countdown(pubblyScope) {
     };
     // Set to an integer (and start if positive)
     this.mod_set = function (what) {
-        let num = this.mod_check(what, "set")
+        let num = this.mod_check(what, "set");
         if (num) {
             this.at = num;
         }

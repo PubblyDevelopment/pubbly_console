@@ -797,16 +797,17 @@ class Pubbly {
     draw_field(ctx, curObj, relPage) {
         if (curObj.vis) {
             let text = curObj.contents || ""; // Default is fixed text.
-            if (curObj.displayType == "points") {
-                let localCheck = this.data.pages[relPage].points[curObj.display];
+            if (curObj.displayType === "points") {
+                let localCheck = this.data.pages[relPage].points[curObj.display.toLowerCase()];
                 let globalCheck = this.data.points[curObj.display];
-                text = (typeof localCheck == "undefined") ? globalCheck : localCheck;
-                if (typeof text == "undefined") {
+                text = (typeof localCheck === "undefined") ? globalCheck : localCheck;
+                if (typeof text === "undefined") {
                     error("warn", "draw page", "Undefined points reference: " + curObj.display);
+                    text = "";
                 } else {
                     text = text.toString();
                 }
-            } else if (curObj.displayType == "countdown") {
+            } else if (curObj.displayType === "countdown") {
                 text = this.countdown.at;
             }
             let lines = false;
@@ -841,7 +842,7 @@ class Pubbly {
                                     measured);
                         }
                         if (measured > curObj.width) {
-                            curDirection = -1
+                            curDirection = -1;
                         } else {
                             curDirection = 1;
                         }

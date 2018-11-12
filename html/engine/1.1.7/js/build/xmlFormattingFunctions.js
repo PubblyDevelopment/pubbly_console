@@ -249,7 +249,7 @@ function messyTargetToPretty(mess, curPage) {
                             hold: false,
                             type: "point",
                             action: lowerAction.charAt(0), // + - * / =
-                            destination: mess.destination, // dogPoints
+                            destination: lowerDestination, // dogPoints to dogpoints
                             attribute: "value", // for sentence structure only
                             value: parseInt(lowerAction.substring(1)), // 10, 50, 7, 28997
 
@@ -797,11 +797,11 @@ function messyTriggerToTypeAndConditional(mess) {
     });
     if (conditional) {
         let split = mess.split(conditional);
-        if (split[0].toLowerCase == "page points") {
+        if (split[0].toLowerCase() === "page points") {
             return ["point", ["page points", conditional.trim(), split[1].trim()]];
         } else {
             // custom points
-            return ["point", [split[0], conditional.trim(), split[1].trim()]];
+            return ["point", [split[0].toLowerCase(), conditional.trim(), split[1].trim()]];
         }
     }
 
@@ -864,7 +864,7 @@ function pointNamesFormatter(pointNames) {
         let pointsBar = pointNames.toString().split("|");
         let pointsSplit = (pointsComma.length > pointsBar.length) ? pointsComma : pointsBar;
         for (let p = 0; p < pointsSplit.length; p++) {
-            let pointName = pointsSplit[p];
+            let pointName = pointsSplit[p].toLowerCase();
             // New feature here
             let defaultValue = 0;
             ret[pointName] = defaultValue;
