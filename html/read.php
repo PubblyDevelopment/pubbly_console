@@ -19,7 +19,7 @@ $postSpecs = [
     "type" => $type,
     "engineCode" => $engineCode
 ];
-
+$seriesName = "";
 if ($type == "book") {
     $id = $_GET['id'];
     $xmlName = "MainXML.xml";
@@ -95,8 +95,7 @@ if (isset($loc)) {
             $dots = ($type == "unit") ? "../../../../../" : "../../";
             $frag = new Html_fragment("engine/old/index.html", [
                 ["DOTS", "../../"],
-                ["XML_NAME", "MainXML.xml"],
-                ["SERIES_NAME", ""],
+                ["SERIES_NAME", $seriesName],
                 ["XML_NAME", $xmlName],
                 ["DOTS", $dots],
             ]);
