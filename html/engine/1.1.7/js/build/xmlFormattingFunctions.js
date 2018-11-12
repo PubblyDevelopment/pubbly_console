@@ -298,9 +298,9 @@ function messyTargetToPretty(mess, curPage) {
                         "resume",
                         "finish",
                         "start at",
+                        "add to",
                         "set at",
                         "subtract from",
-                        "add to",
                     ];
                     if (possibles.indexOf(lowerAction) !== -1) {
                         let timeless = possibles.slice(0, 4); //"stop", "pause", "resume", "finish"
@@ -314,10 +314,20 @@ function messyTargetToPretty(mess, curPage) {
                             }
                         }
                     }
+                    let translatedAction = translate({
+                        "stop": "kill",
+                        "pause": "pause",
+                        "resume": "resume",
+                        "finish": "finish",
+                        "start at": "start_at",
+                        "add to": "mod_add",
+                        "set at": "mod_set",
+                        "subtract from": "mod_subtract",
+                    }, false)(lowerAction);
 
                     ret = {
                         type: "countdown",
-                        action: lowerAction,
+                        action: translatedAction,
                         destination: "countdown", // IDEA: Multiple countdowns
                         value: timeValue,
                         // We have a [countdown] target.

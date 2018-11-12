@@ -44,14 +44,18 @@ function Countdown(pubblyScope) {
     this.stop = this.kill;
 
     // Modification functions
-    // Increase existing countdown (and start if not)
+    // Increase existing countdown
     this.mod_add = function (what) {
-        let num = this.mod_check(what, "add")
+        let num = this.mod_check(what, "add");
         if (num) {
             this.at += num;
         }
-        if (!this.playing) {
-            this.play();
+    };
+    // Set an existing countdown (do not start)
+    this.mod_set = function (what) {
+        let num = this.mod_check(what, "set");
+        if (num) {
+            this.at = num;
         }
     };
     // Decrease existing countdown (and check for finish)
@@ -61,16 +65,7 @@ function Countdown(pubblyScope) {
             this.at -= num;
         }
     };
-    // Set to an integer (and start if positive)
-    this.mod_set = function (what) {
-        let num = this.mod_check(what, "set");
-        if (num) {
-            this.at = num;
-        }
-        if (!this.playing) {
-            this.play();
-        }
-    };
+
     // Make sure it's going to work and all
     this.mod_check = function (what, from) {
         if (typeof (what * 1) === "number") {
@@ -78,6 +73,17 @@ function Countdown(pubblyScope) {
         } else {
             console.error("Cannot set to " + what + ", only numbers allowed");
             return false;
+        }
+    };
+
+    // Set to an integer (and start if positive)
+    this.start_at = function (what) {
+        let num = this.mod_check(what, "set");
+        if (num) {
+            this.at = num;
+        }
+        if (!this.playing) {
+            this.play();
         }
     };
 
@@ -95,10 +101,13 @@ function Countdown(pubblyScope) {
     // Actual function the interval calls here
     this.next = function () {
         this.at--;
+        this.check();
+    };
+    this.check = function() {
         // Check interval redraw? Meh, only one frame a second, not a huge loss.
         _Pubbly.drawPage_dispatch();
         if (this.at <= 0) {
             this.finish();
         }
-    };
+    }.bind(this);
 }

@@ -792,18 +792,13 @@ function Sequence(pubblyScope) {
                 }
                 break;
             case "countdown":
-                if (target.action == "start"
-                        || target.action == "start at") {
-                    if (target.value) {
-                        _Pubbly.countdown.mod_add(target.value);
-                    } else {
-                        _Pubbly.countdown.play();
-                    }
-                } else if (typeof _Pubbly.countdown[target.action] == "function") {
-                    _Pubbly.countdown[target.action]();
+                if (typeof _Pubbly.countdown[target.action] === "function") {
+                    _Pubbly.countdown[target.action](target.value);
                 } else {
                     console.error("Unknown countdown target action " + target.action);
                 }
+                // Redraws value, checks for > 0, starts countdown related sequence if
+                _Pubbly.countdown.check();
                 break;
             case "reset":
                 autoDraw = true;
