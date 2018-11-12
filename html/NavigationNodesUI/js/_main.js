@@ -347,6 +347,18 @@ class NavigationNodes {
         this.theTimer = window.setTimeout(function() {
             console.log("auto saving...");
             this.saveJSON();
+            let currDate = new Date();
+            let timeString = "Last saved: " + currDate.toLocaleTimeString();
+
+            $("#savePrompt").css({"opacity":1});
+            $("#savePrompt").html(timeString);
+
+            window.clearTimeout(this.fadeTimeout);
+            this.fadeTimeout = window.setTimeout(function() {
+                $("#savePrompt").animate({"opacity":0}, 1000);
+            }, 2000);
+            
+            
         }.bind(this), 5000);
 
     }
