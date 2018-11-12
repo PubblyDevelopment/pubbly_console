@@ -799,11 +799,10 @@ class Pubbly {
             let text = curObj.contents || ""; // Default is fixed text.
             if (curObj.displayType === "points") {
                 let localCheck = this.data.pages[relPage].points[curObj.display.toLowerCase()];
-                let globalCheck = this.data.points[curObj.display];
+                let globalCheck = this.data.points[curObj.display.toLowerCase()];
                 text = (typeof localCheck === "undefined") ? globalCheck : localCheck;
                 if (typeof text === "undefined") {
                     error("warn", "draw page", "Undefined points reference: " + curObj.display);
-                    text = "";
                 } else {
                     text = text.toString();
                 }
@@ -842,7 +841,7 @@ class Pubbly {
                                     measured);
                         }
                         if (measured > curObj.width) {
-                            curDirection = -1;
+                            curDirection = -1
                         } else {
                             curDirection = 1;
                         }

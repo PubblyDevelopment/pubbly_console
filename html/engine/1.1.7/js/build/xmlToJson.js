@@ -92,8 +92,12 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
             ],
             "video": [
                 ["fileName", "ObjFileName", false, getFileNameFromPath],
+                ["swapFName", "Source", false, getFileNameFromPath],
                 ["ext", "ObjExt"],
                 ["type", null, "video"],
+                ["swapMethod", "swapSizeOrLoc", false],
+                ["swapHeight", "swapHeight", false, forceType("int")],
+                ["swapWidth", "swapWidth", false, forceType("int")],
             ],
             "gif": [
                 ["fileName", "ObjFileName"],
@@ -211,6 +215,8 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
                             curObj[curSet[os][0]] = quickGet(curSet[os][1], objNode, curSet[os][2], curSet[os][3]);
                         }
 
+
+
                         if (curObj.mobility == "drag") {
                             curObj.droppedLoc = false;
                         }
@@ -219,7 +225,12 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
                             // Used to store already calculated font sizes
                             curObj.calculated = {};
                         }
-
+                        if (curObj.type === "video") {
+                            if (curObj.swapFName && curObj.swapFName !== curObj.fName) {
+                                curObj.fName = curObj.swapFName;
+                                curObj.fileName = curObj.swapFName;
+                            }
+                        }
                         if (curObj.type == "workspace") {
                             // Workspace top left height and width are all WRONG.
                             // Get that info from the rect

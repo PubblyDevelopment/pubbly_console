@@ -32,10 +32,10 @@
  
  ---
  
-
+ 
  DIRECTORY SOURCE - dSrc
  logos/file.ext
-
+ 
  DIRECTORY NAME - dName
  logos
  
@@ -73,11 +73,16 @@ function getExtFromPath(path) {
 function getFileNameFromPath(path) {
     // path     >> ???/???/file.nope.ext
     // return   >> file.nope
-    let fileSource = path.split("/").pop(); // file.nope.ext
-    let tmp1 = fileSource.split("."); // ['file', 'nope', 'ext']
-    tmp1.pop(); // ['file', 'nope']
-    let fileName = tmp1.join(".");
-    return fileName;
+    if (path) {
+        let fileSource = path.split("/").pop(); // file.nope.ext
+        let tmp1 = fileSource.split("."); // ['file', 'nope', 'ext']
+        tmp1.pop(); // ['file', 'nope']
+        let fileName = tmp1.join(".");
+        return fileName;
+    } else {
+        return false;
+    }
+
 }
 
 // TODO: More as needed
