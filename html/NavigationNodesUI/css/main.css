@@ -73,3 +73,14 @@ body{
 #deleteNodeButton {
     background-color: #f45042;
 }
+
+#savePrompt {
+    background-color: #ffffff;
+    padding: 2px;
+    position: absolute;
+    text-align: left;
+    width: 130px;
+    top: 575px;
+    right: 665px;
+    font-size: 10px;
+}
