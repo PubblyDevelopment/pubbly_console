@@ -45,6 +45,10 @@ class Html_fragment {
         echo $this->html;
     }
     
+    public function printOut($where) {
+        file_put_contents($where, $this->html);
+    }
+    
     function __construct($fsLoc, $swaps) {
         $this->fsLoc = $fsLoc;
         $this->swaps = $swaps;

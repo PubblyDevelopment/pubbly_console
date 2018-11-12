@@ -141,7 +141,7 @@ class NavigationNodes {
         let paths = {};
         for (let nodeName in this.json) {
             for (let l in this.json[nodeName].paths) {
-                
+
                 //this.inputs.nodeCanvas.drawLine("black",0,0,node.x,node.y);
                 // Go through each path in that node
                 for (let nodeNameAgain in this.json) {
@@ -163,8 +163,8 @@ class NavigationNodes {
                         let arrowEndingLoc = this.determineArrowEndingPoint(this.json[nodeName], this.json[nodeNameAgain]);
                         let pathName = nodeName + "-" + nodeNameAgain;
                         if (paths[pathName]) {
-                            paths[pathName].lineWidth+=5;
-                        }   else{
+                            paths[pathName].lineWidth += 5;
+                        } else {
                             paths[pathName] = {
                                 start: [
                                     this.json[nodeName].x + this.json[nodeName].width / 2,
@@ -174,8 +174,8 @@ class NavigationNodes {
                                     arrowEndingLoc[0],
                                     arrowEndingLoc[1]
                                 ],
-                                color:color,
-                                lineWidth:1
+                                color: color,
+                                lineWidth: 1
                             }
                         }
                     }
@@ -183,12 +183,13 @@ class NavigationNodes {
             }
         }
         for (let path in paths) {
-            this.inputs.nodeCanvas.drawArrow(paths[path].color,
-                                paths[path].start[0],
-                                paths[path].start[1],
-                                paths[path].end[0],
-                                paths[path].end[1],
-                                Math.min(30, paths[path].lineWidth));
+            this.inputs.nodeCanvas.drawArrow(
+                    paths[path].color,
+                    paths[path].start[0],
+                    paths[path].start[1],
+                    paths[path].end[0],
+                    paths[path].end[1],
+                    Math.min(30, paths[path].lineWidth));
         }
     }
 
@@ -230,29 +231,29 @@ class NavigationNodes {
 
     determineArrowEndingPoint(node1, node2) {
         if (node1.y + node1.height < node2.y) {
-            if (node1.x+node1.width/2 < node2.x) {
+            if (node1.x + node1.width / 2 < node2.x) {
                 return [node2.x, node2.y];
-            } else if (node1.x+node1.width/2 < node2.x+node2.width) {
-                return [node2.x+node2.width/2, node2.y];
+            } else if (node1.x + node1.width / 2 < node2.x + node2.width) {
+                return [node2.x + node2.width / 2, node2.y];
             } else {
-                return [node2.x+node2.width, node2.y];  
+                return [node2.x + node2.width, node2.y];
             }
         } else if (node1.y < node2.y + node2.height) {
-            if (node1.x+node1.width/2 < node2.x) {
-                return [node2.x, node2.y+node2.height/2];
-               
+            if (node1.x + node1.width / 2 < node2.x) {
+                return [node2.x, node2.y + node2.height / 2];
+
             } else {
-                return [node2.x+node2.width, node2.y+node2.height/2];
+                return [node2.x + node2.width, node2.y + node2.height / 2];
             }
         } else {
-            if (node1.x+node1.width/2 < node2.x) {
-                return [node2.x, node2.y+node2.height]; 
-                
-            } else if (node1.x+node1.width/2 < node2.x+node2.width) {
-                return [node2.x+node2.width/2, node2.y+node2.height]; 
-               
+            if (node1.x + node1.width / 2 < node2.x) {
+                return [node2.x, node2.y + node2.height];
+
+            } else if (node1.x + node1.width / 2 < node2.x + node2.width) {
+                return [node2.x + node2.width / 2, node2.y + node2.height];
+
             } else {
-                return [node2.x+node2.width, node2.y+node2.height];
+                return [node2.x + node2.width, node2.y + node2.height];
             }
         }
     }
@@ -344,7 +345,7 @@ class NavigationNodes {
         this.curMovingNode = false;
         this.isPanning = false;
 
-        this.theTimer = window.setTimeout(function() {
+        this.theTimer = window.setTimeout(function () {
             console.log("auto saving...");
             this.saveJSON();
         }.bind(this), 5000);
@@ -373,8 +374,7 @@ class NavigationNodes {
             if (this.inputs.dropDown.populateDropdown(this.curNode) == 0) {
                 this.inputs.pathButton.disableEvent("click");
                 this.inputs.allPathButton.disableEvent("click");
-            }
-            else {
+            } else {
                 //Re-enable relevant buttons
                 this.inputs.pathButton.enableEvent("click");
                 this.inputs.allPathButton.enableEvent("click");
@@ -522,13 +522,13 @@ class NavigationNodes {
 
     eventClickPath(loc, e, elem) {
         let selPath = this.inputs.dropDown.getDropdownSelection();
-        this.attachOne(selPath); 
+        this.attachOne(selPath);
         this.drawNodesRectanglesAndLines();
     }
 
     attachOne(which) {
         if (this.curNode && this.secondNode) {
-            
+
             for (let l in this.curNode.paths) {
                 if (which == this.curNode.paths[l].map_node_path_id) {
                     this.curNode.paths[l].url = this.secondNode.name;
@@ -536,7 +536,7 @@ class NavigationNodes {
             }
 
             let fromPathId = which;
-            
+
             ajax_general("addNodeConnectionToMap", {
                 mapID: window.mapID,
                 fromPathID: fromPathId,
