@@ -231,6 +231,10 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
                                 curObj.fName = curObj.swapFName;
                                 curObj.fileName = curObj.swapFName;
                             }
+                            if (!curObj.fName) {
+                                curObj.fName = curObj.name;
+                                curObj.fileName = curObj.name;
+                            }
                         }
                         if (curObj.type == "workspace") {
                             // Workspace top left height and width are all WRONG.
@@ -427,7 +431,7 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
                 curObj.init.layer = curObj.layer * 1;
                 curObj.init.mobility = curObj.mobility + "";
                 curObj.init.opacity = curObj.opacity * 1;
-                if (curObj.mobility == "drag") {
+                if (curObj.mobility === "drag") {
                     curObj.init.droppedLoc = false;
                 }
                 if (curObj.clear) {

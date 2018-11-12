@@ -129,6 +129,10 @@ class DrawingTools {
                     cursor: "draw-chalk"
                 }
             };
+            if (to[3] && to[3] > 1) {
+                // Is opacity a percentage or a decimal? who cares.
+                to[3] /= 100;
+            }
             this.tool = Object.assign(defaults[to.type], to);
             return true;
         }
