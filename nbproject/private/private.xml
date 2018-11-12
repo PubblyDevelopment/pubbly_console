@@ -3,11 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/Applications/MAMP/htdocs/console/html/assets/booknotfound.png</file>
             <file>file:/Applications/MAMP/htdocs/console/html/edit_map.php</file>
             <file>file:/Applications/MAMP/htdocs/console/html/html/edit_map.html</file>
             <file>file:/Applications/MAMP/htdocs/console/html/js/stitch_app.js</file>
             <file>file:/Applications/MAMP/htdocs/console/html/NavigationNodesUI/js/_main.js</file>
+=======
+            <file>file:/C:/xampp/htdocs/console/html/engine/1.1.5/js/run/sequence.js</file>
+            <file>file:/C:/xampp/htdocs/console/html/engine/1.1.5/js/build/xmlToJson.js</file>
+            <file>file:/C:/xampp/htdocs/console/html/series/vid%20test/sdfg.xml</file>
+            <file>file:/C:/xampp/htdocs/console/html/engine/1.1.5/js/build/xmlFormattingFunctions.js</file>
+>>>>>>> 1c7d8f37566999039a9ca91ccb4714bd12dc29e1
         </group>
     </open-files>
 </project-private>
