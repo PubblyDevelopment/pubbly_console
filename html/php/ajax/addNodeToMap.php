@@ -15,7 +15,7 @@ require_once(CLASS_ROOT . "/mysql_query.php");
 require_once(CLASS_ROOT . "/sec_session.php");
 if (LOGGED_IN && in_array($nodeFromType, ["static", "variable", "unit"])) {
     $nodeFsName = genNodeFsName($nodeFromType, $nodeFromID);
-    $nodeID = createNodeEntryInDB($mapID, $nodeFromType, $nodeFromID, $nodeFsName);
+    $nodeID = createNodeEntryInDB($mapID, $nodeFromType, $nodeFromID, $nodeFsName, $nodeX, $nodeY);
     if ($nodeID) {
         $xmlLoc = getXmlLocFromNodeTypeAndId($nodeFromType, $nodeFromID);
         $paths = createNodeSkeletonPathsFromXmlDoc($nodeID, $xmlLoc);

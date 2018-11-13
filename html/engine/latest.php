@@ -1,4 +1,4 @@
 <?php
-$latestEngineRelease = "1.1.7";
+$latestEngineRelease = "1.1.8";
 define("LATEST_ENGINE_RELEASE", $latestEngineRelease);
 ?>
