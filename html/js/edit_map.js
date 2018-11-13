@@ -32,11 +32,19 @@ let wf_addNodeToMap = function (nodeFromType, nodeFromID) {
             postData.y = navigationNodes.getCenter()[1];
         }
         ajax_general("addNodeToMap", postData, {done: function (newNode) {
-                let node = JSON.parse(newNode);
-                console.log(node);
-                console.log("TODO: Push into map and soft refresh UI");
-                // navigationNodes.json[node.name] = node;
-                window.location.href = window.location.href;
+                let node = false;
+                try {
+                    node = JSON.parse(newNode);
+                } catch (e) {
+                }
+                if (node) {
+                    console.log(node);
+                    console.log("TODO: Push into map and soft refresh UI");
+                    // navigationNodes.json[node.name] = node;
+                    window.location.href = window.location.href;
+                } else {
+                    webix.message(newNode);
+                }
 
             }
         }, 'get');
