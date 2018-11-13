@@ -207,6 +207,7 @@ $(document).ready(function () {
                 if (data) {
                     $$(webixDataParseID).parse(data);
                 } else {
+                    document.body.innerHTML = ret;
                     console.error("Error parsing data");
                     console.error(ret);
                 }

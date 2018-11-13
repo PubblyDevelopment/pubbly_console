@@ -19,7 +19,7 @@ $postSpecs = [
     "type" => $type,
     "engineCode" => $engineCode
 ];
-
+$seriesName = "";
 if ($type == "book") {
     $id = $_GET['id'];
     $xmlName = "MainXML.xml";
@@ -85,7 +85,7 @@ if ($type == "book") {
 }
 if (isset($loc)) {
     require_once("php/classes/site_error.php");
-    require_once("php/html_fragments_by_known_types/engine.php");
+    require_once("php/classes/html_fragment.php");
     $htmlFileName = ($type == "child") ? "$childName.html" : "index.html";
 
 // Old garbage engine again
@@ -93,34 +93,42 @@ if (isset($loc)) {
         if (!file_exists("$loc/$htmlFileName")) {
             $oldHTML = file_get_contents("engine/old/index.html");
             $dots = ($type == "unit") ? "../../../../../" : "../../";
-
-            $frag = new Engine("old", [
+            $frag = new Html_fragment("engine/old/index.html", [
+                ["DOTS", "../../"],
+                ["SERIES_NAME", $seriesName],
                 ["XML_NAME", $xmlName],
                 ["DOTS", $dots],
             ]);
-            file_put_contents("$loc/$htmlFileName", $frag->html);
+            $frag->printOut("$loc/$htmlFileName");
         }
         header("location: $loc/$htmlFileName");
     } else {
         $jsonLoc = "$loc/$jsonName.$engineCode.json";
         $jsonUpdated = (file_exists("$jsonLoc")) ? filemtime("$jsonLoc") : 0;
         $xmlUpdated = (file_exists("$loc/$xmlName")) ? filemtime("$loc/$xmlName") : 0;
-        $hotFixTime = file_exists("engine/$engineCode/hotFixCount.txt") ?
-                filemtime("engine/$engineCode/hotFixCount.txt") : 0;
+        $engineUpdated = stat("engine/$engineCode")['mtime'];
         if ($jsonUpdated <= $xmlUpdated // JSON outdated from XML
-                || $jsonUpdated <= $hotFixTime // JSON outdated from build process
+                || $jsonUpdated <= $engineUpdated // JSON outdated from build process
                 || $forceDebug // Lazy JASON
         ) {
-            new Engine("$engineCode-build", [
+            $frag = new Html_fragment("engine/$engineCode/build.html", [
+                ["REL_ROOT", "."],
+                ["ENGINE", "$engineCode"],
+                ["START_PAGE", 0],
                 ["BUILD_POST_SPECS", json_encode($postSpecs)],
                 ["BUILD_POST_LOC", "build.php"],
                 ["BOOK_LOC", "$loc"],
                 ["XML_NAME", "$xmlName"],
             ]);
+            $frag->echoOut();
         } else {
-            new Engine("$engineCode-run", [
-                ["PUBBLY_JSON", file_get_contents("$jsonLoc")]
+            $frag = new Html_fragment("engine/$engineCode/run.html", [
+                ["REL_ROOT", "."],
+                ["ENGINE", "$engineCode"],
+                ["START_PAGE", 0],
+                ["PUBBLY_JSON", file_get_contents("$jsonLoc")],
             ]);
+            $frag->echoOut();
         }
     }
 }
