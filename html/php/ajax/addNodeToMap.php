@@ -3,6 +3,9 @@
 $mapID = $_GET['mapID'];
 $nodeFromType = $_GET['nodeFromType'];
 $nodeFromID = $_GET['nodeFromID'];
+$nodeX = isset($_GET['x']) ? $_GET['x'] : 0;
+$nodeY = isset($_GET['y']) ? $_GET['y'] : 0;
+
 
 chdir("../../");
 require_once("config.php");
@@ -12,7 +15,7 @@ require_once(CLASS_ROOT . "/mysql_query.php");
 require_once(CLASS_ROOT . "/sec_session.php");
 if (LOGGED_IN && in_array($nodeFromType, ["static", "variable", "unit"])) {
     $nodeFsName = genNodeFsName($nodeFromType, $nodeFromID);
-    $nodeID = createNodeEntryInDB($mapID, $nodeFromType, $nodeFromID, $nodeFsName);
+    $nodeID = createNodeEntryInDB($mapID, $nodeFromType, $nodeFromID, $nodeFsName, $nodeX, $nodeY);
     if ($nodeID) {
         $xmlLoc = getXmlLocFromNodeTypeAndId($nodeFromType, $nodeFromID);
         $paths = createNodeSkeletonPathsFromXmlDoc($nodeID, $xmlLoc);
@@ -112,16 +115,16 @@ function getXmlLocFromNodeTypeAndId($type, $id) {
     return $query->fetchSingle($queryStr, ["s", $id]);
 }
 
-function createNodeEntryInDB($mapID, $nodeType, $nodeFromID, $nodeName) {
+function createNodeEntryInDB($mapID, $nodeType, $nodeFromID, $nodeName, $nodeX, $nodeY) {
     require_once(CLASS_ROOT . "/mysql_query.php");
     $query = new Mysql_query();
-    $queryStr = "INSERT INTO map_node (map_id, name, child_id, book_id, unit_id) VALUES (?, ?, ?, ?, ?)";
+    $queryStr = "INSERT INTO map_node (map_id, name, child_id, book_id, unit_id, x, y) VALUES (?, ?, ?, ?, ?, ?, ?)";
     if ($nodeType === "static") {
-        $id = $query->execSingleGetLastID($queryStr, ["sssss", $mapID, $nodeName, null, $nodeFromID, null]);
+        $id = $query->execSingleGetLastID($queryStr, ["sssssss", $mapID, $nodeName, null, $nodeFromID, null, $nodeX, $nodeY]);
     } else if ($nodeType === "variable") {
-        $id = $query->execSingleGetLastID($queryStr, ["sssss", $mapID, $nodeName, $nodeFromID, null, null]);
+        $id = $query->execSingleGetLastID($queryStr, ["sssssss", $mapID, $nodeName, $nodeFromID, null, null, $nodeX, $nodeY]);
     } else if ($nodeType === "unit") {
-        $id = $query->execSingleGetLastID($queryStr, ["sssss", $mapID, $nodeName, null, null, $nodeFromID]);
+        $id = $query->execSingleGetLastID($queryStr, ["sssssss", $mapID, $nodeName, null, null, $nodeFromID, $nodeX, $nodeY]);
     }
     return $id;
 }

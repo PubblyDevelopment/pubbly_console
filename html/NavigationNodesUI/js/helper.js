@@ -193,3 +193,7 @@ function angle(cx, cy, ex, ey) {
 function getSlope (x1, y1, x2, y2) {
   return (y2-y1)/(x2-x1);
 }
+
+function round (x, y) {
+  return Math.ceil(x/y)*y;
+}

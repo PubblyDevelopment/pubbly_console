@@ -64,6 +64,7 @@
                  deleteNode: $("#deleteNodeButton")[0],
                  viewAt: $("#viewAtButton")[0],
                  allPathButton: $("#allPathButton")[0],
+                 updateButton: $("#updateButton")[0],
              };
              let data = false;
              try {
@@ -83,6 +84,17 @@
                      inputs,
                      {fakeProjectVirgin: false});
          });
+
+         function insertNewNodeTest() {
+          let retFromAddNodeToMapExample = {
+            name: "static-Pots", 
+            cover: 0, 
+            links: Array(0),
+            node_id: 21
+          }
+          navigationNodes.addNewNode(retFromAddNodeToMapExample);
+         }
+         
       </script>
    </head>
    <body>
@@ -94,6 +106,8 @@
       <div id="webixHeader"></div>
 
 
+      <div id="modalBlack" class="hidden"></div>
+      <div id="modalWhite" class="hidden"><img id="modalImg" class="center" width="55%" src="NavigationNodesUI/assets/loadarrow.png"><div id="modalContent">Nodes updating, please wait...</div></div>
 
       <!-- For bootstrap, always enclose in a .container (just works that way) -->
       <div class="container">
@@ -113,7 +127,7 @@
                      </div>
 
                      <div class="d-inline-block" style="width:800px">
-                        <div id="savePrompt" style="opacity: 0;"></div>
+                        <div id="savePrompt" style="opacity: 0;">Last saved: blah blah</div>
                         <canvas id="NavNodesCanvasMain" 
                                 height=600 width=800></canvas>
                      </div>
@@ -123,6 +137,7 @@
                         <button class='button d-block' id="zoomOutButton" type="button" value="ZOOM OUT"/><i class="fas fa-search-minus"></i></button>
                         <button class='button d-block' id="entryNodeButton" type="button" value="SET POINT"/><i class="fas fa-star"></i></button>
                         <button class='button d-block' id="viewAtButton" type="button" value="VIEW MAP AT NODE"/><i class="fas fa-glasses"></i></button>
+                        <button class='button d-block' id="updateButton" type="button" value="UPDATE ALL NODES"/><i class="fas fa-sync-alt"></i></button>
                         <button class='button d-block' id="deleteNodeButton" type="button" value="DELETE NODE"/><i class="fas fa-trash"></i></button>
                        
                      </div>
