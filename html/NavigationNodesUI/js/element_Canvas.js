@@ -85,6 +85,10 @@ class NavigationNodes_Canvas extends NavigationNodes_element {
 
     }
 
+    getCenter() {
+        return [this.ctx.canvas.clientWidth*this.zoom + this.offset[0], this.ctx.canvas.clientHeight*this.zoom + this.offset[1]]; 
+    }
+
     // ES6 goodness. A setter is a function call that looks like a property set. Perfect for our zoomFactor.
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set
     set zoom(to) {

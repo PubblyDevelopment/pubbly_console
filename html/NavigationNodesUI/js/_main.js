@@ -1,5 +1,19 @@
 class NavigationNodes {
 
+    insertNewNodeTest(newJSON) {
+        let nj = {
+            name: "static-Pots", 
+            cover: 0, 
+            links: Array(0),
+            node_id: 21
+        }
+        nj.x = this.getCenter()[0];
+        nj.y = this.getCenter()[1];
+        
+        //console.log("adding new node??");
+        this.json[nj.name] = nj;
+    }
+
     // Start of Jason messed around
     // Plus added a line to top of method eventMouseMoveCanvas
 
@@ -133,6 +147,15 @@ class NavigationNodes {
         this.inputs.nodeCanvas.drawImage(this.starImg,
                 node.x + node.width / 2 - 25,
                 node.y + node.height / 2 - 25, 50, 50);
+    }
+
+    getCenter() {
+        let o = this.inputs.nodeCanvas.offset;
+        let z = this.inputs.nodeCanvas.zoom;
+        let c = this.inputs.nodeCanvas.getCenter();
+        let widthMod = this.inputs.nodeCanvas.width * (1/z/2);
+        let heightMod = this.inputs.nodeCanvas.height * (1/z/2);
+        return[-o[0] + widthMod, -o[1] + heightMod, 50, 50];
     }
 
     determinePaths() {
@@ -341,11 +364,28 @@ class NavigationNodes {
 
     eventMouseUpCanvas(loc, e, elem)
     {
-        this.curMovingNode = false;
+        //TODO snap to grid
+        
         this.isPanning = false;
 
+        if (this.curMovingNode) {
+            this.curMovingNode.x = round(this.curMovingNode.x, 40);
+            this.curMovingNode.y = round(this.curMovingNode.y, 40);
+        }
+
+        this.curMovingNode = false;
+
+        this.clearCanvas();
+        this.determinePaths();
+        this.drawAllNodes();
+        this.drawNodeRect("red", this.curNode);
+        this.drawNodeRect("green", this.secondNode);
+
+        this.changeNodePhoto();
+
+
+
         this.theTimer = window.setTimeout(function() {
-            console.log("auto saving...");
             this.saveJSON();
             let currDate = new Date();
             let timeString = "Last saved: " + currDate.toLocaleTimeString();
@@ -453,8 +493,8 @@ class NavigationNodes {
 
         if (this.curMovingNode && !e.shiftKey) {
             this.curNode = this.curMovingNode;
-            this.curMovingNode.x = loc.x - this.curMovingNode.width / 2;
-            this.curMovingNode.y = loc.y - this.curMovingNode.height / 2;
+            this.curMovingNode.x = loc.x - this.curMovingNode.width / 2, 20;
+            this.curMovingNode.y = loc.y - this.curMovingNode.height / 2, 20;
 
             this.drawNodesRectanglesAndLines();
         } else if (this.curMovingNode && e.shiftKey) {
@@ -528,7 +568,6 @@ class NavigationNodes {
         // TODO: Please wait, disable everything, callback, enable buttons
         this.inputs.save.disableEvent("click");
         this.saveJSON();
-        console.log("saved");
         this.inputs.save.enableEvent("click");
     }
 
@@ -595,6 +634,25 @@ class NavigationNodes {
         }
     }
 
+    eventClickUpdate(loc, e, elem) {
+        $("#modalBlack").removeClass("hidden");
+        $("#modalWhite").removeClass("hidden");
+        
+        ajax_general("updateAllNodesOnMap", 
+            {
+                mapID: window.mapID,
+            }, 
+            {
+                done: function () {
+                    $("#modalBlack").addClass("hidden");
+                    $("#modalWhite").addClass("hidden");
+                },
+            }, "get");
+        
+ 
+        
+    }
+
     eventClickAllPath(loc, e, elem) {
         this.attachAllPaths();
     }
@@ -618,6 +676,7 @@ class NavigationNodes {
         this.inputs.entryNodeButton.attachEvent("click", this.eventClickEntry.bind(this));
         this.inputs.deleteNode.attachEvent("click", this.eventClickDelete.bind(this));
         this.inputs.viewAt.attachEvent("click", this.eventClickViewAt.bind(this));
+        this.inputs.updateButton.attachEvent("click", this.eventClickUpdate.bind(this));
 
         this.inputs.allPathButton.attachEvent("click", this.eventClickAllPath.bind(this));
 
@@ -697,6 +756,7 @@ class NavigationNodes {
             this.inputs.deleteNode = new NavigationNodes_Save(inputElements.deleteNode);
             this.inputs.viewAt = new NavigationNodes_Save(inputElements.viewAt);
             this.inputs.allPathButton = new NavigationNodes_Path(inputElements.allPathButton);
+            this.inputs.updateButton = new NavigationNodes_Save(inputElements.updateButton);
 
         } catch (e) {
             console.error("Error with NavigationNodes init.");

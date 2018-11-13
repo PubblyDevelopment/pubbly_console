@@ -22,11 +22,16 @@ let ajax_general = function (scriptName, info, cbs, type = 'post') {
 
 let wf_addNodeToMap = function (nodeFromType, nodeFromID) {
     if (nodeFromID) {
-        ajax_general("addNodeToMap", {
+        let postData = {
             mapID: window.mapID,
             nodeFromType: nodeFromType,
             nodeFromID: nodeFromID
-        }, {done: function (newNode) {
+        };
+        if (navigationNodes && navigationNodes.getCenter) {
+            postData.x = navigationNodes.getCenter()[0];
+            postData.y = navigationNodes.getCenter()[1];
+        }
+        ajax_general("addNodeToMap", postData, {done: function (newNode) {
                 let node = JSON.parse(newNode);
                 console.log(node);
                 console.log("TODO: Push into map and soft refresh UI");

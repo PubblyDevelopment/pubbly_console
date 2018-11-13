@@ -75,12 +75,70 @@ body{
 }
 
 #savePrompt {
-    background-color: #ffffff;
+    background-color: white;
     padding: 2px;
     position: absolute;
     text-align: left;
     width: 130px;
-    top: 575px;
-    right: 665px;
+    margin-top: 581px;
     font-size: 10px;
+}
+
+#modalBlack {
+    position: fixed;
+    padding: 0;
+    margin: 0;
+    z-index: 10000;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+#modalWhite {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 10001;
+
+    width: 400px;
+    height: 340px;
+
+    margin-top: -250px;
+    margin-left: -200px;
+    border-radius: 15px;
+    background-color: white;
+
+    transition: all 0.5s ease;
+}
+
+#modalContent {
+    text-align: center;
+    margin-top: 10%;   
+}
+
+#modalImg {
+    animation: spin 10s linear infinite;
+}
+
+@keyframes spin {
+    0% { -webkit-transform: rotate(360deg);}
+    100% { -webkit-transform: rotate(0deg);}
+}
+
+.center {
+    position: relative;
+    display: inline-block;
+    left: 21%;
+    margin-top: 12%;
+    transform: translate(-50%);
+}
+
+.hidden {
+    width:0px;
+    height:0px;
+    transition: all 0.3s ease-in-out;
 }
