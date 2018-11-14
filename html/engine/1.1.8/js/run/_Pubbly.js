@@ -1078,7 +1078,8 @@ class Pubbly {
         this.textCtx = document.createElement("canvas").getContext('2d');
 
         this.bufferCtx = document.createElement("canvas").getContext('2d');
-        document.body.append(this.bufferCtx.canvas);
+        // Unnessisary, canvases can draw even if not dommed
+        // document.body.appendChild(this.bufferCtx.canvas);
         // $(this.bufferCtx.canvas).css({"top":0,"left":0,"position":"absolute"});
         // Page turning, single and double
         this.turns = new Turns(this, this.data.info.display);

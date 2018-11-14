@@ -60,10 +60,11 @@ function Countdown(pubblyScope) {
     };
     // Decrease existing countdown (and check for finish)
     this.mod_subtract = function (what) {
-        let num = this.mod_check(what, "subtract")
+        let num = this.mod_check(what, "subtract");
         if (num) {
             this.at -= num;
         }
+        this.check();
     };
 
     // Make sure it's going to work and all

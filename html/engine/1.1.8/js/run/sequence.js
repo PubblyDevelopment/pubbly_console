@@ -798,7 +798,7 @@ function Sequence(pubblyScope) {
                     console.error("Unknown countdown target action " + target.action);
                 }
                 // Redraws value, checks for > 0, starts countdown related sequence if
-                _Pubbly.countdown.check();
+                // _Pubbly.countdown.check();
                 break;
             case "reset":
                 autoDraw = true;

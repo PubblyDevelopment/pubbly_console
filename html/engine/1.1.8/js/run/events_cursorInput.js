@@ -6,8 +6,8 @@ function CursorInput() {
     this.passed = false;
     this.touchLoc = function (e, offsets) {
         return [
-            e.originalEvent.touches[0].pageX + offsets.pageOffsetX,
-            e.originalEvent.touches[0].pageY + offsets.pageOffsetY,
+            e.originalEvent.changedTouches[0].pageX + offsets.pageOffsetX,
+            e.originalEvent.changedTouches[0].pageY + offsets.pageOffsetY,
             now()];
     }
     this.mouseLoc = function (e, offsets) {

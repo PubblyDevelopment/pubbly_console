@@ -1,6 +1,6 @@
-function PubblyDom(xml) {
+function PubblyDom(xml, environment) {
     this.dom;
-    this.build = function () {
+    this.build = function (environment) {
         let info = xml.info;
         let spreadWidth = (info.display == "composite") ? info.width * 2 : info.width;
 
@@ -135,7 +135,12 @@ function PubblyDom(xml) {
         let domHeight = info.height + 111; // margins, subject to change
         let domWidth = spreadWidth + 30; // margins
         let viewportScale = Math.min(screen.height / domHeight, screen.width / domWidth);
-        $("#viewport").attr("content", "initial-scale=" + viewportScale);
+        let viewportScaleNoMargins = Math.min(screen.height / info.height, screen.width / spreadWidth);
+        if (environment === "app") {
+            $("#viewport").attr("content", "initial-scale=" + viewportScaleNoMargins + ", width=device-width, user-scalable=no");
+        } else {
+            $("#viewport").attr("content", "initial-scale=" + viewportScale);
+        }
 
         // TODO: Update the goto with stuff
         for (let p = 0; p < xml.pages.length; p++) {
@@ -156,19 +161,19 @@ function PubblyDom(xml) {
             canvases: $("#canvases"),
             workspaces: $("#workspaces"),
             canPlacers: {
-                previousSpreadLeft:$("div.previousSpreadLeft.canPlacer"),
-                previousSpreadRight:$("div.previousSpreadRight.canPlacer"),
-                previous:$("div.previous.canPlacer"),
-                currentSpreadLeft:$("div.currentSpreadLeft.canPlacer"),
-                currentSpreadRight:$("div.currentSpreadRight.canPlacer"),
-                current:$("div.current.canPlacer"),
-                nextSpreadLeft:$("div.nextSpreadLeft.canPlacer"),
-                nextSpreadRight:$("div.nextSpreadRight.canPlacer"),
-                next:$("div.next.canPlacer"),
+                previousSpreadLeft: $("div.previousSpreadLeft.canPlacer"),
+                previousSpreadRight: $("div.previousSpreadRight.canPlacer"),
+                previous: $("div.previous.canPlacer"),
+                currentSpreadLeft: $("div.currentSpreadLeft.canPlacer"),
+                currentSpreadRight: $("div.currentSpreadRight.canPlacer"),
+                current: $("div.current.canPlacer"),
+                nextSpreadLeft: $("div.nextSpreadLeft.canPlacer"),
+                nextSpreadRight: $("div.nextSpreadRight.canPlacer"),
+                next: $("div.next.canPlacer"),
             }
         };
     }
 
-    this.build();
+    this.build(environment);
     return this.dom;
 }
