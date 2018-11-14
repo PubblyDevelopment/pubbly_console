@@ -528,7 +528,7 @@ function Sequence(pubblyScope) {
                         "animation",
                         [_Sequence, _Pubbly],
                         {},
-                        target,
+                        target
                         );
                 target.player = {
                     name: "animations",
@@ -555,7 +555,7 @@ function Sequence(pubblyScope) {
                                 this.postTarget();
                             },
                         },
-                        target,
+                        target
                         );
                 target.player = {
                     name: "audios",
@@ -581,7 +581,7 @@ function Sequence(pubblyScope) {
                                 this.postTarget();
                             },
                         },
-                        target,
+                        target
                         );
                 target.player = {
                     name: "videos",
@@ -779,7 +779,7 @@ function Sequence(pubblyScope) {
                             "wait",
                             [_Sequence, _Pubbly],
                             {},
-                            target,
+                            target
                             );
                     target.player = {
                         name: "waits",

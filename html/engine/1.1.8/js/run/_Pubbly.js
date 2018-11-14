@@ -957,7 +957,7 @@ class Pubbly {
                     ctx.fillText(
                             lines[l],
                             drawLeft,
-                            drawTop,
+                            drawTop
                             );
                     if (curObj.editing &&
                             this.events.f.insertionPoint.on &&
