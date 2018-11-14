@@ -831,15 +831,16 @@ class Pubbly {
                     lines = ["M"];
                 }
 
-// IF the size of the thing changes, THEN you empty the size and recalculated.
-// This saves us from having to run time consuming measureText nonsense every redraw.
+                // IF the size of the thing changes, THEN you empty the size and recalculated.
+                // This saves us from having to run time consuming measureText nonsense every redraw.
                 let measureChar = "M";
                 if (curObj.calculated.size || curObj.size !== "auto") {
-                    ctx.font = curObj.size + "pt " + curObj.font;
+                    let ptSize = (curObj.calculated.size) ? curObj.calculated.size : curObj.size;
+                    ctx.font = ptSize + "pt " + curObj.font;
                 } else {
-// Calculate the best fit font size for the given field dimentions
-// Ping pong back and forth until one more px font size is too large and one less is too small.
-// Reasonable starting guess
+                    // Calculate the best fit font size for the given field dimentions
+                    // Ping pong back and forth until one more px font size is too large and one less is too small.
+                    // Reasonable starting guess
                     let widthLimit = parseInt(curObj.width / lines[0].length);
                     let curDirection = false,
                             lastDirection = false,
@@ -1088,7 +1089,7 @@ class Pubbly {
         // Sequencing, includes all player functions
         this.sequence = new Sequence(this);
         // Since it's a dirty word for modern browsers, cleaner to keep workarounds in their own obj
-        this.urlNav = new UrlNav(this.runtimeProps.environment);
+        this.urlNav = new UrlNav();
         this.drawingTools = new PubblyDrawingTools(this, this.data.drawingTool);
         this.data.pages.forEach(p => {
             p.objs.forEach(o => {

@@ -119,6 +119,7 @@ if (isset($loc)) {
                 ["BUILD_POST_LOC", "build.php"],
                 ["BOOK_LOC", "$loc"],
                 ["XML_NAME", "$xmlName"],
+                ["ENVIRONMENT", "server"]
             ]);
             $frag->echoOut();
         } else {
@@ -127,6 +128,7 @@ if (isset($loc)) {
                 ["ENGINE", "$engineCode"],
                 ["START_PAGE", 0],
                 ["PUBBLY_JSON", file_get_contents("$jsonLoc")],
+                ["ENVIRONMENT", "server"]
             ]);
             $frag->echoOut();
         }

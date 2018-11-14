@@ -49,34 +49,30 @@ function Build(props) {
                 window.preflight.progress.say(message);
             },
             done: function () {
-                if (_Build.buildPostSpecs) {
-                    $.ajax({
-                        url: _Build.buildPostLoc,
-                        type: 'post',
-                        data: {
-                            data: btoa(JSON.stringify(xml)),
-                            buildPostSpecs: _Build.buildPostSpecs,
-                        },
-                        error: function (ret) {
-                            console.log(ret);
-                            error("fatal", "Buffer", "Problem writting JSON after firstLoad. No writeBookJson ajax script found");
-                        },
-                        success: function (ret) {
-                            if (ret.status == "success") {
-                                console.info("Preload all worked and json wrote.");
-                                console.info("---------------------------------------------");
-                                window.preflight.kill();
-                                _Build.successCB(xml);
-                            } else if (ret.status == "error") {
-                                error("fatal", "Buffer", "Problem writting JSON after firstLoad. Message: " + ret.message);
-                            } else {
-                                document.body.innerHTML = ret;
-                            }
-                        },
-                    });
-                } else {
-                    _Build.successCB(xml);
-                }
+                $.ajax({
+                    url: _Build.buildPostLoc,
+                    type: 'post',
+                    data: {
+                        data: btoa(JSON.stringify(xml)),
+                        buildPostSpecs: _Build.buildPostSpecs,
+                    },
+                    error: function (ret) {
+                        console.log(ret);
+                        error("fatal", "Buffer", "Problem writting JSON after firstLoad. No writeBookJson ajax script found");
+                    },
+                    success: function (ret) {
+                        if (ret.status == "success") {
+                            console.info("Preload all worked and json wrote.");
+                            console.info("---------------------------------------------");
+                            window.preflight.kill();
+                            _Build.successCB(xml);
+                        } else if (ret.status == "error") {
+                            error("fatal", "Buffer", "Problem writting JSON after firstLoad. Message: " + ret.message);
+                        } else {
+                            document.body.innerHTML = ret;
+                        }
+                    },
+                });
             }
         });
     });

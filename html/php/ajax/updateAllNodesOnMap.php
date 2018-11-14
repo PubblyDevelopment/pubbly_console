@@ -9,14 +9,13 @@ require_once(WEB_ROOT . "/php/main.php");
 require_once(WEB_ROOT . "/php/nodeMovements.php");
 require_once(WEB_ROOT . "/php/saveXML.php");
 require_once(CLASS_ROOT . "/mysql_query.php");
+require_once(CLASS_ROOT . "/html_fragment.php");
+require_once(WEB_ROOT . "/engine/latest.php");
 require_once(CLASS_ROOT . "/sec_session.php");
 if (LOGGED_IN) {
     $query = new Mysql_query();
     $mapName = $query->fetchSingle("SELECT name FROM map WHERE map_id = ?", ["s", $mapID]);
-    $nodes = $query->fetchArray("SELECT map_node_id, name, child_id, book_id, unit_id FROM map_node WHERE map_id = ?", ["s", $mapID]);
-    if (!isset($nodes[0]) || !is_array($nodes[0])) {
-        $nodes = [$nodes];
-    }
+    $nodes = $query->fetchRows("SELECT map_node_id, name, child_id, book_id, unit_id FROM map_node WHERE map_id = ?", ["s", $mapID]);
     foreach ($nodes as $node) {
         $toName = $node['name'];
         $id = $node['map_node_id'];
@@ -42,6 +41,11 @@ if (LOGGED_IN) {
             mkdir("$toLoc/videos");
         }
         moveNodeXmlToNodeFsLoc($xmlFromLoc, $assetPrefix, "$toLoc");
+        $frag = new Html_fragment("engine/$latestEngineRelease/app.html", [
+            ["ENGINE_CODE", $latestEngineRelease],
+            ["MAP_NODE_NAME", $toName],
+        ]);
+        $frag->printOut("map/$mapName/$toName.html");
 
 
         $allConnections = $query->fetchRows("SELECT
@@ -67,12 +71,11 @@ WHERE
                     foreach ($xmlLink->Triggers->children() as $trigger) {
                         foreach ($trigger->Targets->children() as $target) {
                             if (
-                                    ((string) $target->Type == "Page" && (string) $target->Destination == "To be Determined")
-                                    || ((string) $target->Action == "Has been determined")) {
+                                    ((string) $target->Type == "Page" && (string) $target->Destination == "To be Determined") || ((string) $target->Action == "Has been determined")) {
                                 $target->Type = "URL";
                                 $target->Action = "Has been determined";
                                 $target->Destination = "base64Encoded(" .
-                                    base64_encode($url) . ")";
+                                        base64_encode($url) . ")";
                             }
                         }
                     }

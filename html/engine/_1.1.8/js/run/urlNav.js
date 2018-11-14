@@ -1,6 +1,5 @@
-function UrlNav(environment) {
+function UrlNav() {
     _UrlNav = this;
-    this.environment = environment;
 
     // Makes sure there's an http[s]://www. in front of the URL
     this.clean = function (url) {
@@ -127,15 +126,7 @@ function UrlNav(environment) {
                 this.url = curUrl[0] + "?" + newVars.join("&");
             } else if (url.substring(0, 1) == "?") {
                 let curUrl = window.location.href.split("?");
-                if (this.environment === "app") {
-                    // map nodes only.
-                    let props = url.split("?")[1].split("&").map(a => a.split("="));
-                    if (props.find(p => (p[0] == "t" && p[1] == "m"))) {
-                        this.url = props.find(p => p[0] == "nn")[1] + ".html";
-                    }
-                } else {
-                    this.url = curUrl[0] + url;
-                }
+                this.url = curUrl[0] + url;
             } else {
                 this.url = this.clean(url);
             }
