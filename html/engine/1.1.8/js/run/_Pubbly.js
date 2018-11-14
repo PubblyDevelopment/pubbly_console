@@ -639,8 +639,13 @@ class Pubbly {
                 this.loadBufferLead(this.curPage, {
                     done: function () {
                         this.progressGraph.end();
-                        this.domInteractionCover.promptClick(cbs.done);
-                        this.ready = true;
+						this.ready = true;
+                        if (this.runtimeProps.environment === "app") {
+							cbs.done();
+						}	else	{
+							this.domInteractionCover.promptClick(cbs.done);
+						}
+                        
                     }.bind(this),
                     fail: cbs.fail,
                     prog: this.progressGraph.calculate

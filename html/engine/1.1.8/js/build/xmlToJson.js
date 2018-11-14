@@ -92,7 +92,7 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
                 ["animations", "ObjAnimations", false, parseObjAnims], // LOC: xmlFormattingFunctions.js
             ],
             "video": [
-                ["fileName", "ObjFileName", false, getFileNameFromPath],
+                ["fName", "ObjFileName", false, getFileNameFromPath],
                 ["swapFName", "Source", false, getFileNameFromPath],
                 ["ext", "ObjExt"],
                 ["type", null, "video"],
@@ -234,7 +234,9 @@ function updateJsonFromXML(progressGraph, xmlLoc, cb) {
                             if (!curObj.fName) {
                                 curObj.fName = curObj.name;
                                 curObj.fileName = curObj.name;
-                            }
+                            }	else	{
+                                curObj.fileName = curObj.fName;
+							}
                         }
                         if (curObj.type == "workspace") {
                             // Workspace top left height and width are all WRONG.
