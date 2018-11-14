@@ -65,7 +65,7 @@ class Mysql_query {
         }
     }
 
-    public function fetchArray($sql, $binds) {
+    public function fetchRows($sql, $binds) {
         $ret = [];
         $retArr = $this->prepBinds($sql, $binds);
         $result = $retArr->get_result();
@@ -73,6 +73,11 @@ class Mysql_query {
             array_push($ret, $row);
         }
         $result->free();
+        return $ret;
+
+    }
+    public function fetchArray($sql, $binds) {
+        $ret = $this->fetchRows($sql, $binds);
         if (count($ret) === 1) {
             $ret = $ret[0];
         }
