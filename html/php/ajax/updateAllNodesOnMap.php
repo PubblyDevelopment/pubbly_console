@@ -56,7 +56,6 @@ LEFT JOIN map_node ton ON
 WHERE
     frm.from_node_id = ?", ["s", $id]);
         foreach ($allConnections as $connection) {
-            pprint_r($connection);
             $toNodeName = $connection['to_node_name'];
             $xmlPath = "$toLoc/MainXML.xml";
             $url = "?engineCode=new&t=m&mn=$mapName&nn=$toNodeName";
