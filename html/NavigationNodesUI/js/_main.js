@@ -404,6 +404,8 @@ class NavigationNodes {
     }
 
     eventMouseDownCanvas(loc, e, elem) {
+        console.log(loc.x+this.inputs.nodeCanvas.offset[0] + " " + e.x);
+
         window.clearTimeout(this.theTimer);
 
         let clickedNode = this.getFirstNodeUnderneathMouseLoc(loc);
@@ -545,6 +547,9 @@ class NavigationNodes {
             this.eventClickZoomIn(loc, e, elem);
         } else
             this.eventClickZoomOut(loc, e, elem);
+
+        console.log(this.inputs.nodeCanvas.zoom);
+        console.log(this.inputs.nodeCanvas.offset);
     }
 
     eventClickZoomIn(loc, e, elem) {

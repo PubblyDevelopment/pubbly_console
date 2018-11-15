@@ -98,7 +98,8 @@ class NavigationNodes_Canvas extends NavigationNodes_element {
             let zoomDif = to - this.zoomFactor;
             let newOffset = this.offset;
             newOffset[0] -= zoomDif * this.width / 2;
-            newOffset[1] -= zoomDif * this.height / 2;
+            newOffset[1] -= zoomDif * this.height / 2
+
             // Set offsetFactor direct, because could screw up the zoom if min/max didn't let the offset go through.
             this.offsetFactor = newOffset;
             this.zoomFactor = to;
