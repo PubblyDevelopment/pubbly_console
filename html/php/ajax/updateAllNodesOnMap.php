@@ -47,8 +47,14 @@ if (LOGGED_IN) {
         ]);
         $frag->printOut("map/$mapName/$toName.html");
 
+        $xmlPath = "$toLoc/MainXML.xml";
+        // recreates nodes just incase new ones were added
+        // If it's a duplicate entry, it fails the foreign key unique check 
+        createNodeSkeletonPathsFromXmlDoc($id, $xmlPath);
+
 
         $allConnections = $query->fetchRows("SELECT
+    frm.map_node_path_id AS map_node_path_id,
     frm.from_link_name AS from_link_name,
     frm.from_link_page AS from_link_page,
     frm.to_node_id AS to_node_id,
@@ -60,8 +66,8 @@ LEFT JOIN map_node ton ON
 WHERE
     frm.from_node_id = ?", ["s", $id]);
         foreach ($allConnections as $connection) {
+            $foundInXml = false;
             $toNodeName = $connection['to_node_name'];
-            $xmlPath = "$toLoc/MainXML.xml";
             $url = "?engineCode=new&t=m&mn=$mapName&nn=$toNodeName";
 
             $xml = simplexml_load_file($xmlPath);
@@ -76,10 +82,14 @@ WHERE
                                 $target->Action = "Has been determined";
                                 $target->Destination = "base64Encoded(" .
                                         base64_encode($url) . ")";
+                                $foundInXml = true;
                             }
                         }
                     }
                 }
+            }
+            if (!$foundInXml) {
+                $query->execSingle("DELETE FROM map_node_path WHERE map_node_path_id = ?", ["s", $connection['map_node_path_id']]);
             }
             saveXML($xml, "$toLoc/MainXML.xml");
         }
