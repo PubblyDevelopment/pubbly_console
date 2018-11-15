@@ -40,7 +40,11 @@ LEFT JOIN map_node fn ON
 LEFT JOIN map_node tn ON 
     np.to_node_id = tn.map_node_id
 WHERE
-    mp.name = ?", ["s", $mapName]);
+    mp.name = ?
+ORDER BY 
+    nodeName, 
+    from_link_name, 
+    from_link_page", ["s", $mapName]);
     // see webix_getUnits.php... Same prob.
     if (!isset($nodePathMap[0]) || !is_array($nodePathMap[0])) {
         $nodePathMap = [$nodePathMap];
