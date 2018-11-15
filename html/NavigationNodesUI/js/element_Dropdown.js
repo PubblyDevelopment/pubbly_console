@@ -19,7 +19,7 @@ class NavigationNodes_Dropdown extends NavigationNodes_element {
 
         for (let l in node.paths) {
             let linkName = node.paths[l].link_name;
-            let pageName = "P" + node.paths[0].page + ": ";
+            let pageName = "P" + node.paths[l].page + ": ";
             let name = pageName + linkName;
             if (name) {
                 select.options[select.options.length] = new Option(name);
