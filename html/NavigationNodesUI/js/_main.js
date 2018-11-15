@@ -644,6 +644,8 @@ class NavigationNodes {
             }, 
             {
                 done: function () {
+                    // TODO: Change to a soft refresh
+                    window.location.href = window.location.href;
                     $("#modalBlack").addClass("hidden");
                     $("#modalWhite").addClass("hidden");
                 },
