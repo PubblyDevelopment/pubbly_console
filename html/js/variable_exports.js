@@ -37,182 +37,7 @@ var header = {
         }
     ]
 };
-var elem = {
-    view: "scrollview",
-    width: "100%",
-    body: {
-        rows: [
-            header,
-            {
-                view: "tabview",
-                id: "editAndCreateTab",
-                cells: [
-                    {
-                        header: "Edit Series",
-                        rows: [
-                            {
-                                cols: [
-                                    // seriesList goes here,
-                                    // seriesActions goes here
-                                ]
-                            },
-                        ],
-                    },
-                    {
-                        id: "createTab",
-                        header: "New Series",
-                        cols: [
-                            {gravity: 1},
-                            {
-                                gravity: 5,
-                                maxWidth: 400,
-                                autoheight: true,
-                                rows: [
-                                    {height: 10, },
-                                    {
-                                        header: "Step 1", collapsed: false, body: {
-                                            view: "form",
-                                            gravity: 1,
-                                            elements: [
-                                                {
-                                                    view: "text",
-                                                    label: "Name Series: ",
-                                                    id: "newSeriesName",
-                                                    labelWidth: 150,
-                                                    on: {
-                                                        onTimedKeyPress: function () {
-                                                            var requestName = $$("newSeriesName").getValue();
-                                                            if (requestName) {
-                                                                if (newSeriesTimeout) {
-                                                                    window.clearTimeout(newSeriesTimeout);
-                                                                }
-                                                                $$("newSeries").disable();
-                                                                $$("newSeries").setValue("Checking...");
-                                                                $$("newSeries").refresh();
-                                                                window.newSeriesTimeout = window.setTimeout(function () {
-                                                                    var jqxhr = $.ajax("ajax/check/checkSeriesName.php?name=" + requestName)
-                                                                            .done(function (ret) {
-                                                                                if (ret == "") {
-                                                                                    $$("newSeries").enable();
-                                                                                    $$("newSeries").setValue("Create new series");
-                                                                                    $$("newSeries").refresh();
-                                                                                } else {
-                                                                                    $$("newSeries").disable();
-                                                                                    $$("newSeries").setValue("Name taken");
-                                                                                    $$("newSeries").refresh();
-                                                                                }
-                                                                            })
-                                                                            .fail(function () {
-                                                                                alert("error");
-                                                                            })
-                                                                }, 500);
-                                                            } else {
-                                                                $$("newSeries").disable();
-                                                                $$("newSeries").setValue("Enter a name");
-                                                                $$("newSeries").refresh();
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                {
-                                                    view: "button",
-                                                    id: "newSeries",
-                                                    value: "Enter a name",
-                                                    disabled: true,
-                                                    on: {
-                                                        onItemClick: function () {
-                                                            $$("newSeriesName").disable();
-                                                            $$(this).disable();
-                                                            $$(this).setValue("Please wait...");
-                                                            $$(this).refresh();
-                                                            var requestName = $$("newSeriesName").getValue();
-                                                            if (requestName) {
-                                                                // Check one last time, just to be safe and stuff and things and
-                                                                $.ajax("ajax/check/checkSeriesName.php?name=" + requestName).done(function (ret) {
-                                                                    if (ret == "") {
-                                                                        $.ajax("ajax/new/newSeries.php?name=" + requestName).done(function (ret) {
-                                                                            if (ret == "true" || ret == 1) {
-                                                                                window.newSeriesName = requestName;
-                                                                                $$('uploadParentDZ').enable();
-                                                                                $$('uploadParentDZ').expand();
-                                                                                attachDropzoneEvents(requestName, "uploadParent", function () {
-                                                                                    $$('editChildren').enable();
-                                                                                    $$('editChildrenCont').enable();
-                                                                                    $$('editChildrenCont').expand();
-                                                                                });
-                                                                                $$("newSeries").disable();
-                                                                                $$("newSeries").setValue("Upload parent");
-                                                                                $$("newSeries").refresh();
-                                                                                $$('uploadParentDZ').enable();
-                                                                                $$('uploadParentDZ').expand();
-                                                                            } else {
-                                                                                console.error(ret);
-                                                                            }
-                                                                        });
-                                                                    } else {
-                                                                        $$("newSeries").disable();
-                                                                        $$("newSeries").setValue("Name taken");
-                                                                        $$("newSeries").refresh();
-                                                                        $$("newSeriesName").enable();
-                                                                    }
-                                                                });
-                                                            } else {
-                                                                $$(this).enable();
-                                                                $$(this).setValue("Enter a name");
-                                                                $$("newSeriesName").enable();
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                            ]
-                                        },
-                                    },
-                                    {
-                                        header: "Step 2",
-                                        id: "uploadParentDZ",
-                                        height: 260,
-                                        disabled: true,
-                                        collapsed: true,
-                                        body: {
-                                            id: "uploadParent",
-                                            template: '<form action="ajax/upload/uploadParent.php" class="dropzone" id="uploadParent"><div class="dz-message" data-dz-message><span>Upload Zip file</span></div></form>',
-                                            gravity: 1,
-                                            minHeight: 220,
-                                        }
-                                    },
-                                    {
-                                        header: "Step 3",
-                                        id: "editChildrenCont",
-                                        collapsed: true,
-                                        disabled: true,
-                                        body: {
-                                            view: "form",
-                                            elements: [
-                                                {
-                                                    view: "button",
-                                                    id: "editChildren",
-                                                    value: "Go swap interface",
-                                                    disabled: true,
-                                                    on: {
-                                                        onItemClick: function () {
-                                                            window.location.href = "swap_app.php?series_name=" + btoa(window.newSeriesName);
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    },
-                                    {height: 10, },
-                                ]
-                            },
-                            {gravity: 1},
-                        ],
-                    },
-                ]
-            },
-        ]
-    }
-};
+;
 
 function getSeries(callback) {
     /*
@@ -305,6 +130,7 @@ function reorderSeriesList(type, dir) {
 $(document).ready(function () {
 
     getSeries(function (ret) {
+        
         seriesData = ret;
         let folders = [];
         seriesData.map(s => {
@@ -350,6 +176,8 @@ $(document).ready(function () {
                 }
             }
         });
+
+        console.log(folders);
 
         var seriesList = {
             width: "50%",
@@ -813,9 +641,194 @@ $(document).ready(function () {
                 },
             ],
         };
+        
+        var elem = {
+            view: "scrollview",
+            width: "100%",
+            body: {
+                rows: [
+                    header,
+                    {
+                        view: "tabview",
+                        id: "editAndCreateTab",
+                        cells: [
+                            {
+                                header: "Edit Series",
+                                rows: [
+                                    {
+                                        cols: [
+                                            // seriesList goes here,
+                                            // seriesActions goes here
+                                        ]
+                                    },
+                                ],
+                            },
+                            {
+                                id: "createTab",
+                                header: "New Series",
+                                cols: [
+                                    {gravity: 1},
+                                    {
+                                        gravity: 5,
+                                        maxWidth: 400,
+                                        autoheight: true,
+                                        rows: [
+                                            {height: 10, },
+                                            {
+                                                header: "Step 1", collapsed: false, body: {
+                                                    view: "form",
+                                                    gravity: 1,
+                                                    elements: [
+                                                        {
+                                                            view: "text",
+                                                            label: "Name Series: ",
+                                                            id: "newSeriesName",
+                                                            labelWidth: 150,
+                                                            on: {
+                                                                onTimedKeyPress: function () {
+                                                                    var requestName = $$("newSeriesName").getValue();
+                                                                    if (requestName) {
+                                                                        if (newSeriesTimeout) {
+                                                                            window.clearTimeout(newSeriesTimeout);
+                                                                        }
+                                                                        $$("newSeries").disable();
+                                                                        $$("newSeries").setValue("Checking...");
+                                                                        $$("newSeries").refresh();
+                                                                        window.newSeriesTimeout = window.setTimeout(function () {
+                                                                            var jqxhr = $.ajax("ajax/check/checkSeriesName.php?name=" + requestName)
+                                                                                    .done(function (ret) {
+                                                                                        if (ret == "") {
+                                                                                            $$("newSeries").enable();
+                                                                                            $$("newSeries").setValue("Create new series");
+                                                                                            $$("newSeries").refresh();
+                                                                                        } else {
+                                                                                            $$("newSeries").disable();
+                                                                                            $$("newSeries").setValue("Name taken");
+                                                                                            $$("newSeries").refresh();
+                                                                                        }
+                                                                                    })
+                                                                                    .fail(function () {
+                                                                                        alert("error");
+                                                                                    })
+                                                                        }, 500);
+                                                                    } else {
+                                                                        $$("newSeries").disable();
+                                                                        $$("newSeries").setValue("Enter a name");
+                                                                        $$("newSeries").refresh();
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            view: "combo",
+                                                            label: "Select folder: ",
+                                                            id: "newSeriesFolderName",
+                                                            labelWidth: 150,
+                                                            options: folders,
+                                                            placeholder: "General Unsorted"
+                                                        },
+                                                        {
+                                                            view: "button",
+                                                            id: "newSeries",
+                                                            value: "Enter a name",
+                                                            disabled: true,
+                                                            on: {
+                                                                onItemClick: function () {
+                                                                    $$("newSeriesName").disable();
+                                                                    $$(this).disable();
+                                                                    $$(this).setValue("Please wait...");
+                                                                    $$(this).refresh();
+                                                                    var requestName = $$("newSeriesName").getValue();
+                                                                    var requestFolder = $$("newSeriesFolderName").getValue();
+                                                                    if (requestName) {
+                                                                        // Check one last time, just to be safe and stuff and things and
+                                                                        $.ajax("ajax/check/checkSeriesName.php?name=" + requestName).done(function (ret) {
+                                                                            if (ret == "") {
+                                                                                $.ajax("ajax/new/newSeries.php?name=" + requestName + "&folder=" + requestFolder).done(function (ret) {
+                                                                                    if (ret == "true" || ret == 1) {
+                                                                                        window.newSeriesName = requestName;
+                                                                                        $$('uploadParentDZ').enable();
+                                                                                        $$('uploadParentDZ').expand();
+                                                                                        attachDropzoneEvents(requestName, "uploadParent", function () {
+                                                                                            $$('editChildren').enable();
+                                                                                            $$('editChildrenCont').enable();
+                                                                                            $$('editChildrenCont').expand();
+                                                                                        });
+                                                                                        $$("newSeries").disable();
+                                                                                        $$("newSeries").setValue("Upload parent");
+                                                                                        $$("newSeries").refresh();
+                                                                                        $$('uploadParentDZ').enable();
+                                                                                        $$('uploadParentDZ').expand();
+                                                                                    } else {
+                                                                                        console.error(ret);
+                                                                                    }
+                                                                                });
+                                                                            } else {
+                                                                                $$("newSeries").disable();
+                                                                                $$("newSeries").setValue("Name taken");
+                                                                                $$("newSeries").refresh();
+                                                                                $$("newSeriesName").enable();
+                                                                            }
+                                                                        });
+                                                                    } else {
+                                                                        $$(this).enable();
+                                                                        $$(this).setValue("Enter a name");
+                                                                        $$("newSeriesName").enable();
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                    ]
+                                                },
+                                            },
+                                            {
+                                                header: "Step 2",
+                                                id: "uploadParentDZ",
+                                                height: 260,
+                                                disabled: true,
+                                                collapsed: true,
+                                                body: {
+                                                    id: "uploadParent",
+                                                    template: '<form action="ajax/upload/uploadParent.php" class="dropzone" id="uploadParent"><div class="dz-message" data-dz-message><span>Upload Zip file</span></div></form>',
+                                                    gravity: 1,
+                                                    minHeight: 220,
+                                                }
+                                            },
+                                            {
+                                                header: "Step 3",
+                                                id: "editChildrenCont",
+                                                collapsed: true,
+                                                disabled: true,
+                                                body: {
+                                                    view: "form",
+                                                    elements: [
+                                                        {
+                                                            view: "button",
+                                                            id: "editChildren",
+                                                            value: "Go swap interface",
+                                                            disabled: true,
+                                                            on: {
+                                                                onItemClick: function () {
+                                                                    window.location.href = "swap_app.php?series_name=" + btoa(window.newSeriesName);
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {height: 10, },
+                                        ]
+                                    },
+                                    {gravity: 1},
+                                ],
+                            },
+                        ]
+                    },
+                ]
+            }
+        }
         elem.body.rows[1].cells[0].rows[0].cols.push(seriesList);
         elem.body.rows[1].cells[0].rows[0].cols.push(seriesActions);
-        // console.log(elem);
         webix.ui(elem);
         $(window).resize(resize);
         resize();

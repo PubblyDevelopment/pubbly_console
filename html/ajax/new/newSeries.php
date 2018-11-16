@@ -5,11 +5,12 @@ require_once("../../config.php");
 chdir('../');
 include('../../includes/dbConnect.php');
 $requestedName = $_GET["name"];
+$requestedFolder = $_GET["folder"];
 $con = new DBConnect();
 $sql = $con->mysqli;
-$sqlObj = $sql->prepare("INSERT INTO series (name) VALUES (?)");
+$sqlObj = $sql->prepare("INSERT INTO series (name, folder) VALUES (?, ?)");
 if ($sqlObj) {
-    $sqlObj->bind_param('s', $requestedName);
+    $sqlObj->bind_param('ss', $requestedName, $requestedFolder);
     $sqlObj->execute();
     $sqlPass = true;
 }   else    {

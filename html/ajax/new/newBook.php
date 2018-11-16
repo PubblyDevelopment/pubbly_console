@@ -4,10 +4,11 @@ require_once("../../config.php");
 chdir('../');
 include('../../includes/dbConnect.php');
 $requestedName = $_GET["name"];
+$requestedFolder = $_GET["folder"];
 $con = new DBConnect();
 $sql = $con->mysqli;
-$sqlObj = $sql->prepare("INSERT INTO books (`name`, longname) VALUES (?, ?)");
-$sqlObj->bind_param('ss', $requestedName, $requestedName);
+$sqlObj = $sql->prepare("INSERT INTO books (`name`, longname, `folder`) VALUES (?, ?, ?)");
+$sqlObj->bind_param('sss', $requestedName, $requestedName, $requestedFolder);
 $sqlObj->execute();
 $sqlPass = true;
 

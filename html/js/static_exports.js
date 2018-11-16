@@ -27,149 +27,7 @@ var header = {
     ]
 };
 
-var newBook = {
-    header: "New Export",
-    id: "newBookCont",
-    collapsed: true,
-    body: {
-        rows: [
-            {
-                id: "createTab",
-                header: "New Book",
-                cols: [
-                    {gravity: 1},
-                    {
-                        gravity: 5,
-                        maxWidth: 400,
-                        autoheight: true,
-                        rows: [
-                            {height: 10, },
-                            {
-                                header: "Step 1", collapsed: false, body: {
-                                    view: "form",
-                                    gravity: 1,
-                                    elements: [
-                                        {
-                                            view: "text", label: "Name: ", id: "newBookName", labelWidth: 150, on: {
-                                                onTimedKeyPress: function () {
-                                                    var requestName = $$("newBookName").getValue();
-                                                    if (requestName) {
-                                                        if (newBookTimeout) {
-                                                            window.clearTimeout(newBookTimeout);
-                                                        }
-                                                        $$("newBook").disable();
-                                                        $$("newBook").setValue("Checking...");
-                                                        $$("newBook").refresh();
-                                                        window.newBookTimeout = window.setTimeout(function () {
-                                                            var jqxhr = $.ajax("ajax/check/checkBookName.php?name=" + requestName)
-                                                                    .done(function (ret) {
-                                                                        if (ret == "") {
-                                                                            $$("newBook").enable();
-                                                                            $$("newBook").setValue("Create");
-                                                                            $$("newBook").refresh();
-                                                                        } else {
-                                                                            $$("newBook").disable();
-                                                                            $$("newBook").setValue("Name taken");
-                                                                            $$("newBook").refresh();
-                                                                        }
-                                                                    })
-                                                                    .fail(function () {
-                                                                        alert("error");
-                                                                    })
-                                                        }, 500);
-                                                    } else {
-                                                        $$("newBook").disable();
-                                                        $$("newBook").setValue("Enter a name");
-                                                        $$("newBook").refresh();
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        {
-                                            view: "button", id: "newBook", value: "Enter a name", disabled: true, on: {
-                                                onItemClick: function () {
-                                                    $$("newBookName").disable();
-                                                    $$(this).disable();
-                                                    $$(this).setValue("Please wait...");
-                                                    $$(this).refresh();
-                                                    var requestName = $$("newBookName").getValue();
-                                                    if (requestName) {
-                                                        // Check one last time, just to be safe and stuff and things and
-                                                        $.ajax("ajax/check/checkBookName.php?name=" + requestName).done(function (ret) {
-                                                            if (ret == "") {
-                                                                $.ajax("ajax/new/newBook.php?name=" + requestName).done(function (ret) {
-                                                                    if (ret == "true" || ret == 1) {
-                                                                        window.newBookName = requestName;
-                                                                        $$('uploadBookCont').enable();
-                                                                        $$('uploadBookCont').expand();
-                                                                        $$("newBook").disable();
-                                                                        $$("newBook").setValue("Upload book");
-                                                                        $$("newBook").refresh();
-                                                                        $$('uploadBookCont').enable();
-                                                                        $$('uploadBookCont').expand();
-                                                                        $$('uploadBook').enable();
-                                                                        $$('uploadBook').data.upload = "ajax/upload/uploadBook.php?bookName=" + requestName;
-                                                                    } else {
-                                                                        console.error(ret);
-                                                                    }
-                                                                });
-                                                            } else {
-                                                                $$("newBook").disable();
-                                                                $$("newBook").setValue("Name taken");
-                                                                $$("newBook").refresh();
-                                                                $$("newBookName").enable();
-                                                            }
-                                                        });
-                                                    } else {
-                                                        $$(this).enable();
-                                                        $$(this).setValue("Enter a name");
-                                                        $$("newBookName").enable();
-                                                    }
-                                                }
-                                            }
-                                        },
-                                    ]
-                                },
-                            },
-                            {
-                                header: "Step 2",
-                                id: "uploadBookCont",
-                                height: 260,
-                                disabled: true,
-                                collapsed: true,
-                                body: {
-                                    view: "form",
-                                    rows: [
-                                        {
-                                            view: "uploader",
-                                            id: "uploadBook",
-                                            disabled: true,
-                                            view: "uploader",
-                                            width: 200,
-                                            value: "Upload zip",
-                                            upload: "ajax/upload/uploadBook.php",
-                                            on: {
-                                                onUploadComplete: function () {
-                                                    webix.message("Upload complete!");
-                                                    window.location.href = window.location.href;
-                                                }
-                                            },
-                                        },
-                                        {
-                                            view: "list", id: "mylist", type: "uploader", autoheight: true, borderless: true,
-                                        },
-                                    ]
-                                }
-                            },
-                            {height: 10, },
-                        ]
-                    },
-                    {gravity: 1},
-                ],
-            },
-        ]
-    }
-};
+
 
 
 
@@ -469,6 +327,158 @@ $(document).ready(function () {
                         ],
                     },
                 };
+                var newBook = {
+                    header: "New Export",
+                    id: "newBookCont",
+                    collapsed: true,
+                    body: {
+                        rows: [
+                            {
+                                id: "createTab",
+                                header: "New Book",
+                                cols: [
+                                    {gravity: 1},
+                                    {
+                                        gravity: 5,
+                                        maxWidth: 400,
+                                        autoheight: true,
+                                        rows: [
+                                            {height: 10, },
+                                            {
+                                                header: "Step 1", collapsed: false, body: {
+                                                    view: "form",
+                                                    gravity: 1,
+                                                    elements: [
+                                                        {
+                                                            view: "text", label: "Name: ", id: "newBookName", labelWidth: 150, on: {
+                                                                onTimedKeyPress: function () {
+                                                                    var requestName = $$("newBookName").getValue();
+                                                                    if (requestName) {
+                                                                        if (newBookTimeout) {
+                                                                            window.clearTimeout(newBookTimeout);
+                                                                        }
+                                                                        $$("newBook").disable();
+                                                                        $$("newBook").setValue("Checking...");
+                                                                        $$("newBook").refresh();
+                                                                        window.newBookTimeout = window.setTimeout(function () {
+                                                                            var jqxhr = $.ajax("ajax/check/checkBookName.php?name=" + requestName)
+                                                                                    .done(function (ret) {
+                                                                                        if (ret == "") {
+                                                                                            $$("newBook").enable();
+                                                                                            $$("newBook").setValue("Create");
+                                                                                            $$("newBook").refresh();
+                                                                                        } else {
+                                                                                            $$("newBook").disable();
+                                                                                            $$("newBook").setValue("Name taken");
+                                                                                            $$("newBook").refresh();
+                                                                                        }
+                                                                                    })
+                                                                                    .fail(function () {
+                                                                                        alert("error");
+                                                                                    })
+                                                                        }, 500);
+                                                                    } else {
+                                                                        $$("newBook").disable();
+                                                                        $$("newBook").setValue("Enter a name");
+                                                                        $$("newBook").refresh();
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            view: "combo",
+                                                            label: "Select folder: ",
+                                                            id: "newSeriesFolderName",
+                                                            labelWidth: 150,
+                                                            options: folders,
+                                                            placeholder: "General Unsorted"
+                                                        },
+                                                        {
+                                                            view: "button", id: "newBook", value: "Enter a name", disabled: true, on: {
+                                                                onItemClick: function () {
+                                                                    $$("newBookName").disable();
+                                                                    $$(this).disable();
+                                                                    $$(this).setValue("Please wait...");
+                                                                    $$(this).refresh();
+                                                                    var requestName = $$("newBookName").getValue();
+                                                                    var requestedFolder = $$("newSeriesFolderName").getValue();
+                                                                    if (requestName) {
+                                                                        // Check one last time, just to be safe and stuff and things and
+                                                                        $.ajax("ajax/check/checkBookName.php?name=" + requestName).done(function (ret) {
+                                                                            if (ret == "") {
+                                                                                $.ajax("ajax/new/newBook.php?name=" + requestName + "&folder=" + requestedFolder).done(function (ret) {
+                                                                                    if (ret == "true" || ret == 1) {
+                                                                                        window.newBookName = requestName;
+                                                                                        $$('uploadBookCont').enable();
+                                                                                        $$('uploadBookCont').expand();
+                                                                                        $$("newBook").disable();
+                                                                                        $$("newBook").setValue("Upload book");
+                                                                                        $$("newBook").refresh();
+                                                                                        $$('uploadBookCont').enable();
+                                                                                        $$('uploadBookCont').expand();
+                                                                                        $$('uploadBook').enable();
+                                                                                        $$('uploadBook').data.upload = "ajax/upload/uploadBook.php?bookName=" + requestName;
+                                                                                    } else {
+                                                                                        console.error(ret);
+                                                                                    }
+                                                                                });
+                                                                            } else {
+                                                                                $$("newBook").disable();
+                                                                                $$("newBook").setValue("Name taken");
+                                                                                $$("newBook").refresh();
+                                                                                $$("newBookName").enable();
+                                                                            }
+                                                                        });
+                                                                    } else {
+                                                                        $$(this).enable();
+                                                                        $$(this).setValue("Enter a name");
+                                                                        $$("newBookName").enable();
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                    ]
+                                                },
+                                            },
+                                            {
+                                                header: "Step 2",
+                                                id: "uploadBookCont",
+                                                height: 260,
+                                                disabled: true,
+                                                collapsed: true,
+                                                body: {
+                                                    view: "form",
+                                                    rows: [
+                                                        {
+                                                            view: "uploader",
+                                                            id: "uploadBook",
+                                                            disabled: true,
+                                                            view: "uploader",
+                                                            width: 200,
+                                                            value: "Upload zip",
+                                                            upload: "ajax/upload/uploadBook.php",
+                                                            on: {
+                                                                onUploadComplete: function () {
+                                                                    webix.message("Upload complete!");
+                                                                    window.location.href = window.location.href;
+                                                                }
+                                                            },
+                                                        },
+                                                        {
+                                                            view: "list", id: "mylist", type: "uploader", autoheight: true, borderless: true,
+                                                        },
+                                                    ]
+                                                }
+                                            },
+                                            {height: 10, },
+                                        ]
+                                    },
+                                    {gravity: 1},
+                                ],
+                            },
+                        ]
+                    }
+                };
                 webix.ui({
                     view: "scrollview",
                     width: "100%",
@@ -484,5 +494,4 @@ $(document).ready(function () {
             }
         }
     });
-
 })
