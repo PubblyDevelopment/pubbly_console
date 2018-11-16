@@ -574,7 +574,8 @@ class Pubbly {
                     placer.removeClass("cover");
                 }
             }
-    }
+        }
+        this.drawPage_dispatch();
     }
 
     removeTurningStylesFromCanvases() {
@@ -639,13 +640,13 @@ class Pubbly {
                 this.loadBufferLead(this.curPage, {
                     done: function () {
                         this.progressGraph.end();
-						this.ready = true;
+                        this.ready = true;
                         if (this.runtimeProps.environment === "app") {
-							cbs.done();
-						}	else	{
-							this.domInteractionCover.promptClick(cbs.done);
-						}
-                        
+                            cbs.done();
+                        } else {
+                            this.domInteractionCover.promptClick(cbs.done);
+                        }
+
                     }.bind(this),
                     fail: cbs.fail,
                     prog: this.progressGraph.calculate
