@@ -574,8 +574,7 @@ class Pubbly {
                     placer.removeClass("cover");
                 }
             }
-        }
-        this.drawPage_dispatch();
+    }
     }
 
     removeTurningStylesFromCanvases() {
