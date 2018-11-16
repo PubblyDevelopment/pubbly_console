@@ -575,7 +575,8 @@ class Pubbly {
                 }
             }
         }
-        this.drawPage_dispatch();
+        if (this.ready)
+            this.drawPage_dispatch();
     }
 
     removeTurningStylesFromCanvases() {
