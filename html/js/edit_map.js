@@ -108,54 +108,47 @@ let w_header = {
     ]
 };
 let w_unitList = {
-    header: "Units",
-    body: {
-        id: "unitList",
-        view: "tree",
-        scroll: "y",
-        // template: "#name#: #length# children",
-        select: true,
-        on: {
-            onItemDblClick: function (e, id) {
-                let unitID = this.getItem(e).unit_id;
-                console.log(unitID);
-                wf_addNodeToMap("unit", unitID);
-            },
-        }
-    },
+    id: "unitList",
+    view: "tree",
+    scroll: "y",
+    // template: "#name#: #length# children",
+    select: true,
+    on: {
+        onItemDblClick: function (e, id) {
+            let unitID = this.getItem(e).unit_id;
+            console.log(unitID);
+            wf_addNodeToMap("unit", unitID);
+        },
+    }
+
 };
 let w_resizer = {view: "resizer"};
 let w_variableList = {
-    header: "Variable uploads",
-    body: {
-        id: "variableList",
-        view: "tree",
-        scroll: "y",
-        // template: "#name#: #length# children",
-        select: true,
-        on: {
-            onItemDblClick: function (e) {
-                let variableID = this.getItem(e).variable_id;
-                wf_addNodeToMap("variable", variableID);
-            },
-        }
-    },
+    id: "variableList",
+    view: "tree",
+    scroll: "y",
+    // template: "#name#: #length# children",
+    select: true,
+    on: {
+        onItemDblClick: function (e) {
+            let variableID = this.getItem(e).variable_id;
+            wf_addNodeToMap("variable", variableID);
+        },
+    }
 };
 let w_staticList = {
-    header: "Static uploads",
-    body: {
-        id: "staticList",
-        view: "tree",
-        scroll: "y",
-        // template: "#name#: #length# children",
-        select: true,
-        on: {
-            onItemDblClick: function (e) {
-                let staticID = this.getItem(e).static_id;
-                wf_addNodeToMap("static", staticID)
-            },
-        }
-    },
+    id: "staticList",
+    view: "tree",
+    scroll: "y",
+    // template: "#name#: #length# children",
+    select: true,
+    on: {
+        onItemDblClick: function (e) {
+            let staticID = this.getItem(e).static_id;
+            wf_addNodeToMap("static", staticID)
+        },
+    }
+
 };
 
 $(document).ready(function () {
@@ -169,16 +162,30 @@ $(document).ready(function () {
     });
     // Build nav node populate stuff
     webix.ui({
-        autowidth: true,
         container: "importMapNodesButtonContainer",
         id: "mapNodePopulater",
-        view: "accordion",
+        width:300,
+        height:"100%",
         rows: [
-            w_unitList,
-            w_resizer,
-            w_variableList,
-            w_resizer,
-            w_staticList
+            {
+                id: "pullFromTabBar",
+                borderless: true,
+                view: "tabbar",
+                value: "listView",
+                multiview: true,
+                options: [
+                    {value: "Unit", id: "unitList"},
+                    {value: "Variable", id: "variableList"},
+                    {value: "Static", id: "staticList"},
+                ]
+            },
+            {
+                cells: [
+                    w_unitList,
+                    w_variableList,
+                    w_staticList
+                ]
+            },
         ]
     });
     // Resize webix on window resize

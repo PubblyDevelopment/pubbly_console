@@ -28,7 +28,6 @@
 #mapContainer {
     /*background-color: purple;*/
     width: 100%;
-    height: 90%;
 }
 
 #mapUI {
@@ -103,7 +102,6 @@
     position: absolute;
     text-align: left;
     width: 130px;
-    margin-top: 581px;
     font-size: 10px;
 }
 
