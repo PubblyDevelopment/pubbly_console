@@ -643,20 +643,15 @@ class NavigationNodes {
     eventClickUpdate(loc, e, elem) {
         $("#modalBlack").removeClass("hidden");
         $("#modalWhite").removeClass("hidden");
-        
-        ajax_general("updateAllNodesOnMap", 
-            {
-                mapID: window.mapID,
-            }, 
-            {
-                done: function () {
-                    // TODO: Change to a soft refresh
-                    window.location.href = window.location.href;
-                    $("#modalBlack").addClass("hidden");
-                    $("#modalWhite").addClass("hidden");
+
+        ajax_general("updateAllNodesOnMap",
+                {
+                    mapID: window.mapID,
                 },
                 {
                     done: function () {
+                        // TODO: Change to a soft refresh
+                        window.location.href = window.location.href;
                         $("#modalBlack").addClass("hidden");
                         $("#modalWhite").addClass("hidden");
                     },
