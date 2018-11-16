@@ -575,8 +575,7 @@ class Pubbly {
                 }
             }
         }
-        if (this.ready)
-            this.drawPage_dispatch();
+        this.drawPage_dispatch();
     }
 
     removeTurningStylesFromCanvases() {
@@ -613,10 +612,10 @@ class Pubbly {
             // Determine if we need another prog
             this.loadBufferLead(newPage, {
                 done: function () {
-                    // Call before resetting style attrs on canvas
-                    this.drawPage_dispatch();
                     // Call after, to avoid preturn canvas flicker.
                     this.updateCanvasAttrsWithNewPageValues(newPage);
+                    // Call before resetting style attrs on canvas
+                    this.drawPage_dispatch();
                     // Pubbly ready to recieve new sequence
                     this.ready = true;
                     cbs.done();
