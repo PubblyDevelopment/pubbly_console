@@ -9,9 +9,10 @@
 /html/map/*
 html/config.php
 /nbproject/*
+nbproject/*
 html/js/branding.js
 html/js/favicon.ico
 
-
 !*/.gitkeep
 !*/*/.gitkeep
+desktop.ini
