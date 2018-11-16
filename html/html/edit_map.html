@@ -1,32 +1,22 @@
-<html>
+<!doctype html>
+
+<html lang="en">
    <head>
+      <meta charset="utf-8">
+
+      <title>Console - NavNodes</title>
+
+      <link rel="stylesheet" href="NavigationNodesUI/css/main.css">
+      <link rel="stylesheet" href="includes/fontawesome.css" />
+      <link rel="stylesheet" href="includes/bootstrap.css" />
+
       <title>Console - NavNodes</title>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <!-- Woo jquery -->
       <script src="includes/jquery-3.3.1.min.js"></script>
-      <link rel="stylesheet" href="includes/fontawesome.css" />
-      <script src="includes/bootstrap.js"></script>
-      <link rel="stylesheet" href="includes/bootstrap.css" />
+      <!-- Anything other 3rd party stuff up here -->
 
-
-      <link rel="stylesheet" href="NavigationNodesUI/css/main.css">
-      <!-- Navigation node development class -->
-      <!-- (In a production or not-open sourced environment, you would probably minify to a single unreadable copyrighted script. BUT this is all attached to the Xprize project, so keep scripts open like so -->
-      <!-- If you're interested... I used to follow the AirBnB javascript styleguide.
-      
-      https://github.com/airbnb/javascript
-      
-      You're welcome to follow/make your own, but as a jumping off point...
-      Small constructed classes should be InitCapsCamelCase()
-      Big contructed classes should be in their own folder. _main.js ties everything together, one "function" named the name of the class (and folder and everything else).
-      Constructed classes should be Init caps camel case (ExampleClass)
-      Scope constants should be all caps (THIS, NAV_SCOPE)
-
-      Everything else, methods props and vars, are be camel case (this.exampleMethod, exampleHelper, this.exampleProp, exampleVar)
-      
-      If you want to change this up, maybe make methods snake_case instead of camelCase, that's fine. But just be aware... you're coming up with a styleguide even if you aren't fully aware of it.
-      -->
       <!-- Underscores so it's at the VERY top of the folder -->
       <script src="NavigationNodesUI/js/_main.js"></script>
       <!-- Single underscore. It's a super class for what's listed below -->
@@ -86,98 +76,80 @@
          });
 
          function insertNewNodeTest() {
-          let retFromAddNodeToMapExample = {
-            name: "static-Pots", 
-            cover: 0, 
-            links: Array(0),
-            node_id: 21
-          }
-          navigationNodes.addNewNode(retFromAddNodeToMapExample);
+             let retFromAddNodeToMapExample = {
+                 name: "static-Pots",
+                 cover: 0,
+                 links: Array(0),
+                 node_id: 21
+             }
+             navigationNodes.addNewNode(retFromAddNodeToMapExample);
          }
-         
+
       </script>
+
    </head>
+
    <body>
+      <div id="modalBlack" class="hidden"></div>
+      <div id="modalWhite" class="hidden"><img id="modalImg" class="center" width="55%" src="NavigationNodesUI/assets/loadarrow.png">
+         <div id="modalContent">Nodes updating, please wait...</div>
+      </div>
+
       <form id="file_upload_form" style="display:none" method="POST" enctype="multipart/form-data">
          <input type="file" name="upload" id="file_upload" />
          <input type="text" name="mapName" value="{MAP_NAME}" />
       </form>
 
       <div id="webixHeader"></div>
-
-
-      <div id="modalBlack" class="hidden"></div>
-      <div id="modalWhite" class="hidden"><img id="modalImg" class="center" width="55%" src="NavigationNodesUI/assets/loadarrow.png"><div id="modalContent">Nodes updating, please wait...</div></div>
-
-      <!-- For bootstrap, always enclose in a .container (just works that way) -->
-      <div class="container">
-         <!-- bootstrap classname for style="display:block;margin:auto" (center align) -->
-         <!-- spacing -->
-         <!-- bootstrap cols use flex styles. BAD for us, cause the canvas needs to be a set 600px all the time no matter what. So can't use the grid for the canvas. Manual fake grid solution below. -->
-         <div class="row">
-            <div class="col-3 m-0 p-0">
-               <div id="importMapNodesButtonContainer"
-                    style="height:calc(100% - 80px)"></div>
-            </div>
-            <div class="col-9 m-0 p-0">
-               <div>
-                  <div class="d-block m-auto" style="width:910px">
-                     <div class="d-inline-block" style="width:50px">
-
-                     </div>
-
-                     <div class="d-inline-block" style="width:800px">
-                        <div id="savePrompt" style="opacity: 0;">Last saved: blah blah</div>
-                        <canvas id="NavNodesCanvasMain" 
-                                height=600 width=800></canvas>
-                     </div>
-                     <div class="d-inline-block" style="width:50px;vertical-align:top">
-                        <button class='button d-block' id="saveButton" type="button" value="SAVE"/><i class="far fa-save"></i></button>
-                        <button class='button d-block' id="zoomInButton" type="button" value="ZOOM IN"/><i class="fas fa-search-plus"></i></button>
-                        <button class='button d-block' id="zoomOutButton" type="button" value="ZOOM OUT"/><i class="fas fa-search-minus"></i></button>
-                        <button class='button d-block' id="entryNodeButton" type="button" value="SET POINT"/><i class="fas fa-star"></i></button>
-                        <button class='button d-block' id="viewAtButton" type="button" value="VIEW MAP AT NODE"/><i class="fas fa-glasses"></i></button>
-                        <button class='button d-block' id="updateButton" type="button" value="UPDATE ALL NODES"/><i class="fas fa-sync-alt"></i></button>
-                        <button class='button d-block' id="deleteNodeButton" type="button" value="DELETE NODE"/><i class="fas fa-trash"></i></button>
-                       
-                     </div>
+      <div class="mainWrapper">
+         <div id="webixContainer">
+            <style>
+               #importMapNodesButtonContainer{
+                   height:400px;
+                   display:grid;
+               }
+            </style>
+            <div id="importMapNodesButtonContainer"></div>
+         </div>
+         <div id="canvasContainer">
+            <div id="mapContainer">
+               <div id="savePrompt" style="opacity: 0;">Last saved: blah blah</div>
+               <canvas id="NavNodesCanvasMain" height=600 width=800></canvas>
+            </div> 
+            <div id="mapUI">
+               <div class="mapUIcol">
+                  <img id="firstNodePhoto" class="d-block m-auto" width=100px src="NavigationNodesUI/assets/nonodeselected.png">
+                  <!-- text-align:center centers text -->
+                  <p id="firstNodeSelected" style="text-align:center;">[No node selected]</p>
+               </div>
+               <div class="mapUIcol">
+                  <select id="pathSelections" style="width:200px">
+                  </select>
+                  <br>
+                  <br>
+                  <div id="bottomButtonContainer" style="text-align: center">
+                     <button class='button' id="pathButton" type="button" value="PATH" style="font-size: 22px">
+                        <i class="fas fa-angle-right"></i>
+                     </button>
+                     <button class='button' id="allPathButton" type="button" value="ALLPATH" style="font-size: 22px">
+                        <i class="fas fa-angle-double-right"></i>
+                     </button>
                   </div>
                </div>
-               <div class="row">
-                  <!-- If no col-number is set, other cols will fill around it -->
-                  <div class="col" style="top: 25;">
-                     <!-- d-block m-auto centers image -->
-                     <img id="firstNodePhoto" class="d-block m-auto" width=100px
-                          src="NavigationNodesUI/assets/nonodeselected.png">
-                     <!-- text-align:center centers text -->
-                     <p id="firstNodeSelected" style="text-align:center;">[No node selected]</p>
-                  </div>
-                  <div class="col-2">
-                     <!-- note, this is the poor-boy centershit of css -->
-                     <div style="position:absolute;top:100%;left:50%;transform:translate(-50%,-50%);">
-                        <select id="pathSelections" style="width:200px">
-                        </select>
-                        <br>
-                        <br>
-                        <div style="text-align: center">
-                           <button class='button' id="pathButton" type="button" value="PATH" style="font-size: 22px">
-                              <i class="fas fa-angle-right"></i>
-                           </button>
-                           <button class='button' id="allPathButton" type="button" value="ALLPATH" style="font-size: 22px">
-                              <i class="fas fa-angle-double-right"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="col" style="top: 25;">
-                     <!-- d-block m-auto centers image -->
-                     <img id="secondNodePhoto" class="d-block m-auto" width=100px
-                          src="NavigationNodesUI/assets/nonodeselected.png">
-                     <!-- text-align:center centers text -->
-                     <p id="secondNodeSelected" style="text-align:center;">[No node selected]</p>
-                  </div>
-               </div>
+               <div class="mapUIcol">
+                  <img id="secondNodePhoto" class="d-block m-auto" width=100px src="NavigationNodesUI/assets/nonodeselected.png">
+                  <!-- text-align:center centers text -->
+                  <p id="secondNodeSelected" style="text-align:center;">[No node selected]</p></div>
             </div>
+         </div>
+         <div id="buttonContainer">
+            <button class='toolButton' id="saveButton" type="button" value="SAVE"/><i class="far fa-save"></i></button>
+            <button class='toolButton' id="zoomInButton" type="button" value="ZOOM IN"/><i class="fas fa-search-plus"></i></button>
+            <button class='toolButton' id="zoomOutButton" type="button" value="ZOOM OUT"/><i class="fas fa-search-minus"></i></button>
+            <button class='toolButton' id="entryNodeButton" type="button" value="SET POINT"/><i class="fas fa-star"></i></button>
+            <button class='toolButton' id="viewAtButton" type="button" value="VIEW MAP AT NODE"/><i class="fas fa-glasses"></i></button>
+            <button class='toolButton' id="updateButton" type="button" value="UPDATE ALL NODES"/><i class="fas fa-sync-alt"></i></button>
+            <button class='toolButton' id="deleteNodeButton" type="button" value="DELETE NODE"/><i class="fas fa-trash"></i></button>
          </div>
       </div>
    </body>

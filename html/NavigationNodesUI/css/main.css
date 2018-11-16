@@ -1,52 +1,63 @@
-body{
-    margin:0;
-    padding:0;
+#webixHeader {
+    /*background-color: mistyRose;*/
 }
+
+.mainWrapper {
+  display: grid;
+  grid-template-columns: 1.5fr 8fr 0.5fr;
+}
+
+#webixContainer {
+    /*background-color: blue;*/
+    margin-right: 10px;
+}
+
+#canvasContainer {
+    /*background-color: red;*/
+}
+
 #NavNodesCanvasMain {
     background-color:rgba(20,20,20,0.2);
 }
 
 #buttonContainer {
-    display:block;
-    /*margin:auto;*/
-    margin-top:50px;
-    text-align: left;
+    /*background-color: green;*/
+    margin-left: 10px;
 }
 
-#bottomUI {
-    background-color: blue;
+#mapContainer {
+    /*background-color: purple;*/
+    width: 100%;
+}
+
+#mapUI {
+    /*background-color: orange;*/
+    text-align: center;
+    display: grid;
+    grid-template-columns: 3fr 3fr 3fr;
+}
+
+.mapUIcol {
     margin-top: 15px;
-    height: 275px;
 }
 
-.col-sm {
-    padding: 0px;
-    text-align: center;
-    margin: 0 auto;
-}
-
-.button {
+.toolButton {
+    display: block;
     background-color: #00c763;
+    border: 0px;
     color: white;
-    border: none;
-    padding: 10px;
-    text-align: center;
-    font-size: 16px;
     cursor: pointer;
-    width:50px;
-}
-
-.button:hover {
-    background-color: #049e51;
+    width: 45px;   
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    text-align: center;
+    margin-top: 2px;
     transition: 0.5s;
 }
 
-#currBookSelected {
-    width: 300px;
-}
-
-.saveButton {
-    /* Other default styles here */
+.toolButton:hover {
+    background-color: #0c9e55;
     transition: 0.5s;
 }
 
@@ -54,24 +65,35 @@ body{
     opacity: 0.5;
 }
 
-.d-block {
-    margin-top: 5px;
-    border-radius: 4px;
+.button {
+    display: block; margin: 0 auto;
+    margin-top: 10px;
+    background-color: #00c763;
+    border-radius: 5px;
+    color: white;
+    border: none;
+    padding: 10px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    width: 200px;
+    transition: 0.5s;
 }
 
-#pathButton {
-    border-radius: 4px;
-    width: 150px;
-}
-
-#allPathButton {
-    margin-top: 5px;
-    border-radius: 4px;
-    width: 150px;
+.button:hover {
+    background-color: #0c9e55;
 }
 
 #deleteNodeButton {
     background-color: #f45042;
+}
+
+#deleteNodeButton:hover {
+    background-color: #bc453a;
+}
+
+#bottomButtonContainer {
+    display: grid;
 }
 
 #savePrompt {
@@ -80,7 +102,6 @@ body{
     position: absolute;
     text-align: left;
     width: 130px;
-    margin-top: 581px;
     font-size: 10px;
 }
 

@@ -2,14 +2,14 @@ class NavigationNodes {
 
     insertNewNodeTest(newJSON) {
         let nj = {
-            name: "static-Pots", 
-            cover: 0, 
+            name: "static-Pots",
+            cover: 0,
             links: Array(0),
             node_id: 21
         }
         nj.x = this.getCenter()[0];
         nj.y = this.getCenter()[1];
-        
+
         //console.log("adding new node??");
         this.json[nj.name] = nj;
     }
@@ -108,15 +108,17 @@ class NavigationNodes {
 
     drawAllNodes() {
         for (let nodeName in this.json) {
-
-            this.inputs.nodeCanvas.drawImage(
-                    this.json[nodeName].img,
-                    this.json[nodeName].x,
-                    this.json[nodeName].y,
-                    this.json[nodeName].width,
-                    this.json[nodeName].height);
-            if (this.json[nodeName].isEntryNode) {
-                this.drawEntryNodeStar(this.json[nodeName]);
+            let img = this.json[nodeName].img;
+            if (img) {
+                this.inputs.nodeCanvas.drawImage(
+                        img,
+                        this.json[nodeName].x,
+                        this.json[nodeName].y,
+                        this.json[nodeName].width,
+                        this.json[nodeName].height);
+                if (this.json[nodeName].isEntryNode) {
+                    this.drawEntryNodeStar(this.json[nodeName]);
+                }
             }
         }
     }
@@ -153,8 +155,8 @@ class NavigationNodes {
         let o = this.inputs.nodeCanvas.offset;
         let z = this.inputs.nodeCanvas.zoom;
         let c = this.inputs.nodeCanvas.getCenter();
-        let widthMod = this.inputs.nodeCanvas.width * (1/z/2);
-        let heightMod = this.inputs.nodeCanvas.height * (1/z/2);
+        let widthMod = this.inputs.nodeCanvas.width * (1 / z / 2);
+        let heightMod = this.inputs.nodeCanvas.height * (1 / z / 2);
         return[-o[0] + widthMod, -o[1] + heightMod, 50, 50];
     }
 
@@ -164,7 +166,7 @@ class NavigationNodes {
         let paths = {};
         for (let nodeName in this.json) {
             for (let l in this.json[nodeName].paths) {
-                
+
                 //this.inputs.nodeCanvas.drawLine("black",0,0,node.x,node.y);
                 // Go through each path in that node
                 for (let nodeNameAgain in this.json) {
@@ -186,8 +188,8 @@ class NavigationNodes {
                         let arrowEndingLoc = this.determineArrowEndingPoint(this.json[nodeName], this.json[nodeNameAgain]);
                         let pathName = nodeName + "-" + nodeNameAgain;
                         if (paths[pathName]) {
-                            paths[pathName].lineWidth+=5;
-                        }   else{
+                            paths[pathName].lineWidth += 5;
+                        } else {
                             paths[pathName] = {
                                 start: [
                                     this.json[nodeName].x + this.json[nodeName].width / 2,
@@ -197,8 +199,8 @@ class NavigationNodes {
                                     arrowEndingLoc[0],
                                     arrowEndingLoc[1]
                                 ],
-                                color:color,
-                                lineWidth:1
+                                color: color,
+                                lineWidth: 1
                             }
                         }
                     }
@@ -207,11 +209,11 @@ class NavigationNodes {
         }
         for (let path in paths) {
             this.inputs.nodeCanvas.drawArrow(paths[path].color,
-                                paths[path].start[0],
-                                paths[path].start[1],
-                                paths[path].end[0],
-                                paths[path].end[1],
-                                Math.min(30, paths[path].lineWidth));
+                    paths[path].start[0],
+                    paths[path].start[1],
+                    paths[path].end[0],
+                    paths[path].end[1],
+                    Math.min(30, paths[path].lineWidth));
         }
     }
 
@@ -253,29 +255,29 @@ class NavigationNodes {
 
     determineArrowEndingPoint(node1, node2) {
         if (node1.y + node1.height < node2.y) {
-            if (node1.x+node1.width/2 < node2.x) {
+            if (node1.x + node1.width / 2 < node2.x) {
                 return [node2.x, node2.y];
-            } else if (node1.x+node1.width/2 < node2.x+node2.width) {
-                return [node2.x+node2.width/2, node2.y];
+            } else if (node1.x + node1.width / 2 < node2.x + node2.width) {
+                return [node2.x + node2.width / 2, node2.y];
             } else {
-                return [node2.x+node2.width, node2.y];  
+                return [node2.x + node2.width, node2.y];
             }
         } else if (node1.y < node2.y + node2.height) {
-            if (node1.x+node1.width/2 < node2.x) {
-                return [node2.x, node2.y+node2.height/2];
-               
+            if (node1.x + node1.width / 2 < node2.x) {
+                return [node2.x, node2.y + node2.height / 2];
+
             } else {
-                return [node2.x+node2.width, node2.y+node2.height/2];
+                return [node2.x + node2.width, node2.y + node2.height / 2];
             }
         } else {
-            if (node1.x+node1.width/2 < node2.x) {
-                return [node2.x, node2.y+node2.height]; 
-                
-            } else if (node1.x+node1.width/2 < node2.x+node2.width) {
-                return [node2.x+node2.width/2, node2.y+node2.height]; 
-               
+            if (node1.x + node1.width / 2 < node2.x) {
+                return [node2.x, node2.y + node2.height];
+
+            } else if (node1.x + node1.width / 2 < node2.x + node2.width) {
+                return [node2.x + node2.width / 2, node2.y + node2.height];
+
             } else {
-                return [node2.x+node2.width, node2.y+node2.height];
+                return [node2.x + node2.width, node2.y + node2.height];
             }
         }
     }
@@ -365,7 +367,7 @@ class NavigationNodes {
     eventMouseUpCanvas(loc, e, elem)
     {
         //TODO snap to grid
-        
+
         this.isPanning = false;
 
         if (this.curMovingNode) {
@@ -385,25 +387,27 @@ class NavigationNodes {
 
 
 
-        this.theTimer = window.setTimeout(function() {
+        this.theTimer = window.setTimeout(function () {
             this.saveJSON();
             let currDate = new Date();
             let timeString = "Last saved: " + currDate.toLocaleTimeString();
 
-            $("#savePrompt").css({"opacity":1});
+            $("#savePrompt").css({"opacity": 1});
             $("#savePrompt").html(timeString);
 
             window.clearTimeout(this.fadeTimeout);
-            this.fadeTimeout = window.setTimeout(function() {
-                $("#savePrompt").animate({"opacity":0}, 1000);
+            this.fadeTimeout = window.setTimeout(function () {
+                $("#savePrompt").animate({"opacity": 0}, 1000);
             }, 2000);
-            
-            
+
+
         }.bind(this), 5000);
 
     }
 
     eventMouseDownCanvas(loc, e, elem) {
+        console.log(loc.x + this.inputs.nodeCanvas.offset[0] + " " + e.x);
+
         window.clearTimeout(this.theTimer);
 
         let clickedNode = this.getFirstNodeUnderneathMouseLoc(loc);
@@ -425,8 +429,7 @@ class NavigationNodes {
             if (this.inputs.dropDown.populateDropdown(this.curNode) == 0) {
                 this.inputs.pathButton.disableEvent("click");
                 this.inputs.allPathButton.disableEvent("click");
-            }
-            else {
+            } else {
                 //Re-enable relevant buttons
                 this.inputs.pathButton.enableEvent("click");
                 this.inputs.allPathButton.enableEvent("click");
@@ -545,6 +548,9 @@ class NavigationNodes {
             this.eventClickZoomIn(loc, e, elem);
         } else
             this.eventClickZoomOut(loc, e, elem);
+
+        console.log(this.inputs.nodeCanvas.zoom);
+        console.log(this.inputs.nodeCanvas.offset);
     }
 
     eventClickZoomIn(loc, e, elem) {
@@ -573,13 +579,13 @@ class NavigationNodes {
 
     eventClickPath(loc, e, elem) {
         let selPath = this.inputs.dropDown.getDropdownSelection();
-        this.attachOne(selPath); 
+        this.attachOne(selPath);
         this.drawNodesRectanglesAndLines();
     }
 
     attachOne(which) {
         if (this.curNode && this.secondNode) {
-            
+
             for (let l in this.curNode.paths) {
                 if (which == this.curNode.paths[l].map_node_path_id) {
                     this.curNode.paths[l].url = this.secondNode.name;
@@ -587,7 +593,7 @@ class NavigationNodes {
             }
 
             let fromPathId = which;
-            
+
             ajax_general("addNodeConnectionToMap", {
                 mapID: window.mapID,
                 fromPathID: fromPathId,
@@ -649,10 +655,15 @@ class NavigationNodes {
                     $("#modalBlack").addClass("hidden");
                     $("#modalWhite").addClass("hidden");
                 },
-            }, "get");
-        
- 
-        
+                {
+                    done: function () {
+                        $("#modalBlack").addClass("hidden");
+                        $("#modalWhite").addClass("hidden");
+                    },
+                }, "get");
+
+
+
     }
 
     eventClickAllPath(loc, e, elem) {
@@ -691,6 +702,19 @@ class NavigationNodes {
         $("#file_upload").change(function () {
             $("#file_upload_form").submit();
         });
+        $(window).resize(this.resizeCanvas.bind(this));
+        this.resizeCanvas();
+    }
+    resizeCanvas() {
+        let width = window.innerWidth - $("#webixContainer").width() - $("#buttonContainer").width() - 20;
+        let height = window.innerHeight - $("#mapUI").height() - $("#webixHeader").height() - 50;
+        this.inputs.nodeCanvas.elem.height = height;
+        this.inputs.nodeCanvas.elem.width = width;
+        if ($$("mapNodePopulater")) {
+            $("#importMapNodesButtonContainer").css("height", height + $("#mapUI").height());
+            $$("mapNodePopulater").resize();
+        }
+        this.drawAllNodes();
     }
 
     constructor(mapName, json, inputElements, debugInfo) {
