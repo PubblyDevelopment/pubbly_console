@@ -6,7 +6,8 @@
 /html/deletedChildren/*
 /html/series/*
 /html/deletedSeries/*
-/html/downloads/maps/*
+/html/download/map/*
+/html/staging/map/*
 /html/map/*
 html/config.php
 /nbproject/*
