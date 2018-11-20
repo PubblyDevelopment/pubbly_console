@@ -6,6 +6,7 @@
 /html/deletedChildren/*
 /html/series/*
 /html/deletedSeries/*
+/html/downloads/maps/*
 /html/map/*
 html/config.php
 /nbproject/*
@@ -15,4 +16,5 @@ html/js/favicon.ico
 
 !*/.gitkeep
 !*/*/.gitkeep
+!*/*/*/.gitkeep
 desktop.ini

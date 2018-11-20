@@ -73,6 +73,7 @@ let selectMap = {
                         window.selectedMapName = item.name;
                         $$("editMap").enable();
                         $$("export_server").enable();
+                        $$("export_zip").enable();
                     },
                 }
             },
@@ -148,7 +149,7 @@ let actionBar = {
                                 }
                             }
                         },
-    
+
                         {
                             id: "export_server_prerequisite",
                             hidden: true,
@@ -171,7 +172,10 @@ let actionBar = {
                         {id: "export_zip", view: "button", label: "Exprt Offline ZIP",
                             disabled: true, on: {
                                 onItemClick: function () {
-                                    window.location.href = "export_map_offline.php?mapName=" + btoa(window.selectedMapName);
+                                    new fake_post("py/exportZipFromMapName.cgi", {
+                                        mapName: window.selectedMapName,
+                                        // Anything else you want to post in here, comma delimited.
+                                    });
                                 }
                             }
                         },
