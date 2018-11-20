@@ -20,7 +20,11 @@ if (LOGGED_IN && $nodeID) {
     if (file_exists("$path/entryPoint.php")) {
         unlink("$path/entryPoint.php");
     }
+    if (file_exists("$path/entryPoint.txt")) {
+        unlink("$path/entryPoint.txt");
+    }
     file_put_contents("$path/entryPoint.php", '<?php $entryPoint="'.$entryName.'"; ?>');
+    file_put_contents("$path/entryPoint.txt", "$entryName");
     echo "done";
 } else {
     echo "Bad pass for nodeFromType, or not logged in, you figure it out.";
