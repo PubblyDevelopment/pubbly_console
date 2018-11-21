@@ -954,11 +954,44 @@ class Pubbly {
                         drawLeft += curObj.calculated.widestLine - width;
                     }
                     drawTops.push(drawTop);
-                    ctx.fillText(
-                            lines[l],
-                            drawLeft,
-                            drawTop
-                            );
+                    let realSize = isNaN(curObj.size * 1) ?
+                            curObj.calculated.size :
+                            curObj.size;
+                    if (curObj.font === "Didact") {
+
+
+                        /*
+                         * Hacky hacky fonts
+                         * 
+                         * Issue is that larger fonts require smaller offsets while tiny fonts require large offsets. We're matching to Times because that's what everything was designed with, and we need uniformity, so why not times right?
+                         * 
+                         * So the real solution is to make a ctx font class that has a custom calculation for each supported font. But for now, which I know I've been saying for years...
+                         * 
+                         * Times 24: adjust +8
+                         * Times 64: adjust 0
+                         * Math.max(-0.2 * realSize + (64 / 5), 0);
+                         * 
+                         * Didact: +10 always
+                         */
+
+                        // TI-81 to da rescue.
+                        let adjustment = 10;
+                        
+                        // Hack for xprize
+                        ctx.fillText(
+                                lines[l],
+                                drawLeft,
+                                drawTop + adjustment
+                                );
+                    } else {
+                        ctx.fillText(
+                                lines[l],
+                                drawLeft,
+                                drawTop
+                                );
+                    }
+
+                    
                     if (curObj.editing &&
                             this.events.f.insertionPoint.on &&
                             insert.line == l) {
@@ -1020,7 +1053,7 @@ class Pubbly {
         this.find = this.find.bind(this);
         this.findAll = this.findAll.bind(this);
         this.sendToTop = this.sendToTop.bind(this);
-        this.runtimeProps = Object.assign(runtimeProps,
+        this.runtimeProps = Object.assign(
                 {
                     // Stop the stupid ear splitting recordings we use
                     masterVolume: 1,
@@ -1043,10 +1076,34 @@ class Pubbly {
                     // When you get to a matching TID, halt everything (look underhood at break point);
                     stopAtTarget: "",
                     // Draw 2px black line around field borders. For eyeball font sizing.
-                    drawFieldBorders: false
-                            // Ambitious! Will playback at double or half speed depending
-                            // speedModified: 1
-                });
+                    drawFieldBorders: false,
+                    // Ambitious! Will playback at double or half speed depending
+                    // speedModified: 1
+                    // Console, market, offline, app, whatever
+
+
+                    // From pubbly.info but needs defaults
+                    name: "Pubbly",
+                    height: 641,
+                    width: 1000,
+                    display: "single",
+                    bullet: "#8867AC",
+                    interrupt: false,
+                    saveStates: false,
+                    navigation: true,
+                    snapDrops: true,
+                    lastPageSpread: false,
+                    assetLocationPrefix: "",
+                    HighlightLinkColor: "128,255,255",
+                    HighlightLinkColorRGBA: "RGBA(128,255,255,0.5)",
+                    HighlightLinkTransparency: 50,
+                    HighlightLinkTime: 500,
+
+                    // Special xprize special stuff special
+                    environment: "console",
+                    // Where to force a back override when pressed (useful for associates (hopefully to be retired) and maps)
+                    forceBack: false,
+                }, runtimeProps);
         /*
          * Data of the pubbly book in question... Only variable thing between two books...
          * IN THEORY, we should be able to detach and re-attach new data, call a prelaunch, and get good stuff.
@@ -1054,6 +1111,10 @@ class Pubbly {
          * 
          * ... hence, it's called data.
          */
+        if (this.runtimeProps.environment === "app") {
+            this.appModifications = new AppModifications(this.runtimeProps);
+        }
+
         this.data = data;
         // Current page of book, ZERO INDEXED
         this.curPage = this.runtimeProps.startPage;
