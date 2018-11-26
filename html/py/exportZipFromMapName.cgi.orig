@@ -1,6 +1,13 @@
+<<<<<<< HEAD
 #!/Library/Frameworks/Python.framework/Versions/3.7/bin/python3
+=======
+#!/usr/bin/python
+#!C:\Users\Jason Horsley\AppData\Local\Programs\Python\Python37\python
+
+>>>>>>> 93bc6db7d2b521e7a898e36c7f9e74bf3b205cd6
 
 
+<<<<<<< HEAD
 import glob
 from pathlib import Path
 import os
@@ -156,5 +163,21 @@ offObj.doTheThing()
 
 
 
+
+# Maybe a 5 second wait, then refresh to the download link area?
+# Maybe generate some nice HTML to show the download?
+# Maybe auto download, then refresh back to ../select_map.php or something
+# Or maybe we change this from a http post to a ajax get variable for the map name, and we autodownload after the callback from select_map.js line 175 ish
 '''
+{id: "export_zip", view: "button", label: "Exprt Offline ZIP",
+    disabled: true, on: {
+        onItemClick: function () {
+            ajax_general(...)
+        }
+    }
+},
 '''
+=======
+print("Content-Type: text/html\n")
+print ("done")
+>>>>>>> 93bc6db7d2b521e7a898e36c7f9e74bf3b205cd6
