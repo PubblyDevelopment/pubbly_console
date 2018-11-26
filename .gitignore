@@ -14,7 +14,8 @@ html/config.php
 nbproject/*
 html/js/branding.js
 html/js/favicon.ico
-
+html/staging/*
+    
 !*/.gitkeep
 !*/*/.gitkeep
 !*/*/*/.gitkeep
