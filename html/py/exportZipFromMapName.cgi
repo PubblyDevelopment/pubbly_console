@@ -1,6 +1,7 @@
 #!/Library/Frameworks/Python.framework/Versions/3.7/bin/python3
 
 import glob
+import cgi
 from pathlib import Path
 import os
 import shutil
@@ -10,7 +11,6 @@ import strreplace as strr
 import datetime
 
 print("Content-Type: text/html\n\n")
-
 
 class OfflineBundler:
     def __init__(self, mn):
@@ -26,8 +26,6 @@ class OfflineBundler:
         self.warnings = []
 
     def checkIfEntryPointExists(self):
-        print ("Checking if entry point exists...")
-
         errors = []
 
         try:
@@ -43,12 +41,9 @@ class OfflineBundler:
 
         errors = []
 
-        print("Copying files to staging area....")
-
         try:
             shutil.copytree(self.initMap, self.stagePath,
                             ignore=ignore_patterns("entryPoint.*", "test.py", "*.sh", "*.html", ".DS_Store"))
-            print("Copy to staging area complete!")
         except FileExistsError:
             errors.append("Fatal: Staging area already exists. Weird.")
 
@@ -159,17 +154,29 @@ class OfflineBundler:
     def makeZip(self):
         errors = []
 
-        today = str(datetime.date.today())
-        zipName = Path(str(self.stagePath) + "_Offline_" + today)
+        # May want to use later to distinguish when zips were made:
+        # today = str(datetime.date.today())
+
+        zipName = Path(str(self.initMap) + "/offline")
 
         #print (zipName)
         try:
             shutil.make_archive(zipName, "zip", self.stagePath)
-            self.zipLoc = str(zipName)
+            self.zipLoc = str(zipName) + ".zip"
         except:
             errors.append("Fatal: Making zip failed for some reason.")
 
         self.printErrors(errors)
+        return errors
+
+    def removeStageFiles(self):
+        errors = []
+
+        try:
+            shutil.rmtree(self.stagePath)
+        except:
+            self.warnings.append("Warning: Stage file removal. Possibly someone else's problem.")
+
         return errors
 
     def isNewer(self, new, old):
@@ -182,7 +189,7 @@ class OfflineBundler:
 
     def printErrors(self, errors):
         for e in errors:
-            print ("* " + e)
+            print ("<br>* " + e)
 
     '''def getErrors(self):
         if (len(self.errors) is 0):
@@ -210,7 +217,8 @@ class OfflineBundler:
                  self.buildRunHTML,
                  self.copyEngineShared,
                  self.makeIndexFile,
-                 self.makeZip]
+                 self.makeZip,
+                 self.removeStageFiles]
 
         step = steps.pop(0)
         worked = bool(len(step()) is 0)
@@ -220,13 +228,16 @@ class OfflineBundler:
             worked = bool(len(step()) is 0)
 
         if worked and len(steps) == 0:
-            print("Success! File made at: " + self.zipLoc)
-            print("Some issues came up: ")
+            print("<br><b>Success!</b> Click <a href=\"" + self.zipLoc + "\">here</a> to download.<br>")
+            print("<br><br><font color=\"red\">Some issues came up: ")
             for w in self.warnings:
-                print ("* " + w)
+                print ("<br>* " + w)
+            print("</font>")
         else:
-            print("Something went horribly wrong. I don't know what to tell you.")
+            print("<br>Something went horribly wrong. I don't know what to tell you.")
 
-offObj = OfflineBundler("test")
+
+form = cgi.FieldStorage()
+mapNameInput = form.getvalue('mapName')
+offObj = OfflineBundler(mapNameInput)
 offObj.doTheThing()
-

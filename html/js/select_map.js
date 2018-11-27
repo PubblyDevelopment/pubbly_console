@@ -169,8 +169,8 @@ let actionBar = {
                 {gravity: 0.2},
                 {
                     rows: [
-                        {id: "export_zip", view: "button", label: "Exprt Offline ZIP",
-                            disabled: true, on: {
+                        {id: "export_zip", view: "button", label: "Export Offline ZIP",
+                            disabled: false, on: {
                                 onItemClick: function () {
                                     new fake_post("py/exportZipFromMapName.cgi", {
                                         mapName: window.selectedMapName,
