@@ -1,6 +1,5 @@
 #!/Library/Frameworks/Python.framework/Versions/3.7/bin/python3
 
-
 import glob
 from pathlib import Path
 import os
@@ -8,13 +7,14 @@ import shutil
 from shutil import *
 import fileinput
 import strreplace as strr
+import datetime
 
 print("Content-Type: text/html\n\n")
+
 
 class OfflineBundler:
     def __init__(self, mn):
         self.mapName = mn
-        self.errors = []
         self.initMap = Path('../map/' + self.mapName)
         self.stagePath = Path('../staging/' + self.mapName)
         self.entryPoint = ""
@@ -22,34 +22,45 @@ class OfflineBundler:
         self.enginePath = Path('../engine/' + self.engineNo)
         self.sharedPath = Path('../engine/shared')
         self.units = next(os.walk(self.initMap))[1]
+        self.zipLoc = ""
+        self.warnings = []
 
     def checkIfEntryPointExists(self):
+        print ("Checking if entry point exists...")
+
+        errors = []
+
         try:
             self.entryPoint = open(Path('../map/' + self.mapName + "/" + "entryPoint.txt"), "r").read()
         except:
-            self.errors.append("Fatal: No entry point specified.")
+            errors.append("Fatal: No entry point specified.")
+
+        self.printErrors(errors)
+        return errors
 
     def copyToStagingArea(self):
-        print ("Copying files to staging area....")
-        shutil.copytree(self.initMap, self.stagePath,
+        # TODO: Decide what to do if that map already exists in staging area. Wipe it? Make another copy?
+
+        errors = []
+
+        print("Copying files to staging area....")
+
+        try:
+            shutil.copytree(self.initMap, self.stagePath,
                             ignore=ignore_patterns("entryPoint.*", "test.py", "*.sh", "*.html", ".DS_Store"))
-        print ("Copy to staging area complete!")
+            print("Copy to staging area complete!")
+        except FileExistsError:
+            errors.append("Fatal: Staging area already exists. Weird.")
+
+        self.printErrors(errors)
+        return errors
+
+
 
     def checkJSONExistsNewerEngine(self):
+        errors = []
+
         unitJSON = ""
-
-        # for f in self.stagePath.iterdir():
-        #     print(str(f) + "<br>")
-        #     if ".json" in str(f) and "modified" not in str(f):
-        #         unitJSON = f
-
-        # for paths, dirs, files in os.walk(self.stagePath):
-        #     print (files)
-        #     if ".json" in str(files) and "modified" not in str(files):
-        #          unitJSON = files
-
-        #for i in self.stagePath.glob('**/*.*'):
-        #    print(i.name)
 
         self.jsonFiles = {}
 
@@ -65,29 +76,32 @@ class OfflineBundler:
                         # Check to see that the version in the filename matches the latest engine
                         version = (f[f.index("1"):f.index(".json")])
                         if version != self.engineNo:
-                            self.errors.append("Fatal: Outdated engine (" + version + ") at\n" + self.stagePath + u)
+                           self.warnings.append("Warning: JSON created for outdated engine (" + version + ") at " + u)
                     except:
-                        self.errors.append("Fatal: Something went wrong. Missing JSON, maybe?")
+                        errors.append("Fatal: Something went wrong at " + u + ". Missing JSON, maybe?")
 
                 if "MainXML" in f:
                     unitXML = Path(str(self.stagePath) + "/" + u + "/" + f)
 
             if not unitJSON:
-                self.errors.append("Fatal: JSON file missing at: " + u)
+                errors.append("Fatal: JSON file missing at: " + u)
             if not unitXML:
-                self.errors.append("Fatal: XML missing at: " + u)
+                errors.append("Fatal: XML missing at: " + u)
             if self.isNewer(unitJSON, unitXML):
-                self.errors.append("Warning: JSON outdated at " + u)
+                self.warnings.append("Warning: JSON outdated at " + u)
+
+        self.printErrors(errors)
+        return errors
 
     def buildRunHTML(self):
+        ### TODO: Add some error stuff here:
+
+        errors = []
+
         for u in self.units:
-            print (str(self.enginePath) + "/run.html")
-            print (self.stagePath)
-
-
             shutil.copy(str(self.enginePath) + "/run.html", self.stagePath)
 
-            #try:
+            # try:
             with fileinput.FileInput(self.jsonFiles[u], inplace=True) as file:
                 for line in file:
                     print(strr.replaceAll(
@@ -106,55 +120,113 @@ class OfflineBundler:
                             ["{ENGINE}", self.engineNo],
                             ["{PUBBLY_JSON}", jsonData],
                         ]), end='')
-            #except:
+            # except:
             #    self.errors.append("Fatal: Constructing run files failed.")
-
 
             os.rename(Path(str(self.stagePath) + "/run.html"),
                       Path(str(self.stagePath) + "/" + u + ".html"))
 
-            print("Slashes are stupid\/")
+        self.printErrors(errors)
+        return errors
 
     def copyEngineShared(self):
-        shutil.copytree(self.enginePath, Path(str(self.stagePath) + "/engine/" + self.engineNo))
-        shutil.copytree(self.sharedPath, Path(str(self.stagePath) + "/engine/shared"))
+        errors = []
+
+        try:
+            shutil.copytree(self.enginePath, Path(str(self.stagePath) + "/engine/" + self.engineNo))
+        except FileExistsError:
+            errors.append("Fatal: A copy of the engine (" + self.engineNo + ") already exists. Weird.")
+        try:
+            shutil.copytree(self.sharedPath, Path(str(self.stagePath) + "/engine/shared"))
+        except FileExistsError:
+            errors.append("A copy of the engine (" + self.engineNo + ") already exists. Weird.")
+
+        self.printErrors(errors)
+        return errors
 
     def makeIndexFile(self):
-        print(self.entryPoint)
-        shutil.copyfile(Path(str(self.stagePath) + "/" + self.entryPoint + ".html"),
-                        Path(str(self.stagePath) + "/index.html"))
+        errors = []
 
+        try:
+            shutil.copyfile(Path(str(self.stagePath) + "/" + self.entryPoint + ".html"),
+                            Path(str(self.stagePath) + "/index.html"))
+        except:
+            errors.append("Fatal: Making index file failed.")
+
+        self.printErrors(errors)
+        return errors
+
+    def makeZip(self):
+        errors = []
+
+        today = str(datetime.date.today())
+        zipName = Path(str(self.stagePath) + "_Offline_" + today)
+
+        #print (zipName)
+        try:
+            shutil.make_archive(zipName, "zip", self.stagePath)
+            self.zipLoc = str(zipName)
+        except:
+            errors.append("Fatal: Making zip failed for some reason.")
+
+        self.printErrors(errors)
+        return errors
 
     def isNewer(self, new, old):
-        result = os.path.getmtime(new)-os.path.getmtime(old)
+
+        result = os.path.getmtime(new) - os.path.getmtime(old)
         if (result is 0):
-            self.errors.append("The files were created at the same exact time. Weird.")
+           self.warnings.append("Warning: The files were created at the same exact time. Weird.")
         else:
             return (result < 0)
 
-    def getErrors(self):
+    def printErrors(self, errors):
+        for e in errors:
+            print ("* " + e)
+
+    '''def getErrors(self):
         if (len(self.errors) is 0):
-            print ("Success! File made at: DO THIS LATER LOL")
+            print("Success! File made at: " + self.zipLoc)
         else:
-            print ("Errors found: ")
-            for e in self.errors:
-                print ("* " + e)
+            print("Errors found: ")
+            for k, v in self.errors.items():
+                print (v + "! " + k)'''
+
 
     def doTheThing(self):
+        '''
         self.checkIfEntryPointExists()
         self.copyToStagingArea()
         self.checkJSONExistsNewerEngine()
         self.buildRunHTML()
         self.copyEngineShared()
         self.makeIndexFile()
-        self.getErrors()
+        self.makeZip()
+        '''
+
+        steps = [self.checkIfEntryPointExists,
+                 self.copyToStagingArea,
+                 self.checkJSONExistsNewerEngine,
+                 self.buildRunHTML,
+                 self.copyEngineShared,
+                 self.makeIndexFile,
+                 self.makeZip]
+
+        step = steps.pop(0)
+        worked = bool(len(step()) is 0)
+
+        while worked and len(steps) > 0:
+            step = steps.pop(0)
+            worked = bool(len(step()) is 0)
+
+        if worked and len(steps) == 0:
+            print("Success! File made at: " + self.zipLoc)
+            print("Some issues came up: ")
+            for w in self.warnings:
+                print ("* " + w)
+        else:
+            print("Something went horribly wrong. I don't know what to tell you.")
 
 offObj = OfflineBundler("test")
 offObj.doTheThing()
 
-
-
-
-
-'''
-'''
