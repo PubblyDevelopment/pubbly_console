@@ -1,0 +1,3 @@
+[submodule "html/pubbly_engine"]
+	path = html/pubbly_engine
+	url = https://github.com/PubblyDevelopment/pubbly_engine
