@@ -1,7 +1,7 @@
 - make folder in html/py/genOffline.cgi
 - make sure you can get python/cgi files running -"hello world"
-- get info about latest version from html/engine/latest.txt
-- copy run.html somewhere useful, from html/engine/{version}/run.html
+- get info about latest version from html/pubbly_engine/latest.txt
+- copy run.html somewhere useful, from html/pubbly_engine/{version}/run.html
 - get all map content from html/map/{name o' map}
 - use a good test folder, like html/offlineMaps{name of map}
 - after getErrors
@@ -15,7 +15,7 @@ So add index.html, which is that html above with the name of the entry point of 
 Zip everything
 • AllNode.html
 • index.html
-• engine/
+• pubbly_engine/
 • map/
 ... Maybe move said zip to a "OfflineMapDownload/MapName.zip" folder
 And echo the finished link

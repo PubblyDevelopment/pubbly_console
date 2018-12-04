@@ -9,7 +9,7 @@ $types = [
     "m" => "map",
 ];
 $type = $types[$_GET['t']];
-require_once("engine/latest.php");
+require_once("pubbly_engine/latest.php");
 $engineCode = (isset($_GET['engineCode']) && $_GET['engineCode'] == "new") ? $latestEngineRelease : "old";
 $forceDebug = isset($_GET['fb']) ? $_GET['fb'] : false;
 
@@ -91,9 +91,9 @@ if (isset($loc)) {
 // Old garbage engine again
     if ($engineCode == "old") {
         if (!file_exists("$loc/$htmlFileName")) {
-            $oldHTML = file_get_contents("engine/old/index.html");
+            $oldHTML = file_get_contents("pubbly_engine/old/index.html");
             $dots = ($type == "unit") ? "../../../../../" : "../../";
-            $frag = new Html_fragment("engine/old/index.html", [
+            $frag = new Html_fragment("pubbly_engine/old/index.html", [
                 ["DOTS", "../../"],
                 ["SERIES_NAME", $seriesName],
                 ["XML_NAME", $xmlName],
@@ -106,12 +106,12 @@ if (isset($loc)) {
         $jsonLoc = "$loc/$jsonName.$engineCode.json";
         $jsonUpdated = (file_exists("$jsonLoc")) ? filemtime("$jsonLoc") : 0;
         $xmlUpdated = (file_exists("$loc/$xmlName")) ? filemtime("$loc/$xmlName") : 0;
-        $engineUpdated = stat("engine/$engineCode")['mtime'];
+        $engineUpdated = stat("pubbly_engine/$engineCode")['mtime'];
         if ($jsonUpdated <= $xmlUpdated // JSON outdated from XML
                 || $jsonUpdated <= $engineUpdated // JSON outdated from build process
                 || $forceDebug // Lazy JASON
         ) {
-            $frag = new Html_fragment("engine/$engineCode/build.html", [
+            $frag = new Html_fragment("pubbly_engine/$engineCode/build.html", [
                 ["REL_ROOT", "."],
                 ["ENGINE", "$engineCode"],
                 ["START_PAGE", 0],
@@ -123,7 +123,7 @@ if (isset($loc)) {
             ]);
             $frag->echoOut();
         } else {
-            $frag = new Html_fragment("engine/$engineCode/run.html", [
+            $frag = new Html_fragment("pubbly_engine/$engineCode/run.html", [
                 ["REL_ROOT", "."],
                 ["ENGINE", "$engineCode"],
                 ["START_PAGE", 0],

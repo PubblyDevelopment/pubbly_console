@@ -18,9 +18,9 @@ class OfflineBundler:
         self.initMap = Path('../map/' + self.mapName)
         self.stagePath = Path('../staging/' + self.mapName)
         self.entryPoint = ""
-        self.engineNo = open(Path('../engine/latest.txt'), 'r').read()
-        self.enginePath = Path('../engine/' + self.engineNo)
-        self.sharedPath = Path('../engine/shared')
+        self.engineNo = open(Path('../pubbly_engine/latest.txt'), 'r').read()
+        self.enginePath = Path('../pubbly_engine/' + self.engineNo)
+        self.sharedPath = Path('../pubbly_engine/shared')
         self.units = next(os.walk(self.initMap))[1]
         self.zipLoc = ""
         self.warnings = []
@@ -128,11 +128,11 @@ class OfflineBundler:
         errors = []
 
         try:
-            shutil.copytree(self.enginePath, Path(str(self.stagePath) + "/engine/" + self.engineNo))
+            shutil.copytree(self.enginePath, Path(str(self.stagePath) + "/pubbly_engine/" + self.engineNo))
         except FileExistsError:
             errors.append("Fatal: A copy of the engine (" + self.engineNo + ") already exists. Weird.")
         try:
-            shutil.copytree(self.sharedPath, Path(str(self.stagePath) + "/engine/shared"))
+            shutil.copytree(self.sharedPath, Path(str(self.stagePath) + "/pubbly_engine/shared"))
         except FileExistsError:
             errors.append("A copy of the engine (" + self.engineNo + ") already exists. Weird.")
 

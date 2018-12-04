@@ -352,6 +352,9 @@ function unpackParentZip($seriesName) {
                             } else if ((string) $asset->Type == "Field") {
                                 $originalFound = true;
                                 $originalType = "Field";
+                            } else if ((string) $asset->Type == "Video") {
+                                $originalFound = true;
+                                $originalType = "Video";
                             }
                         }
                     }
@@ -398,6 +401,15 @@ function unpackParentZip($seriesName) {
                                 foreach ($page->Objects->children() as $object) {
                                     if ($object->ObjName == $orig) {
                                         $object->FldContentsEncoded = $new;
+                                    }
+                                }
+                            }
+                        } else if ($originalType == "Video") {
+                            foreach ($childXML->Pages->children() as $page) {
+                                foreach ($page->Objects->children() as $object) {
+                                    if ($object->ParentSource == $orig) {
+                                        $object->ObjFileName = $new;
+                                        $object->Source = $new;
                                     }
                                 }
                             }
