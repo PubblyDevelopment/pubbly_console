@@ -70,7 +70,7 @@ class NavigationNodes_Canvas extends NavigationNodes_element {
     }
     drawImage(src, x, y, w, h) {
         // helper.js
-        if (checkArrayForAllValuesOfDesiredType([x, y, w, h], "number")) {
+        if (checkArrayForAllValuesOfDesiredType([x, y, w, h], "number") && src.height > 0) {
             let args = [src, x, y, w, h];
             // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/scale
             this.ctx.scale(this.zoom, this.zoom);
