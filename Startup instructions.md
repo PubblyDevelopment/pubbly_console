@@ -33,6 +33,17 @@ sudo nano config_default.php
 sudo mv config_default.php config.php
 
 
+Get python up and running
+
+sudo apt-get install python3
+sudo vim /etc/apache2/conf-available/cgi-enabled.conf
+    <Directory "/var/www/html/py">
+        Options +ExecCGI
+        AddHandler cgi-script .cgi .py
+    </Directory>
+sudo a2enconf cgi-enabled
+sudo service apache2 restart
+
 // Server is ready
 
 Strongly advice that you change the root password to something secure, that you disallow the following of system indexes, and other things.
