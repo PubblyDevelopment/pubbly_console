@@ -15,8 +15,10 @@ nbproject/*
 html/js/branding.js
 html/js/favicon.ico
 html/staging/*
-    
+
 !*/.gitkeep
 !*/*/.gitkeep
 !*/*/*/.gitkeep
 desktop.ini
+.sass-cache
+*.swp

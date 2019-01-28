@@ -40,10 +40,10 @@ CREATE TABLE `books` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `childassetnotes`
+-- Table structure for table `childAssetNotes`
 --
 
-CREATE TABLE `childassetnotes` (
+CREATE TABLE `childAssetNotes` (
   `refSeries` varchar(255) NOT NULL,
   `refBook` varchar(255) NOT NULL,
   `refPage` int(11) NOT NULL,
@@ -185,10 +185,10 @@ CREATE TABLE `swaps` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `unitpages`
+-- Table structure for table `unitPages`
 --
 
-CREATE TABLE `unitpages` (
+CREATE TABLE `unitPages` (
   `unitID` int(11) NOT NULL,
   `unitPage` int(11) NOT NULL,
   `refPage` int(11) NOT NULL,

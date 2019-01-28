@@ -1,6 +1,5 @@
 <?php
 
-// Environment variables, set in docker or here. 
 putenv("DB_USER=console");
 putenv("DB_PASSWORD=PutPasswordHere");
 putenv("DB_NAME=console");

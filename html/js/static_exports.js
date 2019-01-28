@@ -286,6 +286,12 @@ $(document).ready(function () {
                                             onUploadComplete: function () {
                                                 webix.message("Upload complete!");
                                                 window.location.href = window.location.href;
+                                            },
+                                            onFileUploadError: function(file, err) {
+                                                console.alert(err);
+                                            },
+                                            onFileUpload: function() {
+                                                console.log("here");
                                             }
                                         },
                                     },
