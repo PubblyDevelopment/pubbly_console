@@ -29,14 +29,15 @@ Not finished... please do the manual. below
 ### Import database
 
 * sudo mysql -u root -p
-* CREATE DATABASE console;
-* CREATE USER 'console'@'localhost' IDENTIFIED BY 'PutPasswordHere';
-* grant all privileges on console.* to 'console'@'localhost';
+* CREATE DATABASE pubbly_console;
+* CREATE USER 'pubbly_console'@'localhost' IDENTIFIED BY 'PutPasswordHere';
+* grant all privileges on pubbly_console.* to 'pubbly_console'@'localhost';
 * flush privileges;
+* USE mysql;
 * SET GLOBAL sql_mode=(SELECT REPLACE(@@sel_mode,'ONLY_FULL_GROUP_BY', ''));
 * exit;
 
-> sudo mysql -u root -p console < sql/freshBuild.sql
+> sudo mysql -u root -p pubbly_console < sql/freshBuild.sql
 
 ### Moving over config files
 

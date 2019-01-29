@@ -9,11 +9,9 @@ $types = [
     "m" => "map",
 ];
 $type = $types[$_GET['t']];
-require_once("pubbly_engine/latest.php");
+$latestEngineRelease = file_get_contents("pubbly_engine/version.txt");
 $engineCode = (isset($_GET['engineCode']) && $_GET['engineCode'] == "new") ? $latestEngineRelease : "old";
 $forceDebug = isset($_GET['fb']) ? $_GET['fb'] : false;
-
-
 
 $postSpecs = [
     "type" => $type,
@@ -103,32 +101,32 @@ if (isset($loc)) {
         }
         header("location: $loc/$htmlFileName");
     } else {
-        $jsonLoc = "$loc/$jsonName.$engineCode.json";
+        $jsonLoc = "$loc/$jsonName.json";
         $jsonUpdated = (file_exists("$jsonLoc")) ? filemtime("$jsonLoc") : 0;
         $xmlUpdated = (file_exists("$loc/$xmlName")) ? filemtime("$loc/$xmlName") : 0;
-        $engineUpdated = stat("pubbly_engine/$engineCode")['mtime'];
+        $engineUpdated = stat("pubbly_engine/")['mtime'];
         if ($jsonUpdated <= $xmlUpdated // JSON outdated from XML
                 || $jsonUpdated <= $engineUpdated // JSON outdated from build process
                 || $forceDebug // Lazy JASON
         ) {
-            $frag = new Html_fragment("pubbly_engine/$engineCode/build.html", [
-                ["REL_ROOT", "."],
+            $frag = new Html_fragment("pubbly_engine/html/console-build.html", [
+                ["ROOT_TO_ENGINE", "pubbly_engine"],
                 ["ENGINE", "$engineCode"],
                 ["START_PAGE", 0],
                 ["BUILD_POST_SPECS", json_encode($postSpecs)],
                 ["BUILD_POST_LOC", "build.php"],
                 ["BOOK_LOC", "$loc"],
                 ["XML_NAME", "$xmlName"],
-                ["ENVIRONMENT", "server"]
+                ["ENVIRONMENT", "console"]
             ]);
             $frag->echoOut();
         } else {
-            $frag = new Html_fragment("pubbly_engine/$engineCode/run.html", [
-                ["REL_ROOT", "."],
+            $frag = new Html_fragment("pubbly_engine/html/console-run.html", [
+                ["ROOT_TO_ENGINE", "pubbly_engine"],
                 ["ENGINE", "$engineCode"],
                 ["START_PAGE", 0],
                 ["PUBBLY_JSON", file_get_contents("$jsonLoc")],
-                ["ENVIRONMENT", "server"]
+                ["ENVIRONMENT", "console"]
             ]);
             $frag->echoOut();
         }
