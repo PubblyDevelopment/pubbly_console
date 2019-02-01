@@ -9,13 +9,13 @@ $types = [
     "m" => "map",
 ];
 $type = $types[$_GET['t']];
-$latestEngineRelease = file_get_contents("pubbly_engine/version.txt");
+include("pubbly_engine/version.php");
 $engineCode = (isset($_GET['engineCode']) && $_GET['engineCode'] == "new") ? $latestEngineRelease : "old";
 $forceDebug = isset($_GET['fb']) ? $_GET['fb'] : false;
 
 $postSpecs = [
     "type" => $type,
-    "engineCode" => $engineCode
+    "engineCode" => $engineCode,
 ];
 $seriesName = "";
 if ($type == "book") {
@@ -101,7 +101,7 @@ if (isset($loc)) {
         }
         header("location: $loc/$htmlFileName");
     } else {
-        $jsonLoc = "$loc/$jsonName.json";
+        $jsonLoc = "$loc/$jsonName.$engineCode.json";
         $jsonUpdated = (file_exists("$jsonLoc")) ? filemtime("$jsonLoc") : 0;
         $xmlUpdated = (file_exists("$loc/$xmlName")) ? filemtime("$loc/$xmlName") : 0;
         $engineUpdated = stat("pubbly_engine/")['mtime'];
@@ -109,7 +109,8 @@ if (isset($loc)) {
                 || $jsonUpdated <= $engineUpdated // JSON outdated from build process
                 || $forceDebug // Lazy JASON
         ) {
-            $frag = new Html_fragment("pubbly_engine/html/console-build.html", [
+            echo "<!-- $jsonLoc -->";
+            $frag = new Html_fragment("pubbly_engine/html/server-build.html", [
                 ["ROOT_TO_ENGINE", "pubbly_engine"],
                 ["ENGINE", "$engineCode"],
                 ["START_PAGE", 0],
@@ -121,7 +122,7 @@ if (isset($loc)) {
             ]);
             $frag->echoOut();
         } else {
-            $frag = new Html_fragment("pubbly_engine/html/console-run.html", [
+            $frag = new Html_fragment("pubbly_engine/html/server-run.html", [
                 ["ROOT_TO_ENGINE", "pubbly_engine"],
                 ["ENGINE", "$engineCode"],
                 ["START_PAGE", 0],

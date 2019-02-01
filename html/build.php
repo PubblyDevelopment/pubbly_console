@@ -30,7 +30,11 @@ if ($postSpecs['type'] == "book") {
     $nodeName = $postSpecs['nodeName'];
     $bookLoc = "map/$mapName/$nodeName";
     $jsonName = "Main";
+}   else    {
+    print_r($_POST);
 }
+
+
 if ($bookLoc) {
     $engineCode = $postSpecs['engineCode'];
     $bookData = json_decode($data);
