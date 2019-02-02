@@ -34,7 +34,7 @@ Not finished... please do the manual. below
 * grant all privileges on pubbly_console.* to 'pubbly_console'@'localhost';
 * flush privileges;
 * USE mysql;
-* SET GLOBAL sql_mode=(SELECT REPLACE(@@sel_mode,'ONLY_FULL_GROUP_BY', ''));
+* SET sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
 * exit;
 
 > sudo mysql -u root -p pubbly_console < sql/freshBuild.sql

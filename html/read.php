@@ -111,19 +111,19 @@ if (isset($loc)) {
         ) {
             echo "<!-- $jsonLoc -->";
             $frag = new Html_fragment("pubbly_engine/html/server-build.html", [
-                ["ROOT_TO_ENGINE", "pubbly_engine"],
+                ["PATH_TO_ENGINE", "pubbly_engine/"],
                 ["ENGINE", "$engineCode"],
                 ["START_PAGE", 0],
                 ["BUILD_POST_SPECS", json_encode($postSpecs)],
                 ["BUILD_POST_LOC", "build.php"],
-                ["BOOK_LOC", "$loc"],
+                ["PATH_TO_BOOK", "$loc/"],
                 ["XML_NAME", "$xmlName"],
                 ["ENVIRONMENT", "console"]
             ]);
             $frag->echoOut();
         } else {
             $frag = new Html_fragment("pubbly_engine/html/server-run.html", [
-                ["ROOT_TO_ENGINE", "pubbly_engine"],
+                ["PATH_TO_ENGINE", "pubbly_engine"],
                 ["ENGINE", "$engineCode"],
                 ["START_PAGE", 0],
                 ["PUBBLY_JSON", file_get_contents("$jsonLoc")],
