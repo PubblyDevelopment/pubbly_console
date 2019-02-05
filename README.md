@@ -26,6 +26,15 @@ Not finished... please do the manual. below
 * sudo apt install tasksel
 * sudo tasksel install lamp-server
 
+* sudo apt-get install php-zip
+* sudo apt-get install php-xml
+
+### PHP.ini setup
+
+> vim /etc/php/7.2/apache/php.ini
+> find upload_max_filesize
+> change to 200M
+
 ### Import database
 
 * sudo mysql -u root -p
