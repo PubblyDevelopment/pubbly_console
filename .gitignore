@@ -15,6 +15,7 @@ nbproject/*
 html/js/branding.js
 html/js/favicon.ico
 html/staging/*
+html/download
 
 !*/.gitkeep
 !*/*/.gitkeep
