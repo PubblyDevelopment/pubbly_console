@@ -17,6 +17,9 @@ html/js/favicon.ico
 html/staging/*
 html/download/*
 
+/html/favicon.ico
+/html/js/branding.js
+
 !*/.gitkeep
 !*/*/.gitkeep
 !*/*/*/.gitkeep
