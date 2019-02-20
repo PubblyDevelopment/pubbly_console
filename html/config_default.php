@@ -1,8 +1,8 @@
 <?php
 
-putenv("DB_USER=console");
+putenv("DB_USER=pubbly_console");
 putenv("DB_PASSWORD=PutPasswordHere");
-putenv("DB_NAME=console");
+putenv("DB_NAME=pubbly_console");
 putenv("DB_HOST=localhost");
 
 define('WEB_ROOT', $_SERVER['DOCUMENT_ROOT'] . "");
