@@ -123,7 +123,7 @@ if (isset($loc)) {
             $frag->echoOut();
         } else {
             $frag = new Html_fragment("pubbly_engine/html/server-run.html", [
-                ["PATH_TO_ENGINE", "pubbly_engine"],
+                ["PATH_TO_ENGINE", "pubbly_engine/"],
                 ["ENGINE", "$engineCode"],
                 ["START_PAGE", 0],
                 ["PUBBLY_JSON", file_get_contents("$jsonLoc")],
