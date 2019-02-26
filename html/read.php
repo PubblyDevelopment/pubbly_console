@@ -126,6 +126,7 @@ if (isset($loc)) {
                 ["PATH_TO_ENGINE", "pubbly_engine/"],
                 ["ENGINE", "$engineCode"],
                 ["START_PAGE", 0],
+		["JSON_LOC", $jsonLoc],
                 ["PUBBLY_JSON", file_get_contents("$jsonLoc")],
                 ["ENVIRONMENT", "console"]
             ]);
