@@ -1,5 +1,17 @@
-class NavigationNodes {
+/*
+    _main.js
+    Author: Wallis Muraca
 
+    Does most of the heavy lifting for the operation of maps
+
+    A small note: "Nodes" were originally called "books" so there
+    might be some weirdly named variables. In a perfect universe, I 
+    would go back in time and make some different choices...
+
+    ...but here we are.
+*/
+
+class NavigationNodes {
     insertNewNodeTest(newJSON) {
         let nj = {
             name: "static-Pots",
@@ -16,7 +28,6 @@ class NavigationNodes {
 
     // Start of Jason messed around
     // Plus added a line to top of method eventMouseMoveCanvas
-
     play_getNodeInfoByFancyName(fancyName) {
         for (let nodeName in this.json) {
             if (this.json[nodeName].name == fancyName) {
@@ -24,7 +35,10 @@ class NavigationNodes {
             }
         }
     }
-    // 
+
+    // Loops through all paths and sees if mouse is nearby
+    // using an algorithm from helper.js
+    // Will return the first line that it can find
     play_getLines(mx, my) {
         let lines = [];
         for (let nodeName in this.json) {
@@ -62,7 +76,7 @@ class NavigationNodes {
 
     // End of Jason messed around
 
-
+    // Loads in relevant image files
     loadAssets(cb) {
         let needed = 0;
         let recieved = 0;
@@ -88,9 +102,13 @@ class NavigationNodes {
     }
 
     // Puts nodes in a grid 
+    // We might not be usinf this? Unclear
     placeVirginProjectNodes() {
 
     }
+
+    // Checks if a project is brand new by seeing 
+    // if the first node has an x value
     checkIfProjectVirgin() {
         for (let nodeName in this.json) {
             if (typeof this.json[nodeName].x == "undefined") {
@@ -102,10 +120,14 @@ class NavigationNodes {
         return false;
     }
 
+    // Clears canvas to allow redraws
     clearCanvas() {
         this.inputs.nodeCanvas.clear();
     }
 
+    // Draws all nodes by looping through them
+    // and drawing a canvas image based on its stored
+    // location and size values
     drawAllNodes() {
         for (let nodeName in this.json) {
             let img = this.json[nodeName].img;
@@ -123,6 +145,8 @@ class NavigationNodes {
         }
     }
 
+    
+    // Draws a rectangle around a node cover
     drawNodeRect(color, node) {
         if (node !== undefined) {
             this.inputs.nodeCanvas.drawRect(
@@ -134,8 +158,9 @@ class NavigationNodes {
         }
     }
 
+    // Clears canvas, then draws pretty much 
+    // everything relevant to map
     drawNodesRectanglesAndLines() {
-
         this.clearCanvas();
         this.determinePaths();
         this.drawAllNodes();
@@ -145,12 +170,16 @@ class NavigationNodes {
 
     }
 
+    // Draws a star on whatever node is passed to it
+    // Should theoretically be the entry point node
     drawEntryNodeStar(node) {
         this.inputs.nodeCanvas.drawImage(this.starImg,
                 node.x + node.width / 2 - 25,
                 node.y + node.height / 2 - 25, 50, 50);
     }
 
+    // Returns the center of the canvas
+    // Honestly figured this out through trial and error
     getCenter() {
         let o = this.inputs.nodeCanvas.offset;
         let z = this.inputs.nodeCanvas.zoom;
@@ -160,13 +189,14 @@ class NavigationNodes {
         return[-o[0] + widthMod, -o[1] + heightMod, 50, 50];
     }
 
+    // Creates a list of ALL paths' start points, end points,
+    // and colors. At the ends, loops through and draws
     determinePaths() {
         // Go through each node
         this.listOfPaths = [];
         let paths = {};
         for (let nodeName in this.json) {
             for (let l in this.json[nodeName].paths) {
-
                 //this.inputs.nodeCanvas.drawLine("black",0,0,node.x,node.y);
                 // Go through each path in that node
                 for (let nodeNameAgain in this.json) {
@@ -179,15 +209,21 @@ class NavigationNodes {
                         let color = "gray";
                         if (this.json[nodeName] == this.curNode) {
                             // Populate dropdown to show existing path
+                            // Also set arrow color to black instead of gray
                             if (this.json[nodeNameAgain] == this.secondNode || this.secondNode == undefined) {
                                 this.inputs.dropDown.setDropdownSelection(this.json[nodeName].paths[l].name);
                                 color = "black";
                             }
                         }
 
+                        // Wher arrow ends is IMPORTANT
+                        // Determined using a separate function
                         let arrowEndingLoc = this.determineArrowEndingPoint(this.json[nodeName], this.json[nodeNameAgain]);
                         let pathName = nodeName + "-" + nodeNameAgain;
                         if (paths[pathName]) {
+                            // This is a multiplier: Ff there are multiple paths between the two same books
+                            // Lines get wider and wider, up until a width of 30 (designated in the draw
+                            // loop below)
                             paths[pathName].lineWidth += 5;
                         } else {
                             paths[pathName] = {
@@ -217,6 +253,9 @@ class NavigationNodes {
         }
     }
 
+    // Jason's algorithm to determine where the arrow should end
+    // More elegant code-wise, but leaves gaps that aren't super
+    // pretty
     determineArrowEndingPoint_backup(node1, node2) {
         let slope = getSlope(node1.x, node1.y, node2.x, node2.y);
         let minRadius = Math.max(node2.height, node2.width) / 2;
@@ -253,6 +292,9 @@ class NavigationNodes {
         }
     }
 
+    // My arrow endpoint algorithm. Clumsier code-wise,
+    // but prettier on the canvas
+    // One day, I will make this V E R Y beautiful
     determineArrowEndingPoint(node1, node2) {
         if (node1.y + node1.height < node2.y) {
             if (node1.x + node1.width / 2 < node2.x) {
@@ -282,6 +324,7 @@ class NavigationNodes {
         }
     }
 
+    // Redraws the current connection's arrow in black
     generateNodeConnectionArrowPoints(node1, node2) {
         // TODO 10/4
         for (let l in node1.paths) {
@@ -292,25 +335,14 @@ class NavigationNodes {
         }
     }
 
-    drawAllLines() {
-        for (let nodeName in this.json) {
-            if (this.json[nodeName] == this.curNode)
-                this.drawLines(this.json[nodeName], "black");
-            else
-                this.drawLines(this.json[nodeName], "gray");
-        }
-    }
-
+    // When clicking or shift clicking a book, swap out cover in 
+    // bottom UI if it exists. Else, use a default gray "cover not found" image
     changeNodePhoto() {
         let firstCoverSrc = (this.curNode) ? this.curNode.cover : "NavigationNodesUI/assets/nonodeselected.png";
         document.getElementById("firstNodePhoto").src = firstCoverSrc;
 
         let secondCoverSrc = (this.secondNode) ? this.secondNode.cover : "NavigationNodesUI/assets/nonodeselected.png";
         document.getElementById("secondNodePhoto").src = secondCoverSrc;
-
-
-        if (this.secondNode)
-            document.getElementById("secondNodePhoto").src = this.secondNode.cover;
     }
 
     // Updates the JSON in /project
@@ -342,10 +374,32 @@ class NavigationNodes {
         this.cookies.set('edit_map-offset', mapOffset, 1);
     }
 
-    // Events to be called back with class NavigationNodes scope.
-    // ALL events using 
-    //     arg1: relative mouse loc {x, y}
-    //     arg12: element where event was generated
+    // Autosaves by using a timer function
+    // After user mouses up, wait 5 seconds, save
+    // the JSON, show some appropriate HTML and CSS 
+    // to indicate a save happened
+    autoSave() {
+        this.theTimer = window.setTimeout(function () {
+            this.saveJSON();
+            let currDate = new Date();
+            let timeString = "Last saved: " + currDate.toLocaleTimeString();
+
+            $("#savePrompt").css({"opacity": 1});
+            $("#savePrompt").html(timeString);
+
+            window.clearTimeout(this.fadeTimeout);
+            this.fadeTimeout = window.setTimeout(function () {
+                $("#savePrompt").animate({"opacity": 0}, 1000);
+            }, 2000);
+
+
+        }.bind(this), 5000);
+    }
+
+    // Determine which node mouse is hovering over
+    // Loop through all nodes, create a polygon based on that node
+    // Decide if cursor is inside that polygon using outside helper function
+    // If multiple nodes are a match, return the first to prevent conflict
     getFirstNodeUnderneathMouseLoc(loc) {
         let hoveredNodes = [];
         for (let bn in this.json) {
@@ -366,10 +420,10 @@ class NavigationNodes {
 
     eventMouseUpCanvas(loc, e, elem)
     {
-        //TODO snap to grid
-
+        // Turn off panning on mouse up
         this.isPanning = false;
 
+        // Snap to grid by rounding final drop location
         if (this.curMovingNode) {
             this.curMovingNode.x = round(this.curMovingNode.x, 40);
             this.curMovingNode.y = round(this.curMovingNode.y, 40);
@@ -377,56 +431,50 @@ class NavigationNodes {
 
         this.curMovingNode = false;
 
+        // Appropriate clear + redraws
         this.clearCanvas();
         this.determinePaths();
         this.drawAllNodes();
         this.drawNodeRect("red", this.curNode);
         this.drawNodeRect("green", this.secondNode);
-
         this.changeNodePhoto();
 
-
-
-        this.theTimer = window.setTimeout(function () {
-            this.saveJSON();
-            let currDate = new Date();
-            let timeString = "Last saved: " + currDate.toLocaleTimeString();
-
-            $("#savePrompt").css({"opacity": 1});
-            $("#savePrompt").html(timeString);
-
-            window.clearTimeout(this.fadeTimeout);
-            this.fadeTimeout = window.setTimeout(function () {
-                $("#savePrompt").animate({"opacity": 0}, 1000);
-            }, 2000);
-
-
-        }.bind(this), 5000);
+        this.autoSave();
+        
 
     }
 
     eventMouseDownCanvas(loc, e, elem) {
-        console.log(loc.x + this.inputs.nodeCanvas.offset[0] + " " + e.x);
-
+        // Reset the autosave timer so you're not saving while moving/clicking on a node
         window.clearTimeout(this.theTimer);
 
         let clickedNode = this.getFirstNodeUnderneathMouseLoc(loc);
         let clickedLine = this.play_getLines(loc.x, loc.y);
 
         if (this.curNode && this.secondNode) {
+            // A terribly inefficient way to highlight the current selected nodes' connection
             this.generateNodeConnectionArrowPoints(this.curNode, this.secondNode);
         }
 
+        // Logic for selected first node (red rectangle)
         if (clickedNode && !e.shiftKey) {
+            // So you can't connect a node to itself
             if (clickedNode == this.secondNode) {
                 this.secondNode = undefined;
+                // Fixes stuck titles in bottom UI
+                this.inputs.dropDown.setSecondNodeTitle();
             }
+
+            // Run a php script to upload a new cover for clicked node
             let id = clickedNode.node_id;
             $("#file_upload_form").attr("action", "php/ajax/uploadNodeCover.php?nodeID=" + id);
+            
             this.curNode = clickedNode;
             this.curMovingNode = clickedNode;
             this.inputs.dropDown.populateDropdown(this.curNode);
+            
             if (this.inputs.dropDown.populateDropdown(this.curNode) == 0) {
+                // Disable buttons if no links exist
                 this.inputs.pathButton.disableEvent("click");
                 this.inputs.allPathButton.disableEvent("click");
             } else {
@@ -436,8 +484,12 @@ class NavigationNodes {
                 this.inputs.viewAt.enableEvent("click");
             }
 
+            // Update covers in bottom UI
             this.changeNodePhoto();
+            // Draw all
             this.drawNodesRectanglesAndLines();
+
+        // Logic for selected second node (green rectangle)
         } else if (clickedNode && e.shiftKey) {
             this.secondNode = clickedNode;
             this.curMovingNode = clickedNode;
@@ -445,13 +497,18 @@ class NavigationNodes {
             if (this.curNode) {
                 if (this.curNode.name == this.secondNode.name) {
                     this.curNode = undefined;
+                    // Fixes stuck titles in bottom UI
+                    this.inputs.dropDown.setFirstNodeTitle();
                 }
             }
 
+            // draw all
             this.drawNodesRectanglesAndLines();
 
             this.inputs.dropDown.setSecondNodeTitle(this.secondNode);
             this.changeNodePhoto();
+
+        // Logic for clicking a line
         } else if (clickedLine) {
             this.curNode = this.play_getNodeInfoByFancyName(clickedLine.fromNode);
             this.secondNode = this.play_getNodeInfoByFancyName(clickedLine.toNode);
@@ -489,25 +546,30 @@ class NavigationNodes {
             this.initialY = e.offsetY;
         }
     }
+
     eventMouseMoveCanvas(loc, e, elem) {
         // playing around with ideas.
         let hoveringOnALine = this.play_getLines(loc.x, loc.y);
 
-
+        // If we're moving the red node, change location as it moves
         if (this.curMovingNode && !e.shiftKey) {
             this.curNode = this.curMovingNode;
             this.curMovingNode.x = loc.x - this.curMovingNode.width / 2, 20;
             this.curMovingNode.y = loc.y - this.curMovingNode.height / 2, 20;
 
+            // Redraw as movement occurs
             this.drawNodesRectanglesAndLines();
+        // If we're moving the red node, change location as it moves
         } else if (this.curMovingNode && e.shiftKey) {
-            // some stuff
             this.secondNode = this.curMovingNode;
             this.curMovingNode.x = loc.x - this.curMovingNode.width / 2;
             this.curMovingNode.y = loc.y - this.curMovingNode.height / 2;
 
             this.drawNodesRectanglesAndLines();
 
+        // Not moving a book, and NOT PANNING
+        // So mouse is moving over stuff, but not doing anything
+        // Draw rectangles over nodes mouse is hovering on 
         } else {
             let hoverNode = this.getFirstNodeUnderneathMouseLoc(loc);
 
@@ -542,7 +604,9 @@ class NavigationNodes {
             this.drawNodeRect("green", this.secondNode);
         }
     }
-
+    // So we can zoom with a mousewheel
+    // e.deltaY is positive if scrolling up, negative
+    // if scrolling down
     eventMouseWheelCanvas(loc, e, elem) {
         if (e.deltaY < 0) {
             this.eventClickZoomIn(loc, e, elem);
@@ -553,6 +617,7 @@ class NavigationNodes {
         console.log(this.inputs.nodeCanvas.offset);
     }
 
+    // With each zoom in, change zoom factor
     eventClickZoomIn(loc, e, elem) {
         let factor = 0.1;
 
@@ -562,6 +627,8 @@ class NavigationNodes {
         this.determinePaths();
         this.drawAllNodes();
     }
+
+    // With each zoom out, change zoom factor
     eventClickZoomOut(loc, e, elem) {
         let factor = 0.1;
         this.inputs.nodeCanvas.zoom -= factor;
@@ -570,19 +637,25 @@ class NavigationNodes {
         this.determinePaths();
         this.drawAllNodes();
     }
+
+    // Can't save while you're saving...
     eventClickSave(loc, e, elem) {
         // TODO: Please wait, disable everything, callback, enable buttons
+        // This has not been done......
         this.inputs.save.disableEvent("click");
         this.saveJSON();
         this.inputs.save.enableEvent("click");
     }
 
+    // Button handler for making one path connection
     eventClickPath(loc, e, elem) {
         let selPath = this.inputs.dropDown.getDropdownSelection();
         this.attachOne(selPath);
         this.drawNodesRectanglesAndLines();
     }
 
+    // Connect curnode to secondnode at chosen linkname
+    // Not really sure what which is doing, probably should remove?
     attachOne(which) {
         if (this.curNode && this.secondNode) {
 
@@ -605,12 +678,15 @@ class NavigationNodes {
         }
     }
 
+    // Attach ALL links in first node to second node
     attachAllPaths() {
         for (let path in this.curNode.paths) {
             this.attachOne(this.curNode.paths[path].map_node_path_id);
         }
     }
 
+    // Make an entry point by changing all OTHER nodes' entryNode property to false
+    // then making chosen node entryPoint property true
     eventClickEntry(loc, e, elem) {
         for (let nodeName in this.json) {
             this.json[nodeName].isEntryNode = false;
@@ -624,6 +700,7 @@ class NavigationNodes {
             }}, "get");
     }
 
+    // delete that boi
     eventClickDelete(loc, e, elem) {
         if (this.curNode) {
             ajax_general("deleteNodeFromMap", {
@@ -634,12 +711,16 @@ class NavigationNodes {
                 }}, "get");
         }
     }
+
+    // Opens chosen node in the engine by generating a slick URL
     eventClickViewAt(loc, e, elem) {
         if (this.curNode) {
             window.open("read.php?engineCode=new&t=m&mn=" + window.mapName + "&nn=" + this.curNode.name);
         }
     }
 
+    // Updates nodes after they're changed in separate parts of console
+    // Makes a VERY slick "updating" modal
     eventClickUpdate(loc, e, elem) {
         $("#modalBlack").removeClass("hidden");
         $("#modalWhite").removeClass("hidden");
@@ -700,6 +781,7 @@ class NavigationNodes {
         $(window).resize(this.resizeCanvas.bind(this));
         this.resizeCanvas();
     }
+
     resizeCanvas() {
         let width = window.innerWidth - $("#webixContainer").width() - $("#buttonContainer").width() - 20;
         let height = window.innerHeight - $("#mapUI").height() - $("#webixHeader").height() - 50;
@@ -709,7 +791,7 @@ class NavigationNodes {
             $("#importMapNodesButtonContainer").css("height", height + $("#mapUI").height());
             $$("mapNodePopulater").resize();
         }
-        this.drawAllNodes();
+        this.drawNodesRectanglesAndLines();
     }
 
     constructor(mapName, json, inputElements, debugInfo) {
@@ -811,7 +893,7 @@ class NavigationNodes {
                 node.initY = node.y;
             }
             this.determinePaths.call(_NavigationNodes);
-            this.drawAllNodes.call(_NavigationNodes);
+            this.drawNodesRectanglesAndLines.call(_NavigationNodes);
         }
     }
 }

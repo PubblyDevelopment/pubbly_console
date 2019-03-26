@@ -1,5 +1,15 @@
+/*
+    element.js
+    Author: Wallis Muraca
+
+    Element parent class
+*/
+
 class NavigationNodes_element {
 
+    // When an element is first activated, 
+    // see if disabled. If not, execute callback function
+    // after making appropriate canvas calculations
     eventMain(cb, eventName, e) {
         // Has this event been disabled? 
         if (this.disabled.indexOf(eventName) === -1) {

@@ -1,3 +1,8 @@
+/*
+  canvas-arrow.js
+  https://github.com/frogcat/canvas-arrow
+*/
+
 (function(target) {
   if (!target || !target.prototype)
     return;

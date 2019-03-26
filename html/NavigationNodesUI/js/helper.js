@@ -1,8 +1,10 @@
-// Helper.js
-/*
- * Probably bad practice, but basically a "light" library of functions you might use somewhere else
- * If you want to copy from this project later on, this is where you check first.
- */
+/* 
+  Helper.js
+  Authors: Jason Horsely and Wallis Muraca
+
+  Probably bad practice, but basically a "light" library of functions you might use somewhere else
+  If you want to copy from this project later on, this is where you check first.
+*/
 
 let checkInputKeyAgainstArrayOfRequiredElementNamesAndReturnMissingArr = function (inputs, required) {
     /*
@@ -190,6 +192,8 @@ function angle(cx, cy, ex, ey) {
    return theta;
  }
 
+// Didn't really use this, had an idea to perfect arrow rendering
+// Drawing arrows should NOT be so hard! 
 function getSlope (x1, y1, x2, y2) {
   return (y2-y1)/(x2-x1);
 }

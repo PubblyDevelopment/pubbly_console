@@ -1,8 +1,16 @@
+/*
+    element_Canvas.js
+    Author: Wallis Muraca
+
+    Handles calls to the context, draws, zooms, pans, etc.
+*/
+
 class NavigationNodes_Canvas extends NavigationNodes_element {
     clear() {
         this.elem.width = this.elem.width;
     }
 
+    // Draw a rectangle in a desired color
     drawRect(color, x, y, w, h) {
         if (checkArrayForAllValuesOfDesiredType([x, y, w, h], "number")) {
             let rectLineWidth = 2;
