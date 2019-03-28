@@ -10,8 +10,9 @@ require_once(WEB_ROOT . "/php/nodeMovements.php");
 require_once(WEB_ROOT . "/php/saveXML.php");
 require_once(CLASS_ROOT . "/mysql_query.php");
 require_once(CLASS_ROOT . "/html_fragment.php");
-require_once(WEB_ROOT . "/pubbly_engine/latest.php");
 require_once(CLASS_ROOT . "/sec_session.php");
+
+$latestEngineRelease = file_get_contents("pubbly_engine/version.txt");
 if (LOGGED_IN) {
     $query = new Mysql_query();
     $mapName = $query->fetchSingle("SELECT name FROM map WHERE map_id = ?", ["s", $mapID]);
@@ -41,7 +42,7 @@ if (LOGGED_IN) {
             mkdir("$toLoc/videos");
         }
         moveNodeXmlToNodeFsLoc($xmlFromLoc, $assetPrefix, "$toLoc");
-        $frag = new Html_fragment("pubbly_engine/$latestEngineRelease/app.html", [
+        $frag = new Html_fragment("pubbly_engine/html/server-build.html", [
             ["ENGINE_CODE", $latestEngineRelease],
             ["MAP_NODE_NAME", $toName],
         ]);
