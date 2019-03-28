@@ -1,13 +1,14 @@
-$(document).ready(function () {
+function wb_build() {
     let logosAndLogout = webix.ui({
-        container: "logoAndLogout",
+        container: "logout",
         css: "whiteBG",
         height: 150,
         cols: [
             {},
             {width: 200,
                 rows: [
-                    {template: "<img id=logo style='height:150px' src='" + window.homepageLogoSrc + "' />"},
+                    // Source set from index.html inside CSS
+                    {template: "<img id=logo style='height:150px' />"},
                 ]
             },
             {},
@@ -29,7 +30,7 @@ $(document).ready(function () {
         ],
     })
     let consoleSections = webix.ui({
-        container: "consoleSections",
+        container: "consoleAppRouting",
         css: "whiteBG",
         rows: [
             {cols: [
@@ -78,7 +79,7 @@ $(document).ready(function () {
                     {},
                     {
                         cols: [
-                            {template: "<img style='height:48;width:200' src='assets/powered_by_pubbly.png' />", width: 200, height:48},
+                            {template: "<img style='height:48;width:200' src='assets/powered_by_pubbly.png' />", width: 200, height: 48},
                         ]
                     },
                     {},
@@ -92,4 +93,4 @@ $(document).ready(function () {
     });
     logosAndLogout.resize();
     consoleSections.resize();
-})
+}

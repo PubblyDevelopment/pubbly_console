@@ -9,4 +9,6 @@ define('WEB_ROOT', $_SERVER['DOCUMENT_ROOT'] . "");
 define('INC_ROOT', $_SERVER['DOCUMENT_ROOT'] . "/../includes");
 define('CLASS_ROOT', $_SERVER['DOCUMENT_ROOT'] . "/php/classes");
 define("ENVIRONMENT", "development");
+
+define("BRAND", "");
 ?>

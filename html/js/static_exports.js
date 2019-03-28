@@ -487,7 +487,6 @@ $(document).ready(function () {
                 };
                 webix.ui({
                     view: "scrollview",
-                    width: "100%",
                     body: {
                         type: "space",
                         rows: [

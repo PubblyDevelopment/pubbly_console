@@ -1,42 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
-   <head>
-      <meta charset="UTF-8">
-      <title>Console - Variable Exports</title>
-      <link rel="stylesheet" href="includes/dropzone.css"/>
-      <script>
-      </script>
-      <script src="includes/jquery.js"></script>
-      <link rel="stylesheet" href="skins/webix.css" type="text/css">
-      <script src="includes/webix/webix.js"></script>
-      <script src="skins/skin.js"></script>
-      <script src="includes/dropzone.js"></script>
+<html>
 
-      <style>
-         #uploadParent, #reuploadParent {
-             height: 200px;
-             width: 200px;
-             display: block;
-             margin: auto;
-             border: 2px dashed grey;
-         }
-      </style>
-      <style>
-         .selected button:hover {
-             background-color: #91bd49 !important;
-             border-color: #91bd49 !important;
-         }
+<head>
+    <title>{BRAND} Console - Variable Exports</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-         .selected button {
-             background-color: #91bd49 !important;
-             border-color: #91bd49 !important;
-         }
-      </style>
-      <link rel="styleSheet" href="css/webixPersonalModifications.css"/>
-      <script src="js/deletePrompt.js"></script>
-      <script src="js/variable_exports.js?v=2"></script>
-   </head>
-   <body>
+    <!-- GLOBAL console includes -->
 
-   </body>
+    <!-- 
+            Webix
+            https://blog.webix.com/using-webix-in-open-source/
+        -->
+    <link rel="stylesheet" href="https://cdn.webix.com/edge/webix.css" type="text/css">
+    <script src="https://cdn.webix.com/edge/webix.js" type="text/javascript"></script>
+    <!-- Custom skin for webix, give us a little more class -->
+    <!-- 
+        Need to regenerate, old skin generated for NOT edge repo... Wait to hear back from webix
+            <link rel="stylesheet" href="webix/skin.css" type="text/css">
+        <script src="webix/skin.js"></script>
+        -->
+    <!-- Overrides for delete behaviors and such -->
+    <link rel="styleSheet" href="webix/overrides.css" />
+
+    <!--
+            DropZone.js
+            https://github.com/enyo/dropzone/blob/master/LICENSE
+        -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/dropzone.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/dropzone.css" />
+    <link rel="stylesheet" href="css/dropzone_modifications.css" />
+
+    <!-- 
+            jQuery  3.3.1+
+            https://jquery.org/license/
+        -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+    <!-- 
+            Font Awesome 5.4.1+
+            https://fontawesome.com/license/free
+        -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" />
+    <!-- 
+            BootStrap
+            https://getbootstrap.com/docs/4.0/about/license/
+        -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+
+    <!--
+            LiveJS 4
+            http://livejs.com/license.txt
+        -->
+    <script src="http://livejs.com/live.js"></script>
+
+    <!-- -->
+    <!--
+            Helper: Light function filled lib of my own choosing.
+            I.E., simple stuff too long to repeat in native, or StackOverflow grabs.
+        -->
+    <script src="js/helper.js"></script>
+
+    <!-- PAGE specific includes -->
+    <!-- 
+            SHA-512 JS: Anonymous Contributor, Paul Johnston
+            BSD License
+        -->
+    <script src="js/sha512.js"></script>
+
+    <!-- -->
+    <!-- 
+            Fake Post: Create HTML form, fill in data from object arg, submit to URL
+        -->
+    <script src="js/classes/fake_post.js"></script>
+
+    <link rel="stylesheet" href="css/page/variable_exports.css" />
+    <script src="js/page/wb/variable_exports.js"></script>
+</head>
+
+<body>
+</body>
+
 </html>
