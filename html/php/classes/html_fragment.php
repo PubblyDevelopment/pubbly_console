@@ -43,7 +43,7 @@ class Html_fragment {
 
     private function addDefaultSwaps() {
         // SHOULD be in config.php
-        $brand = (defined(BRAND)) ? BRAND : "";
+        $brand = (defined("BRAND")) ? BRAND : "";
         array_push($this->swaps, ["BRAND", $brand]);
     }
 
