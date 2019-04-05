@@ -263,6 +263,7 @@ $(document).ready(function () {
                             $$('uploadBookCont').expand();
                             $$('uploadBook').enable();
                             $$('uploadBook').data.upload = "ajax/upload/uploadBook.php?bookName=" + requestName;
+
                         } else {
                             console.error(ret);
                         }
@@ -501,16 +502,6 @@ $(document).ready(function () {
                                                         ]
                                                     }
                                                 },
-                                                {
-                                                    header: "Reupload parent", id: "reuploadParentDZ", height: 260, collapsed: false,
-                                                    body: {
-                                                        id: "reuploadParent",
-                                                        template: '<form action="ajax/upload/uploadBook.php" class="dropzone" id="reuploadParent"><div class="dz-message" data-dz-message><span>Upload Zip file</span></div></form>',
-                                                        gravity: 1,
-                                                        minHeight: 220,
-                                                    },
-                                                },
-                                                { height: 10, },
                                             ]
                                         },
                                         { gravity: 1 },

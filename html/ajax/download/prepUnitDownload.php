@@ -20,7 +20,6 @@ if (loginCheck()) {
     $zip->open("$name.zip", ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
     // Create recursive directory iterator
-    /** @var SplFileInfo[] $files */
     $files = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($rootPath), RecursiveIteratorIterator::LEAVES_ONLY
     );

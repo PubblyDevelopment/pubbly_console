@@ -9,7 +9,7 @@ function wb_build() {
                     {},
                     {
                         view: "label",
-                        template: "<p class='toolbarCenterLabel'>Console Login</p>"
+                        template: "<p class='toolbarCenterLabel text-center m-0' style='font-size:19;line-height:42px'>Console Login</p>"
                     },
                     {}
                 ]

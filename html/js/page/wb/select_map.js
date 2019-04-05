@@ -38,11 +38,11 @@ let selectMap = {
                 editable: true,
                 scroll: false,
                 columns: [
-                    {id: "map_id", header: "ID", width: 50, editor: false},
-                    {id: "name", header: "Name", width: 200, editor: "text", },
-                    {id: "unit_count", header: "Unit count", width: 100, editor: false, },
-                    {id: "status", header: "Status", width: 100, editor: false},
-                    {id: "modified", header: "Modified", width: 100, editor: false},
+                    { id: "map_id", header: "ID", width: 50, editor: false },
+                    { id: "name", header: "Name", width: 200, editor: "text", },
+                    { id: "unit_count", header: "Unit count", width: 100, editor: false, },
+                    { id: "status", header: "Status", width: 100, editor: false },
+                    { id: "modified", header: "Modified", width: 100, editor: false },
                 ],
                 url: "php/ajax/getMaps.php",
                 on: {
@@ -51,20 +51,20 @@ let selectMap = {
                         if (state.value !== state.old) {
                             // editor.column is name or longname
                             $.ajax("ajax/rename/renameSchool.php?oldName=" + state.old + "&newName=" + state.value).done(
-                                    function (ret) {
-                                        if (ret == "done") {
-                                            webix.message("Changes to " + editor.column + " saved.");
-                                        } else if (ret == "taken") {
-                                            var sel = THIS.getSelectedId();
-                                            var row = THIS.getItem(sel.row);
-                                            row.name = state.old;
-                                            THIS.updateItem(sel.row, row);
-                                            THIS.refresh();
-                                            webix.message("Name already taken! Rename to something else.");
-                                        } else {
-                                            document.body.innerHTML = ret;
-                                        }
+                                function (ret) {
+                                    if (ret == "done") {
+                                        webix.message("Changes to " + editor.column + " saved.");
+                                    } else if (ret == "taken") {
+                                        var sel = THIS.getSelectedId();
+                                        var row = THIS.getItem(sel.row);
+                                        row.name = state.old;
+                                        THIS.updateItem(sel.row, row);
+                                        THIS.refresh();
+                                        webix.message("Name already taken! Rename to something else.");
+                                    } else {
+                                        document.body.innerHTML = ret;
                                     }
+                                }
                             );
                         }
                     },
@@ -77,7 +77,7 @@ let selectMap = {
                     },
                 }
             },
-            {height: 20},
+            { height: 20 },
         ],
     },
 };
@@ -87,7 +87,8 @@ let actionBar = {
         {
             rows: [
                 {},
-                {view: "button", label: "New",
+                {
+                    view: "button", label: "New",
                     on: {
                         onItemClick: function () {
                             let newName = window.prompt("Enter a name");
@@ -100,7 +101,8 @@ let actionBar = {
                     },
                 },
                 {},
-                {id: "editMap", view: "button", label: "Edit",
+                {
+                    id: "editMap", view: "button", label: "Edit",
                     disabled: true, on: {
                         onItemClick: function () {
                             window.location.href = "edit_map.php?mapName=" + btoa(window.selectedMapName);
@@ -108,7 +110,8 @@ let actionBar = {
                     }
                 },
                 {},
-                {view: "button", label: "Rename", on: {
+                {
+                    view: "button", label: "Rename", on: {
                         onItemClick: function () {
                             let newName = window.prompt("Enter a name");
                             if (selectedMapName && newName) {
@@ -118,9 +121,11 @@ let actionBar = {
                                 });
                             }
                         }
-                    }, },
+                    },
+                },
                 {},
-                {view: "button", label: "Delete", css: "delete",
+                {
+                    view: "button", label: "Delete", css: "delete",
                     on: {
                         onItemClick: function () {
                             if (selectedMapName && window.confirm("You sure?")) {
@@ -142,7 +147,8 @@ let actionBar = {
             rows: [
                 {
                     rows: [
-                        {id: "export_server", view: "button", label: "View Server",
+                        {
+                            id: "export_server", view: "button", label: "View Server",
                             disabled: true, on: {
                                 onItemClick: function () {
                                     window.location.href = "read.php?engineCode=new&t=m&mn=" + window.selectedMapName
@@ -166,20 +172,33 @@ let actionBar = {
                         },
                     ]
                 },
-                {gravity: 0.2},
+                { gravity: 0.2 },
                 {
                     rows: [
-                        {id: "export_zip", view: "button", label: "Export Offline ZIP",
+                        {
+                            id: "export_zip", view: "button", label: "Export for market",
                             disabled: false, on: {
                                 onItemClick: function () {
-                                    new fake_post("py/exportZipFromMapName.cgi", {
-                                        mapName: window.selectedMapName,
-                                        // Anything else you want to post in here, comma delimited.
-                                    });
+                                    $.ajax("ajax/download/prepMapDownload.php?type=market&mapName=" + window.selectedMapName).done(
+                                        function (ret) {
+                                            try {
+                                                ret = JSON.parse(ret);
+                                                if (ret.status === "success") {
+                                                    window.location.href = ret.url;
+                                                }   else    {
+                                                    webix.message("Error: " + ret.message);
+
+                                                }
+                                            } catch (err) {
+                                                document.body.innerHTML = ret;
+                                            }
+                                        }
+                                    );
                                 }
                             }
                         },
-                        {id: "view_zip", hidden: true, view: "button", label: "Download Offline ZIP",
+                        {
+                            id: "view_zip", hidden: true, view: "button", label: "Download Offline ZIP",
                             disabled: true, on: {
                                 onItemClick: function () {
                                     window.location.href = "map/" + window.selectedMapName + "/offline.zip";
@@ -203,17 +222,19 @@ let actionBar = {
                         },
                     ]
                 },
-                {gravity: 0.2},
+                { gravity: 0.2 },
                 {
                     rows: [
-                        {id: "export_apk", view: "button", label: "Export APK",
+                        {
+                            id: "export_apk", view: "button", label: "Export APK",
                             disabled: true, on: {
                                 onItemClick: function () {
                                     window.location.href = "export_map_apk.php?mapName=" + btoa(window.selectedMapName);
                                 }
                             }
                         },
-                        {id: "view_apk", hidden: true, view: "button", label: "Download APK",
+                        {
+                            id: "view_apk", hidden: true, view: "button", label: "Download APK",
                             disabled: true, on: {
                                 onItemClick: function () {
                                     window.location.href = "map/" + window.selectedMapName + "/apk/development.apk";

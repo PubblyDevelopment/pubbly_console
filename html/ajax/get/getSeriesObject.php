@@ -301,7 +301,7 @@ function getNotes($seriesName, $childName, $page, $src) {
     $ret = [];
     if ($con) {
         $sql = $con->mysqli;
-        $stmt = $sql->prepare("SELECT noteType, noteAct FROM childassetnotes WHERE refSeries = ? AND refBook = ? AND refPage = ? AND originalAssetName = ?");
+        $stmt = $sql->prepare("SELECT noteType, noteAct FROM childAssetNotes WHERE refSeries = ? AND refBook = ? AND refPage = ? AND originalAssetName = ?");
         $stmt->bind_param('ssss', $seriesName, $childName, $page, $src);
         $stmt->execute();
         if ($result = $stmt->get_result()) {

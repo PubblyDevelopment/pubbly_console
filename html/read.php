@@ -1,5 +1,5 @@
 <?php
-
+require("config.php");
 $types = [
     "b" => "book",
     "p" => "parent",
