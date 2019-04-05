@@ -25,4 +25,5 @@ html/download/*
 !*/*/*/.gitkeep
 desktop.ini
 .sass-cache
+.vscode
 *.swp
