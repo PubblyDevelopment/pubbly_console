@@ -40,21 +40,27 @@ class Html_fragment {
         $commentSwaps .= "-->";
         return $commentLoc . $commentSwaps;
     }
-    
+
+    private function addDefaultSwaps() {
+        // SHOULD be in config.php
+        $brand = (defined(BRAND)) ? BRAND : "";
+        array_push($this->swaps, ["BRAND", $brand]);
+    }
+
     public function echoOut() {
         echo $this->html;
     }
-    
+
     public function printOut($where) {
         file_put_contents($where, $this->html);
     }
-    
+
     function __construct($fsLoc, $swaps) {
         $this->fsLoc = $fsLoc;
         $this->swaps = $swaps;
         // Load HTML file passed through
         if (file_exists($fsLoc)) {
-
+            $this->addDefaultSwaps();
             $comments = $this->genComments();
             $htmlText = $this->genSwappedHTML();
             $this->html = $comments . $htmlText;
