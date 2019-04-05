@@ -1,4 +1,7 @@
 <?php
+
+ini_set('max_execution_time', 900); // 15 minutes
+
 chdir("../../");
 require_once("config.php");
 require_once(INC_ROOT . "/dbConnect.php");
