@@ -1,4 +1,9 @@
 <?php
+
+echo "Registration closed.";
+echo "</br>If you're interested in your own console, here's the source. Jeeze."
+echo "</br>https://github.com/PubblyDevelopment";
+/*
 require_once("../../config.php");
 
 
@@ -80,3 +85,4 @@ if (isset($_POST['username']) && isset($_POST['email']) && isset($_POST['p']) &&
 }
 
 ?>
+*/

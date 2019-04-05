@@ -164,7 +164,7 @@ $(document).ready(function () {
     webix.ui({
         container: "importMapNodesButtonContainer",
         id: "mapNodePopulater",
-        width:300,
+        width:450,
         height:"100%",
         rows: [
             {

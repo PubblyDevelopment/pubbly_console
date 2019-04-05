@@ -102,6 +102,16 @@
                  {width: 80},
              ]
          };
+	var block = {
+		rows: [
+			header,
+			{},
+			{
+				view: "template", height:300, template: "<div style='width:300px;display:block;margin:auto;'><h2>Registration closed, internal pubbly use only.</h2><p>If you want your own console, host it yourself. Source: https://github.com/PubblyDevelopment</p></div>"
+			},
+			{},
+		]
+	};
          var loginCont = {
              type: "space",
              rows: [
@@ -217,7 +227,8 @@
              ],
          };
          webix.ui(
-                 loginCont
+		block
+                 // loginCont
                  );
          function checkUsername(which, callback) {
              $.ajax({
