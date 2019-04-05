@@ -1,0 +1,1106 @@
+{
+    "view": "scrollview",
+    "body": {
+        "type": "space",
+        "rows": [
+            {
+                "view": "toolbar",
+                "height": 55,
+                "autoWidth": true,
+                "cols": [
+                    {
+                        "view": "button",
+                        "value": "Home",
+                        "width": 80,
+                        "on": {}
+                    },
+                    {
+                        "view": "button",
+                        "value": "Series Select",
+                        "width": 80,
+                        "on": {}
+                    },
+                    {
+                        "view": "label",
+                        "template": "<p class='toolbarCenterLabel'>Swap App</p>"
+                    },
+                    {
+                        "width": 80
+                    },
+                    {
+                        "view": "button",
+                        "value": "Logout",
+                        "width": 80,
+                        "on": {}
+                    }
+                ]
+            },
+            {
+                "type": "space",
+                "height": 5,
+                "template": "<hr>"
+            },
+            {
+                "id": "chooseProject",
+                "type": "line",
+                "css": "main",
+                "cols": [
+                    {
+                        "borderless": true,
+                        "view": "tabview",
+                        "autoheight": true,
+                        "width": 200,
+                        "css": "parentTabMainCon",
+                        "cells": [
+                            {
+                                "header": "Parent",
+                                "body": {
+                                    "rows": [
+                                        {
+                                            "height": 5
+                                        },
+                                        {
+                                            "cols": [
+                                                {
+                                                    "width": 10
+                                                },
+                                                {
+                                                    "view": "toolbar",
+                                                    "css": "ParentChildToolbar",
+                                                    "border": 2,
+                                                    "cols": [
+                                                        {
+                                                            "width": 10
+                                                        },
+                                                        {
+                                                            "view": "button",
+                                                            "value": "Download parent",
+                                                            "width": 150,
+                                                            "align": "center",
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "width": 10
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "width": 10
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "height": 5
+                                        },
+                                        {
+                                            "height": 30,
+                                            "template": "<p style='text-align:center'>test_series_2</p>"
+                                        },
+                                        {
+                                            "height": 5
+                                        },
+                                        {
+                                            "template": "Page 1",
+                                            "type": "header"
+                                        },
+                                        {
+                                            "id": "parent_page_1",
+                                            "rows": [
+                                                {
+                                                    "cols": [
+                                                        {
+                                                            "height": 100,
+                                                            "disabled": true,
+                                                            "gravity": 1,
+                                                            "id": "book_parent_page_1_src_P_firstTimeHint.png_btn",
+                                                            "view": "button",
+                                                            "value": "P_firstTimeHint.png"
+                                                        },
+                                                        {
+                                                            "data": [
+                                                                {
+                                                                    "img": "<div class='imageCont'><span class='helper'></span><img src='series/test_series_2/images/P_firstTimeHint.png' class='preview' /></div>"
+                                                                }
+                                                            ],
+                                                            "gravity": 1,
+                                                            "id": "book_parent_page_1_src_P_firstTimeHint.png_img",
+                                                            "scroll": false,
+                                                            "select": false,
+                                                            "template": "#img#",
+                                                            "type": {
+                                                                "height": 100
+                                                            },
+                                                            "view": "list"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "cols": [
+                                                        {
+                                                            "height": 100,
+                                                            "disabled": true,
+                                                            "gravity": 1,
+                                                            "id": "book_parent_page_1_src_Field 1_btn",
+                                                            "view": "button",
+                                                            "value": "Field 1"
+                                                        },
+                                                        {
+                                                            "view": "textarea",
+                                                            "value": "Welcome to Pubbly"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "cols": [
+                                                        {
+                                                            "height": 100,
+                                                            "disabled": true,
+                                                            "gravity": 1,
+                                                            "id": "book_parent_page_1_src_P_girl_tada_btn",
+                                                            "view": "button",
+                                                            "value": "P_girl_tada"
+                                                        },
+                                                        {
+                                                            "disabled": false,
+                                                            "gravity": 1,
+                                                            "id": "book_parent_page_1_src_P_girl_tada_aud",
+                                                            "value": "P_girl_tada",
+                                                            "view": "button",
+                                                            "on": {}
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "template": "Page 2",
+                                            "type": "header"
+                                        },
+                                        {
+                                            "id": "parent_page_2",
+                                            "rows": []
+                                        },
+                                        {
+                                            "template": "Page 3",
+                                            "type": "header"
+                                        },
+                                        {
+                                            "id": "parent_page_3",
+                                            "rows": []
+                                        }
+                                    ],
+                                    "keys": {
+                                        "1": 6,
+                                        "2": 8,
+                                        "3": 10
+                                    },
+                                    "id": "undefined_tab"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "view": "resizer"
+                    },
+                    {
+                        "borderless": true,
+                        "view": "tabview",
+                        "tabbar": {
+                            "tabOffset": 10
+                        },
+                        "id": "childTabMainCon",
+                        "css": "childTabMainCon",
+                        "autoheight": true,
+                        "cells": [
+                            {
+                                "body": {
+                                    "rows": [
+                                        {
+                                            "rows": [
+                                                {
+                                                    "height": 5
+                                                },
+                                                {
+                                                    "cols": [
+                                                        {
+                                                            "width": 10
+                                                        },
+                                                        {
+                                                            "view": "toolbar",
+                                                            "css": "ParentChildToolbar",
+                                                            "cols": [
+                                                                {
+                                                                    "view": "button",
+                                                                    "value": "View",
+                                                                    "width": 80,
+                                                                    "on": {}
+                                                                },
+                                                                {},
+                                                                {
+                                                                    "view": "button",
+                                                                    "value": "Delete",
+                                                                    "width": 80,
+                                                                    "css": "delete",
+                                                                    "on": {}
+                                                                },
+                                                                {},
+                                                                {
+                                                                    "view": "button",
+                                                                    "value": "Lock",
+                                                                    "width": 80,
+                                                                    "on": {}
+                                                                },
+                                                                {},
+                                                                {
+                                                                    "view": "select",
+                                                                    "value": "Progress",
+                                                                    "width": 140,
+                                                                    "options": [
+                                                                        "Progress",
+                                                                        "Complete",
+                                                                        "Missing"
+                                                                    ],
+                                                                    "on": {}
+                                                                },
+                                                                {},
+                                                                {
+                                                                    "view": "button",
+                                                                    "value": "New",
+                                                                    "width": 80,
+                                                                    "on": {}
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "width": 10
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "height": 5
+                                                },
+                                                {
+                                                    "height": 30,
+                                                    "template": "<p style='text-align:center'>first</p>"
+                                                },
+                                                {
+                                                    "height": 5
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "template": "Page 1",
+                                            "type": "header"
+                                        },
+                                        {
+                                            "id": "first_page_1",
+                                            "disabled": 0,
+                                            "rows": [
+                                                {
+                                                    "cols": [
+                                                        {
+                                                            "height": 100,
+                                                            "disabled": false,
+                                                            "gravity": 1,
+                                                            "id": "book_first_page_1_src_P_firstTimeHint.png_btn",
+                                                            "view": "button",
+                                                            "value": "Download",
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "data": [
+                                                                {
+                                                                    "img": "<div class='imageCont'><span class='helper'></span><img src='series/test_series_2/images/P_firstTimeHint.png' class='preview' /></div>"
+                                                                }
+                                                            ],
+                                                            "gravity": 1,
+                                                            "id": "book_first_page_1_src_P_firstTimeHint.png_img",
+                                                            "scroll": false,
+                                                            "select": false,
+                                                            "template": "#img#",
+                                                            "type": {
+                                                                "height": 100
+                                                            },
+                                                            "view": "list"
+                                                        },
+                                                        {
+                                                            "id": "book_first_page_1_src_P_firstTimeHint.png_placeholder",
+                                                            "placeholder": "Placeholder",
+                                                            "css": "assetPlaceholder",
+                                                            "view": "textarea",
+                                                            "gravity": 1,
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "id": "book_first_page_1_src_P_firstTimeHint.png_note",
+                                                            "placeholder": "Note",
+                                                            "css": "assetNote",
+                                                            "view": "textarea",
+                                                            "gravity": 1,
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "gravity": 2,
+                                                            "id": "book_first_page_1_src_P_firstTimeHint.png_lnk",
+                                                            "minWidth": 260,
+                                                            "scroll": false,
+                                                            "type": "uploader",
+                                                            "view": "list"
+                                                        },
+                                                        {
+                                                            "width": 50,
+                                                            "view": "button",
+                                                            "value": "size",
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "template": "<h2 class=rowNum>1</h2>",
+                                                            "width": 55,
+                                                            "height": 90
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "cols": [
+                                                        {
+                                                            "height": 100,
+                                                            "disabled": true,
+                                                            "gravity": 2,
+                                                            "id": "book_first_page_1_src_Field 1_btn",
+                                                            "view": "button",
+                                                            "value": "Field 1"
+                                                        },
+                                                        {
+                                                            "id": "book_first_page_1_src_Field 1_placeholder",
+                                                            "placeholder": "Placeholder",
+                                                            "css": "assetPlaceholder",
+                                                            "view": "textarea",
+                                                            "gravity": 1,
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "id": "book_first_page_1_src_Field 1_note",
+                                                            "placeholder": "Note",
+                                                            "css": "assetNote",
+                                                            "view": "textarea",
+                                                            "gravity": 1,
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "view": "textarea",
+                                                            "css": "align-center",
+                                                            "value": "Welcome to Pubbly",
+                                                            "gravity": 2,
+                                                            "minWidth": 260,
+                                                            "id": "book_first_page_1_src_Field 1_textarea",
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "width": 50,
+                                                            "view": "button",
+                                                            "value": "center",
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "template": "<h2 class=rowNum>2</h2>",
+                                                            "width": 55,
+                                                            "height": 90
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "cols": [
+                                                        {
+                                                            "height": 100,
+                                                            "disabled": false,
+                                                            "gravity": 1,
+                                                            "id": "book_first_page_1_src_P_girl_tada_btn",
+                                                            "view": "button",
+                                                            "value": "Download",
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "disabled": false,
+                                                            "gravity": 1,
+                                                            "id": "book_first_page_1_src_P_girl_tada_aud",
+                                                            "value": "P_girl_tada",
+                                                            "view": "button",
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "id": "book_first_page_1_src_P_girl_tada_placeholder",
+                                                            "placeholder": "Placeholder",
+                                                            "css": "assetPlaceholder",
+                                                            "view": "textarea",
+                                                            "gravity": 1,
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "id": "book_first_page_1_src_P_girl_tada_note",
+                                                            "placeholder": "Note",
+                                                            "css": "assetNote",
+                                                            "view": "textarea",
+                                                            "gravity": 1,
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "gravity": 2,
+                                                            "id": "book_first_page_1_src_P_girl_tada_lnk",
+                                                            "minWidth": 260,
+                                                            "scroll": false,
+                                                            "type": "uploader",
+                                                            "view": "list"
+                                                        },
+                                                        {
+                                                            "rows": [
+                                                                {
+                                                                    "view": "button",
+                                                                    "width": 50,
+                                                                    "height": 50,
+                                                                    "value": "+",
+                                                                    "on": {}
+                                                                },
+                                                                {},
+                                                                {
+                                                                    "view": "button",
+                                                                    "width": 50,
+                                                                    "height": 50,
+                                                                    "value": "-",
+                                                                    "on": {}
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "template": "<h2 class=rowNum>3</h2>",
+                                                            "width": 55,
+                                                            "height": 90
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "template": "Page 2",
+                                            "type": "header"
+                                        },
+                                        {
+                                            "id": "first_page_2",
+                                            "disabled": 0,
+                                            "rows": []
+                                        },
+                                        {
+                                            "template": "Page 3",
+                                            "type": "header"
+                                        },
+                                        {
+                                            "id": "first_page_3",
+                                            "disabled": 0,
+                                            "rows": []
+                                        }
+                                    ],
+                                    "keys": {
+                                        "1": 2,
+                                        "2": 4,
+                                        "3": 6
+                                    },
+                                    "id": "first_tab"
+                                },
+                                "header": "<div class='childHeaders '><b><div id='c_first_status' style='display: inline-block;width:100%;'><p style='padding-top:7px'><span class=\"statuses progress\">&#x21BB;</span><span class=\"statuses complete\">&#x2714;</span><span class=\"statuses missing\">&#x2716;</span><span class=\"childName\" style=\"color:black;\">first</span></p> </div></b></div>"
+                            },
+                            {
+                                "body": {
+                                    "rows": [
+                                        {
+                                            "rows": [
+                                                {
+                                                    "height": 5
+                                                },
+                                                {
+                                                    "cols": [
+                                                        {
+                                                            "width": 10
+                                                        },
+                                                        {
+                                                            "view": "toolbar",
+                                                            "css": "ParentChildToolbar",
+                                                            "cols": [
+                                                                {
+                                                                    "view": "button",
+                                                                    "value": "View",
+                                                                    "width": 80,
+                                                                    "on": {}
+                                                                },
+                                                                {},
+                                                                {
+                                                                    "view": "button",
+                                                                    "value": "Delete",
+                                                                    "width": 80,
+                                                                    "css": "delete",
+                                                                    "on": {}
+                                                                },
+                                                                {},
+                                                                {
+                                                                    "view": "button",
+                                                                    "value": "Lock",
+                                                                    "width": 80,
+                                                                    "on": {}
+                                                                },
+                                                                {},
+                                                                {
+                                                                    "view": "select",
+                                                                    "value": "Progress",
+                                                                    "width": 140,
+                                                                    "options": [
+                                                                        "Progress",
+                                                                        "Complete",
+                                                                        "Missing"
+                                                                    ],
+                                                                    "on": {}
+                                                                },
+                                                                {},
+                                                                {
+                                                                    "view": "button",
+                                                                    "value": "New",
+                                                                    "width": 80,
+                                                                    "on": {}
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "width": 10
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "height": 5
+                                                },
+                                                {
+                                                    "height": 30,
+                                                    "template": "<p style='text-align:center'>second</p>"
+                                                },
+                                                {
+                                                    "height": 5
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "template": "Page 1",
+                                            "type": "header"
+                                        },
+                                        {
+                                            "id": "second_page_1",
+                                            "disabled": 0,
+                                            "rows": [
+                                                {
+                                                    "cols": [
+                                                        {
+                                                            "height": 100,
+                                                            "disabled": false,
+                                                            "gravity": 1,
+                                                            "id": "book_second_page_1_src_P_firstTimeHint.png_btn",
+                                                            "view": "button",
+                                                            "value": "Download",
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "data": [
+                                                                {
+                                                                    "img": "<div class='imageCont'><span class='helper'></span><img src='series/test_series_2/images/P_firstTimeHint.png' class='preview' /></div>"
+                                                                }
+                                                            ],
+                                                            "gravity": 1,
+                                                            "id": "book_second_page_1_src_P_firstTimeHint.png_img",
+                                                            "scroll": false,
+                                                            "select": false,
+                                                            "template": "#img#",
+                                                            "type": {
+                                                                "height": 100
+                                                            },
+                                                            "view": "list"
+                                                        },
+                                                        {
+                                                            "id": "book_second_page_1_src_P_firstTimeHint.png_placeholder",
+                                                            "placeholder": "Placeholder",
+                                                            "css": "assetPlaceholder",
+                                                            "view": "textarea",
+                                                            "gravity": 1,
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "id": "book_second_page_1_src_P_firstTimeHint.png_note",
+                                                            "placeholder": "Note",
+                                                            "css": "assetNote",
+                                                            "view": "textarea",
+                                                            "gravity": 1,
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "gravity": 2,
+                                                            "id": "book_second_page_1_src_P_firstTimeHint.png_lnk",
+                                                            "minWidth": 260,
+                                                            "scroll": false,
+                                                            "type": "uploader",
+                                                            "view": "list"
+                                                        },
+                                                        {
+                                                            "width": 50,
+                                                            "view": "button",
+                                                            "value": "size",
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "template": "<h2 class=rowNum>1</h2>",
+                                                            "width": 55,
+                                                            "height": 90
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "cols": [
+                                                        {
+                                                            "height": 100,
+                                                            "disabled": true,
+                                                            "gravity": 2,
+                                                            "id": "book_second_page_1_src_Field 1_btn",
+                                                            "view": "button",
+                                                            "value": "Field 1"
+                                                        },
+                                                        {
+                                                            "id": "book_second_page_1_src_Field 1_placeholder",
+                                                            "placeholder": "Placeholder",
+                                                            "css": "assetPlaceholder",
+                                                            "view": "textarea",
+                                                            "gravity": 1,
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "id": "book_second_page_1_src_Field 1_note",
+                                                            "placeholder": "Note",
+                                                            "css": "assetNote",
+                                                            "view": "textarea",
+                                                            "gravity": 1,
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "view": "textarea",
+                                                            "css": "align-center",
+                                                            "value": "Welcome to Pubbly",
+                                                            "gravity": 2,
+                                                            "minWidth": 260,
+                                                            "id": "book_second_page_1_src_Field 1_textarea",
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "width": 50,
+                                                            "view": "button",
+                                                            "value": "center",
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "template": "<h2 class=rowNum>2</h2>",
+                                                            "width": 55,
+                                                            "height": 90
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "cols": [
+                                                        {
+                                                            "height": 100,
+                                                            "disabled": false,
+                                                            "gravity": 1,
+                                                            "id": "book_second_page_1_src_P_girl_tada_btn",
+                                                            "view": "button",
+                                                            "value": "Download",
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "disabled": false,
+                                                            "gravity": 1,
+                                                            "id": "book_second_page_1_src_P_girl_tada_aud",
+                                                            "value": "P_girl_tada",
+                                                            "view": "button",
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "id": "book_second_page_1_src_P_girl_tada_placeholder",
+                                                            "placeholder": "Placeholder",
+                                                            "css": "assetPlaceholder",
+                                                            "view": "textarea",
+                                                            "gravity": 1,
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "id": "book_second_page_1_src_P_girl_tada_note",
+                                                            "placeholder": "Note",
+                                                            "css": "assetNote",
+                                                            "view": "textarea",
+                                                            "gravity": 1,
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "gravity": 2,
+                                                            "id": "book_second_page_1_src_P_girl_tada_lnk",
+                                                            "minWidth": 260,
+                                                            "scroll": false,
+                                                            "type": "uploader",
+                                                            "view": "list"
+                                                        },
+                                                        {
+                                                            "rows": [
+                                                                {
+                                                                    "view": "button",
+                                                                    "width": 50,
+                                                                    "height": 50,
+                                                                    "value": "+",
+                                                                    "on": {}
+                                                                },
+                                                                {},
+                                                                {
+                                                                    "view": "button",
+                                                                    "width": 50,
+                                                                    "height": 50,
+                                                                    "value": "-",
+                                                                    "on": {}
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "template": "<h2 class=rowNum>3</h2>",
+                                                            "width": 55,
+                                                            "height": 90
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "template": "Page 2",
+                                            "type": "header"
+                                        },
+                                        {
+                                            "id": "second_page_2",
+                                            "disabled": 0,
+                                            "rows": []
+                                        },
+                                        {
+                                            "template": "Page 3",
+                                            "type": "header"
+                                        },
+                                        {
+                                            "id": "second_page_3",
+                                            "disabled": 0,
+                                            "rows": []
+                                        }
+                                    ],
+                                    "keys": {
+                                        "1": 2,
+                                        "2": 4,
+                                        "3": 6
+                                    },
+                                    "id": "second_tab"
+                                },
+                                "header": "<div class='childHeaders '><b><div id='c_second_status' style='display: inline-block;width:100%;'><p style='padding-top:7px'><span class=\"statuses progress\">&#x21BB;</span><span class=\"statuses complete\">&#x2714;</span><span class=\"statuses missing\">&#x2716;</span><span class=\"childName\" style=\"color:black;\">second</span></p> </div></b></div>"
+                            },
+                            {
+                                "body": {
+                                    "rows": [
+                                        {
+                                            "rows": [
+                                                {
+                                                    "height": 5
+                                                },
+                                                {
+                                                    "cols": [
+                                                        {
+                                                            "width": 10
+                                                        },
+                                                        {
+                                                            "view": "toolbar",
+                                                            "css": "ParentChildToolbar",
+                                                            "cols": [
+                                                                {
+                                                                    "view": "button",
+                                                                    "value": "View",
+                                                                    "width": 80,
+                                                                    "on": {}
+                                                                },
+                                                                {},
+                                                                {
+                                                                    "view": "button",
+                                                                    "value": "Delete",
+                                                                    "width": 80,
+                                                                    "css": "delete",
+                                                                    "on": {}
+                                                                },
+                                                                {},
+                                                                {
+                                                                    "view": "button",
+                                                                    "value": "Lock",
+                                                                    "width": 80,
+                                                                    "on": {}
+                                                                },
+                                                                {},
+                                                                {
+                                                                    "view": "select",
+                                                                    "value": "Progress",
+                                                                    "width": 140,
+                                                                    "options": [
+                                                                        "Progress",
+                                                                        "Complete",
+                                                                        "Missing"
+                                                                    ],
+                                                                    "on": {}
+                                                                },
+                                                                {},
+                                                                {
+                                                                    "view": "button",
+                                                                    "value": "New",
+                                                                    "width": 80,
+                                                                    "on": {}
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "width": 10
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "height": 5
+                                                },
+                                                {
+                                                    "height": 30,
+                                                    "template": "<p style='text-align:center'>third</p>"
+                                                },
+                                                {
+                                                    "height": 5
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "template": "Page 1",
+                                            "type": "header"
+                                        },
+                                        {
+                                            "id": "third_page_1",
+                                            "disabled": 0,
+                                            "rows": [
+                                                {
+                                                    "cols": [
+                                                        {
+                                                            "height": 100,
+                                                            "disabled": false,
+                                                            "gravity": 1,
+                                                            "id": "book_third_page_1_src_P_firstTimeHint.png_btn",
+                                                            "view": "button",
+                                                            "value": "Download",
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "data": [
+                                                                {
+                                                                    "img": "<div class='imageCont'><span class='helper'></span><img src='series/test_series_2/images/P_firstTimeHint.png' class='preview' /></div>"
+                                                                }
+                                                            ],
+                                                            "gravity": 1,
+                                                            "id": "book_third_page_1_src_P_firstTimeHint.png_img",
+                                                            "scroll": false,
+                                                            "select": false,
+                                                            "template": "#img#",
+                                                            "type": {
+                                                                "height": 100
+                                                            },
+                                                            "view": "list"
+                                                        },
+                                                        {
+                                                            "id": "book_third_page_1_src_P_firstTimeHint.png_placeholder",
+                                                            "placeholder": "Placeholder",
+                                                            "css": "assetPlaceholder",
+                                                            "view": "textarea",
+                                                            "gravity": 1,
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "id": "book_third_page_1_src_P_firstTimeHint.png_note",
+                                                            "placeholder": "Note",
+                                                            "css": "assetNote",
+                                                            "view": "textarea",
+                                                            "gravity": 1,
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "gravity": 2,
+                                                            "id": "book_third_page_1_src_P_firstTimeHint.png_lnk",
+                                                            "minWidth": 260,
+                                                            "scroll": false,
+                                                            "type": "uploader",
+                                                            "view": "list"
+                                                        },
+                                                        {
+                                                            "width": 50,
+                                                            "view": "button",
+                                                            "value": "size",
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "template": "<h2 class=rowNum>1</h2>",
+                                                            "width": 55,
+                                                            "height": 90
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "cols": [
+                                                        {
+                                                            "height": 100,
+                                                            "disabled": true,
+                                                            "gravity": 2,
+                                                            "id": "book_third_page_1_src_Field 1_btn",
+                                                            "view": "button",
+                                                            "value": "Field 1"
+                                                        },
+                                                        {
+                                                            "id": "book_third_page_1_src_Field 1_placeholder",
+                                                            "placeholder": "Placeholder",
+                                                            "css": "assetPlaceholder",
+                                                            "view": "textarea",
+                                                            "gravity": 1,
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "id": "book_third_page_1_src_Field 1_note",
+                                                            "placeholder": "Note",
+                                                            "css": "assetNote",
+                                                            "view": "textarea",
+                                                            "gravity": 1,
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "view": "textarea",
+                                                            "css": "align-size",
+                                                            "value": "Welcome to Pubbly",
+                                                            "gravity": 2,
+                                                            "minWidth": 260,
+                                                            "id": "book_third_page_1_src_Field 1_textarea",
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "width": 50,
+                                                            "view": "button",
+                                                            "value": "size",
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "template": "<h2 class=rowNum>2</h2>",
+                                                            "width": 55,
+                                                            "height": 90
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "cols": [
+                                                        {
+                                                            "height": 100,
+                                                            "disabled": false,
+                                                            "gravity": 1,
+                                                            "id": "book_third_page_1_src_P_girl_tada_btn",
+                                                            "view": "button",
+                                                            "value": "Download",
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "disabled": false,
+                                                            "gravity": 1,
+                                                            "id": "book_third_page_1_src_P_girl_tada_aud",
+                                                            "value": "P_girl_tada",
+                                                            "view": "button",
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "id": "book_third_page_1_src_P_girl_tada_placeholder",
+                                                            "placeholder": "Placeholder",
+                                                            "css": "assetPlaceholder",
+                                                            "view": "textarea",
+                                                            "gravity": 1,
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "id": "book_third_page_1_src_P_girl_tada_note",
+                                                            "placeholder": "Note",
+                                                            "css": "assetNote",
+                                                            "view": "textarea",
+                                                            "gravity": 1,
+                                                            "on": {}
+                                                        },
+                                                        {
+                                                            "gravity": 2,
+                                                            "id": "book_third_page_1_src_P_girl_tada_lnk",
+                                                            "minWidth": 260,
+                                                            "scroll": false,
+                                                            "type": "uploader",
+                                                            "view": "list"
+                                                        },
+                                                        {
+                                                            "rows": [
+                                                                {
+                                                                    "view": "button",
+                                                                    "width": 50,
+                                                                    "height": 50,
+                                                                    "value": "+",
+                                                                    "on": {}
+                                                                },
+                                                                {},
+                                                                {
+                                                                    "view": "button",
+                                                                    "width": 50,
+                                                                    "height": 50,
+                                                                    "value": "-",
+                                                                    "on": {}
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "template": "<h2 class=rowNum>3</h2>",
+                                                            "width": 55,
+                                                            "height": 90
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "template": "Page 2",
+                                            "type": "header"
+                                        },
+                                        {
+                                            "id": "third_page_2",
+                                            "disabled": 0,
+                                            "rows": []
+                                        },
+                                        {
+                                            "template": "Page 3",
+                                            "type": "header"
+                                        },
+                                        {
+                                            "id": "third_page_3",
+                                            "disabled": 0,
+                                            "rows": []
+                                        }
+                                    ],
+                                    "keys": {
+                                        "1": 2,
+                                        "2": 4,
+                                        "3": 6
+                                    },
+                                    "id": "third_tab"
+                                },
+                                "header": "<div class='childHeaders '><b><div id='c_third_status' style='display: inline-block;width:100%;'><p style='padding-top:7px'><span class=\"statuses progress\">&#x21BB;</span><span class=\"statuses complete\">&#x2714;</span><span class=\"statuses missing\">&#x2716;</span><span class=\"childName\" style=\"color:black;\">third</span></p> </div></b></div>"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

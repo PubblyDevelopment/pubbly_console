@@ -1,4 +1,61 @@
 $(document).ready(function () {
+    $.ajax({
+        url: "ajax/get/getSeriesObject.php",
+        data: { "seriesName": seriesName },
+        success: function (data) {
+            var newData = false;
+            try {
+                newData = jQuery.parseJSON(data);
+            } catch (e) {
+                document.body.innerHTML = data;
+            }
+
+            if (newData.children.length == 0) {
+                for (var p = 0; p < newData.parent.pages.length; p++) {
+                    createPage(newData.parent.name, p + 1, true);
+                    for (var a = 0; a < newData.parent.pages[p].length; a++) {
+                        var asset = newData.parent.pages[p][a];
+                        createRow(newData.parent.name.name, p + 1, asset, true, a);
+                    }
+                }
+                delete elem.cols[0].width;
+
+                var tab = {};
+                tab.view = "tabview";
+                tab.cells = [];
+                tab.cells.push({
+                    header: "No children",
+                    rows: [
+                        { height: 10, },
+                        {
+                            cols: [
+                                {
+                                    view: "button", value: "New", inputWidth: 150, align: 'center', on: {
+                                        onItemClick: function () {
+                                            var name = window.prompt("Enter a child book name.");
+                                            if (name) {
+                                                createChild(name);
+                                            }
+                                        }
+                                    }
+                                },
+                            ]
+                        },
+                        { height: 10, },
+                    ]
+                });
+
+
+                elem.cols[0].gravity = 1;
+                elem.cols[2] = tab;
+                var final = finalPrep(elem);
+                webix.ui(final);
+            } else {
+                ready(newData);
+            }
+
+        }
+    });
 
     function getQueryVariable(variable) {
         var query = window.location.search.substring(1);
@@ -58,7 +115,7 @@ $(document).ready(function () {
             window.audioPlayers[i].src = "series/" + window.seriesName + "/audio/" + src + "." + ext + "?" + Math.random();;
             window.audioPlayers[i].play();
         }
-        
+
     }
     function setNoteAjax(series, child, page, assetSrc, type, val) {
         var dataObj = {};
@@ -131,7 +188,7 @@ $(document).ready(function () {
                 view: "label",
                 template: "<p class='toolbarCenterLabel'>Swap App</p>"
             },
-            {width: 80, },
+            { width: 80, },
             {
                 view: "button", value: "Logout", width: 80, on: {
                     onItemClick: function () {
@@ -151,7 +208,6 @@ $(document).ready(function () {
     var elem = {
         id: "chooseProject",
         type: "line",
-        width: "100%",
         css: "main",
         cols: [
             {
@@ -166,16 +222,16 @@ $(document).ready(function () {
                         header: "Parent",
                         body: {
                             rows: [
-                                {height: 5, },
+                                { height: 5, },
                                 {
                                     cols: [
-                                        {width: 10, },
+                                        { width: 10, },
                                         {
                                             view: "toolbar",
                                             css: "ParentChildToolbar",
                                             border: 2,
                                             cols: [
-                                                {width: 10, },
+                                                { width: 10, },
                                                 {
                                                     view: "button",
                                                     value: "Download parent",
@@ -187,15 +243,15 @@ $(document).ready(function () {
                                                         }
                                                     },
                                                 },
-                                                {width: 10, },
+                                                { width: 10, },
                                             ],
                                         },
-                                        {width: 10, },
+                                        { width: 10, },
                                     ]
                                 },
-                                {height: 5, },
-                                {height: 30, template: "<p style='text-align:center'>" + seriesName + "</p>"},
-                                {height: 5, },
+                                { height: 5, },
+                                { height: 30, template: "<p style='text-align:center'>" + seriesName + "</p>" },
+                                { height: 5, },
                             ]
                         }
                     }
@@ -214,234 +270,19 @@ $(document).ready(function () {
                 id: "childTabMainCon",
                 css: "childTabMainCon",
                 autoheight: true,
-                width: "100%",
                 cells: [],
             },
         ]
     };
 
-// ABSOLUTELY NEED THIS, can't figure out how to stick it in the original elem declaration.
-// Keys for parent
+    // ABSOLUTELY NEED THIS, can't figure out how to stick it in the original elem declaration.
+    // Keys for parent
     elem.cols[0].cells[0].body.keys = {};
-// Keys for children
+    // Keys for children
     elem.cols[2].cells.key = {};
 
-    function getProjects(callback) {
-        var dataObj = {};
-        dataObj.seriesName = seriesName;
-        $.ajax({
-            url: "ajax/get/getSeriesObject.php",
-            data: dataObj,
-            success: function (data) {
-                var newData = false;
-                try {
-                    newData = jQuery.parseJSON(data);
-                } catch (e) {
-                    document.body.innerHTML = data;
-                }
-                /*
-                 
-                 data = {};
-                 
-                 var parent = {};
-                 parent.name = "Apples";
-                 parent.num = 1;
-                 parent.pages = [];
-                 
-                 var asset1 = {};
-                 asset1.type = "image";
-                 asset1.originalAsset = "P_apple.jpg";
-                 asset1.newAsset = "P_apple.jpg";
-                 asset1.note = "Target fruit of the book";
-                 asset1.placeholder = "pic of apple";
-                 
-                 var asset2 = {};
-                 asset2.type = "audio";
-                 asset2.originalAsset = "P_apple.mp3";
-                 asset2.newAsset = "P_apple.mp3";
-                 asset2.note = "Aud of target fruit";
-                 asset2.placeholder = '"Apple" spoken';
-                 
-                 var page1 = [];
-                 page1.push(asset1);
-                 page1.push(asset2);
-                 
-                 parent.pages.push(page1);
-                 data.parent = parent;
-                 
-                 
-                 data.children = [];
-                 
-                 var child1 = {};
-                 child1.name = "Apples";
-                 child1.num = 1;
-                 child1.pages = [];
-                 
-                 var asset1 = {};
-                 asset1.type = "image";
-                 asset1.originalAsset = "P_apple.jpg";
-                 asset1.newAsset = "P_apple.jpg";
-                 asset1.note = "Target fruit of the book";
-                 asset1.placeholder = "pic of apple";
-                 
-                 var asset2 = {};
-                 asset2.type = "audio";
-                 asset2.originalAsset = "P_apple.mp3";
-                 asset2.newAsset = "P_apple.mp3";
-                 asset2.note = "Aud of target fruit";
-                 asset2.placeholder = '"Apple" spoken';
-                 
-                 var page1 = [];
-                 page1.push(asset1);
-                 page1.push(asset2);
-                 
-                 
-                 child1.pages.push(page1);
-                 data.children.push(child1);
-                 
-                 
-                 var child2 = {};
-                 child2.name = "Banana";
-                 child2.num = 2;
-                 child2.pages = [];
-                 
-                 var asset1 = {};
-                 asset1.type = "image";
-                 asset1.originalAsset = "P_apple.png";
-                 asset1.newAsset = "C2_banana.png";
-                 asset1.note = "Target fruit of the book";
-                 asset1.placeholder = "pic of banana";
-                 
-                 var asset2 = {};
-                 asset2.type = "audio";
-                 asset2.originalAsset = "P_apple.mp3";
-                 asset2.newAsset = "C2_banana.mp3";
-                 asset2.note = "Aud of target fruit";
-                 asset2.placeholder = '"Banana" spoken';
-                 
-                 var page1 = [];
-                 page1.push(asset1);
-                 page1.push(asset2);
-                 
-                 child2.pages.push(page1);
-                 data.children.push(child2);
-                 
-                 console.log(data);
-                 */
-                if (newData.children.length == 0) {
-                    for (var p = 0; p < newData.parent.pages.length; p++) {
-                        createPage(newData.parent.name, p + 1, true);
-                        for (var a = 0; a < newData.parent.pages[p].length; a++) {
-                            var asset = newData.parent.pages[p][a];
-                            createRow(newData.parent.name.name, p + 1, asset, true, a);
-                        }
-                    }
-                    delete elem.cols[0].width;
-
-                    var tab = {};
-                    tab.view = "tabview";
-                    tab.cells = [];
-                    tab.cells.push({
-                        header: "No children",
-                        rows: [
-                            {height: 10, },
-                            {
-                                cols: [
-                                    {
-                                        view: "button", value: "New", inputWidth: 150, align: 'center', on: {
-                                            onItemClick: function () {
-                                                var name = window.prompt("Enter a child book name.");
-                                                if (name) {
-                                                    createChild(name);
-                                                }
-                                            }
-                                        }
-                                    },
-                                ]
-                            },
-                            {height: 10, },
-                        ]
-                    });
 
 
-                    elem.cols[0].gravity = 1;
-                    elem.cols[2] = tab;
-                    var final = finalPrep(elem);
-                    webix.ui(final);
-                } else {
-                    callback(newData);
-                }
-
-            }
-        });
-    }
-
-    function finalPrep(elem) {
-        var final = {
-            view: "scrollview",
-            width: "100%",
-            body: {
-                type: "space",
-                rows: []
-            }
-        };
-        final.body.rows.push(header);
-        final.body.rows.push(hr);
-        final.body.rows.push(elem);
-        return final;
-    }
-
-    getProjects(function (data) {
-        var dropZonesToCreate = [];
-        if (true) {
-            // Parent
-            for (var p = 0; p < data.parent.pages.length; p++) {
-                createPage(data.parent.name, p + 1, true);
-                for (var a = 0; a < data.parent.pages[p].length; a++) {
-                    var asset = data.parent.pages[p][a];
-                    createRow(data.parent.name.name, p + 1, asset, true, a);
-                }
-            }
-
-            // Children
-            for (var i = 0; i < data.children.length; i++) {
-                var child = data.children[i];
-                createTab(child);
-                for (var p = 0; p < child.pages.length; p++) {
-                    var page = child.pages[p];
-                    createPage(child, p + 1);
-                    for (var a = 0; a < page.length; a++) {
-                        var asset = page[a];
-                        var elemID = createRow(child.name, p + 1, asset, false, a);
-                        if (elemID && asset.type !== "field") {
-                            dropZonesToCreate.push([child.name, p + 1, asset.newAsset, asset.type, asset.sizeOrLoc, asset.originalAsset, elemID]);
-                        }
-                    }
-                }
-            }
-
-            /*
-             // Figure a way to put this in the parent tab header actual
-             elem.cols.unshift({
-             view: "button", type: "icon", icon: "home", label: "Home", on: {
-             onItemClick: function () {
-             window.location.href = "selectSeries.php";
-             }
-             }
-             });
-             */
-
-            var final = finalPrep(elem);
-            webix.ui(final);
-            for (var d = 0; d < dropZonesToCreate.length; d++) {
-                var cur = dropZonesToCreate[d];
-                createDropZone.apply(this, cur);
-            }
-            if (gotoChild) {
-                $$("childTabMainCon").setValue(gotoChild + "_tab");
-            }
-        }
-    });
 
     window.forceStyle = function (sel, prop, val) {
         // Why? Webix hot swaps html, so anything in the html itself gets erased. Style sheets don't get touched though.
@@ -486,14 +327,13 @@ $(document).ready(function () {
         tab.body.rows = [];
         tab.body.rows.push({
             rows: [
-                {height: 5, },
+                { height: 5, },
                 {
                     cols: [
-                        {width: 10},
+                        { width: 10 },
                         {
                             view: "toolbar",
                             css: "ParentChildToolbar",
-                            width: "100%",
                             cols: [
                                 {
                                     view: "button", value: "View", width: 80, on: {
@@ -531,30 +371,30 @@ $(document).ready(function () {
                                                 action = false;
                                             }
                                             $.ajax("ajax/misc/lockChild.php?seriesName=" + seriesName + "&childName=" + childName + "&action=" + action).done(
-                                                    function (ret) {
-                                                        // returning done\r... so fuck it.
-                                                        if (ret == "done" || true) {
-                                                            if (action) {
-                                                                $$(THIS).setValue("Unlock");
-                                                                $$(THIS).refresh();
-                                                                for (var p = 0; p < window.pagesInChildBooks[childName].length; p++) {
-                                                                    var curPage = window.pagesInChildBooks[childName][p];
-                                                                    $$(childName + "_page_" + curPage).disable();
-                                                                }
-                                                            } else {
-                                                                $$(THIS).setValue("Lock");
-                                                                $$(THIS).refresh();
-                                                                for (var p = 0; p < window.pagesInChildBooks[childName].length; p++) {
-                                                                    var curPage = window.pagesInChildBooks[childName][p];
-                                                                    $$(childName + "_page_" + curPage).enable();
-                                                                }
+                                                function (ret) {
+                                                    // returning done\r... so fuck it.
+                                                    if (ret == "done" || true) {
+                                                        if (action) {
+                                                            $$(THIS).setValue("Unlock");
+                                                            $$(THIS).refresh();
+                                                            for (var p = 0; p < window.pagesInChildBooks[childName].length; p++) {
+                                                                var curPage = window.pagesInChildBooks[childName][p];
+                                                                $$(childName + "_page_" + curPage).disable();
                                                             }
-
-                                                            // window.location.href = window.location.href;
                                                         } else {
-                                                            document.body.innerHTML = ret;
+                                                            $$(THIS).setValue("Lock");
+                                                            $$(THIS).refresh();
+                                                            for (var p = 0; p < window.pagesInChildBooks[childName].length; p++) {
+                                                                var curPage = window.pagesInChildBooks[childName][p];
+                                                                $$(childName + "_page_" + curPage).enable();
+                                                            }
                                                         }
+
+                                                        // window.location.href = window.location.href;
+                                                    } else {
+                                                        document.body.innerHTML = ret;
                                                     }
+                                                }
                                             );
                                         }
                                     }
@@ -570,15 +410,15 @@ $(document).ready(function () {
                                         onChange: function () {
                                             var action = $$(this).getValue().toLowerCase();
                                             $.ajax("ajax/set/setChildStatus.php?seriesName=" + seriesName + "&childName=" + childName + "&action=" + action).done(
-                                                    function (ret) {
-                                                        if (ret == "done" || true) {
-                                                            forceStyle("#c_" + childName + "_status .statuses", "display", "none");
-                                                            forceStyle("#c_" + childName + "_status ." + action, "display", "initial");
-                                                            webix.message("Status changed.");
-                                                        } else {
-                                                            document.body.innerHTML = ret;
-                                                        }
+                                                function (ret) {
+                                                    if (ret == "done" || true) {
+                                                        forceStyle("#c_" + childName + "_status .statuses", "display", "none");
+                                                        forceStyle("#c_" + childName + "_status ." + action, "display", "initial");
+                                                        webix.message("Status changed.");
+                                                    } else {
+                                                        document.body.innerHTML = ret;
                                                     }
+                                                }
                                             );
                                         }
                                     }
@@ -596,12 +436,12 @@ $(document).ready(function () {
                                 },
                             ]
                         },
-                        {width: 10},
+                        { width: 10 },
                     ]
                 },
-                {height: 5, },
-                {height: 30, template: "<p style='text-align:center'>" + childName + "</p>"},
-                {height: 5, },
+                { height: 5, },
+                { height: 30, template: "<p style='text-align:center'>" + childName + "</p>" },
+                { height: 5, },
             ]
         });
         tab.body.keys = {};
@@ -611,22 +451,22 @@ $(document).ready(function () {
         }
 
         tab.header = "" +
-                "<div class='childHeaders " + lockedClass + "'>" +
-                "<b>" +
-                "<div id='c_" + childName + "_status' style='display: inline-block;width:100%;'>" +
-                "<p style='padding-top:7px'>" +
-                // Why? Webix hot swaps html, so anything in the html itself gets erased. Keep all statuses as seperate elements, redeclare style sheets to show and hide each.
-                '<span class="statuses progress">&#x21BB;</span>' +
-                '<span class="statuses complete">&#x2714;</span>' +
-                '<span class="statuses missing">&#x2716;</span>' +
-                '<span class="childName" style="color:black;">' +
-                childName +
-                "</span>" +
-                "</p> " +
-                "</div>" +
-                "</b>" +
-                "</div>" +
-                "";
+            "<div class='childHeaders " + lockedClass + "'>" +
+            "<b>" +
+            "<div id='c_" + childName + "_status' style='display: inline-block;width:100%;'>" +
+            "<p style='padding-top:7px'>" +
+            // Why? Webix hot swaps html, so anything in the html itself gets erased. Keep all statuses as seperate elements, redeclare style sheets to show and hide each.
+            '<span class="statuses progress">&#x21BB;</span>' +
+            '<span class="statuses complete">&#x2714;</span>' +
+            '<span class="statuses missing">&#x2716;</span>' +
+            '<span class="childName" style="color:black;">' +
+            childName +
+            "</span>" +
+            "</p> " +
+            "</div>" +
+            "</b>" +
+            "</div>" +
+            "";
         forceStyle("#c_" + childName + "_status ." + status, "display", "initial");
         /*
          tab.header.labelWidth = 500;
@@ -666,7 +506,7 @@ $(document).ready(function () {
             }
             window.pagesInChildBooks[bookName].push(pageNumber);
         }
-        tab.body.rows.push({id: pagesID, disabled: locked, "rows": []});
+        tab.body.rows.push({ id: pagesID, disabled: locked, "rows": [] });
     }
 
     function createRow(bookName, pageNumber, asset, isParent, assetNum) {
@@ -757,9 +597,9 @@ $(document).ready(function () {
 
                             function downloadFile(fullSrc) {
                                 var a = $("<a>")
-                                        .attr("href", fullSrc)
-                                        .attr("download", fullSrc)
-                                        .appendTo("body");
+                                    .attr("href", fullSrc)
+                                    .attr("download", fullSrc)
+                                    .appendTo("body");
                                 a[0].click();
                                 a.remove();
                             }
@@ -823,17 +663,17 @@ $(document).ready(function () {
                 preview.data[0] = {};
                 if (assetType == "image") {
                     preview.data[0].img = "" +
-                            "<div class='imageCont'>" +
-                            "<span class='helper'></span>" +
-                            "<img src='series/" + seriesName + "/images/" + assetSrc + "' class='preview' />" +
-                            "</div>";
+                        "<div class='imageCont'>" +
+                        "<span class='helper'></span>" +
+                        "<img src='series/" + seriesName + "/images/" + assetSrc + "' class='preview' />" +
+                        "</div>";
                 } else if (assetType == "video") {
                     preview.data[0].img = "" +
-                            "<div class='imageCont'>" +
-                            "<span class='helper'></span>" +
-                            "<video src='series/" + seriesName + "/videos/" + assetSrc + "' class='preview' controls>" +
-                            "</video>" +
-                            "</div>";
+                        "<div class='imageCont'>" +
+                        "<span class='helper'></span>" +
+                        "<video src='series/" + seriesName + "/videos/" + assetSrc + "' class='preview' controls>" +
+                        "</video>" +
+                        "</div>";
                 }
 
 
@@ -1001,11 +841,11 @@ $(document).ready(function () {
     function createDropZone(childName, pageNum, assetSrc, assetType, sizeOrLoc, originalAssetName, elemID) {
         // var elemID = "book_" + childName + "_page_" + pageNum + "_src_" + originalAssetName;
         var uploadScriptSrc = "ajax/upload/uploadNewAsset.php?" +
-                "seriesName=" + window.seriesName +
-                "&assetType=" + assetType +
-                "&childName=" + childName +
-                "&originalAssetName=" + originalAssetName +
-                "&assetSwapSizeOrLoc=" + sizeOrLoc;
+            "seriesName=" + window.seriesName +
+            "&assetType=" + assetType +
+            "&childName=" + childName +
+            "&originalAssetName=" + originalAssetName +
+            "&assetSwapSizeOrLoc=" + sizeOrLoc;
         webix.ui({
             id: elemID + "_dz",
             view: "uploader",
@@ -1074,7 +914,7 @@ $(document).ready(function () {
                     }
                     // Getting a weird error if I update directly from here... webix's fault, not my prob.
                     window.setTimeout(function () {
-                        $$(elemID + "_dz").setValue({name: "Upload Complete!", sizetext: "", status: ""});
+                        $$(elemID + "_dz").setValue({ name: "Upload Complete!", sizetext: "", status: "" });
                         $$(elemID + "_dz").refresh();
                         var filename = item.src.split("/");
                         filename.shift();
@@ -1116,11 +956,11 @@ $(document).ready(function () {
 
     function updateField(seriesName, bookName, fieldName, newContent) {
         var uploadScriptSrc = "ajax/upload/uploadNewAsset.php?" +
-                "seriesName=" + seriesName +
-                "&assetType=" + "field" +
-                "&childName=" + bookName +
-                "&originalAssetName=" + fieldName +
-                "&newContent=" + btoa(newContent);
+            "seriesName=" + seriesName +
+            "&assetType=" + "field" +
+            "&childName=" + bookName +
+            "&originalAssetName=" + fieldName +
+            "&newContent=" + btoa(newContent);
         $.ajax({
             type: 'get',
             url: uploadScriptSrc,
@@ -1136,15 +976,63 @@ $(document).ready(function () {
 
     function modAudio(src, childName, action, callback) {
         var modAudUrl = "ajax/misc/modAudVol.php?" +
-                "seriesName=" + window.seriesName +
-                "&childName=" + childName +
-                "&action=" + action +
-                "&audName=" + src;
+            "seriesName=" + window.seriesName +
+            "&childName=" + childName +
+            "&action=" + action +
+            "&audName=" + src;
 
         $.ajax({
             url: modAudUrl, success: function (ret) {
                 callback(ret);
             }
         })
+    }
+
+
+    function ready(data) {
+        var dropZonesToCreate = [];
+        // Parent
+        for (var p = 0; p < data.parent.pages.length; p++) {
+            createPage(data.parent.name, p + 1, true);
+            for (var a = 0; a < data.parent.pages[p].length; a++) {
+                var asset = data.parent.pages[p][a];
+                createRow(data.parent.name.name, p + 1, asset, true, a);
+            }
+        }
+
+        // Children
+        for (var i = 0; i < data.children.length; i++) {
+            var child = data.children[i];
+            createTab(child);
+            for (var p = 0; p < child.pages.length; p++) {
+                var page = child.pages[p];
+                createPage(child, p + 1);
+                for (var a = 0; a < page.length; a++) {
+                    var asset = page[a];
+                    var elemID = createRow(child.name, p + 1, asset, false, a);
+                    if (elemID && asset.type !== "field") {
+                        dropZonesToCreate.push([child.name, p + 1, asset.newAsset, asset.type, asset.sizeOrLoc, asset.originalAsset, elemID]);
+                    }
+                }
+            }
+        }
+        webix.ui({
+            view: "scrollview",
+            body: {
+                type: "space",
+                rows: [
+                    header,
+                    hr,
+                    elem
+                ]
+            }
+        });
+        for (var d = 0; d < dropZonesToCreate.length; d++) {
+            var cur = dropZonesToCreate[d];
+            createDropZone.apply(this, cur);
+        }
+        if (gotoChild) {
+            $$("childTabMainCon").setValue(gotoChild + "_tab");
+        }
     }
 });
