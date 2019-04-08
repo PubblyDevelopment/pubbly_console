@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.3
+-- version 4.6.6deb5
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 06, 2018 at 08:03 PM
--- Server version: 10.1.33-MariaDB
--- PHP Version: 7.2.6
+-- Host: localhost:3306
+-- Generation Time: Apr 08, 2019 at 03:34 PM
+-- Server version: 5.7.25-0ubuntu0.18.04.2
+-- PHP Version: 7.2.15-0ubuntu0.18.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -19,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `console`
+-- Database: `pubbly_console`
 --
 
 -- --------------------------------------------------------
@@ -36,6 +34,13 @@ CREATE TABLE `books` (
   `priority` int(11) DEFAULT '0',
   `folder` varchar(255) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `books`
+--
+
+INSERT INTO `books` (`ID`, `name`, `longname`, `pages`, `priority`, `folder`) VALUES
+(8, 'map home', 'map home', 1, 0, '');
 
 -- --------------------------------------------------------
 
@@ -68,6 +73,15 @@ CREATE TABLE `children` (
   `status` varchar(255) NOT NULL DEFAULT 'progress'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `children`
+--
+
+INSERT INTO `children` (`child_id`, `seriesName`, `childName`, `deleted`, `childID`, `locked`, `status`) VALUES
+(4, 'map nodes', 'n1', 0, 1, 0, 'progress'),
+(5, 'map node', 'ndoe1', 0, 1, 0, 'progress'),
+(6, 'map node', 'node2', 0, 2, 0, 'progress');
+
 -- --------------------------------------------------------
 
 --
@@ -81,6 +95,13 @@ CREATE TABLE `levels` (
   `subjectID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `levels`
+--
+
+INSERT INTO `levels` (`ID`, `name`, `schoolID`, `subjectID`) VALUES
+(1, 'sdfg', 1, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -91,6 +112,14 @@ CREATE TABLE `map` (
   `map_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `map`
+--
+
+INSERT INTO `map` (`map_id`, `name`) VALUES
+(2, 'test map'),
+(3, 'test map 2');
 
 -- --------------------------------------------------------
 
@@ -111,6 +140,16 @@ CREATE TABLE `map_node` (
   `y` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `map_node`
+--
+
+INSERT INTO `map_node` (`map_node_id`, `map_id`, `name`, `has_cover`, `is_entry`, `child_id`, `book_id`, `unit_id`, `x`, `y`) VALUES
+(2, 2, 'static-map home', 1, 1, NULL, 8, NULL, 1520, 400),
+(3, 2, 'variable-map node-ndoe1', 1, 0, 5, NULL, NULL, 1240, 720),
+(4, 2, 'variable-map node-node2', 1, 0, 6, NULL, NULL, 1840, 720),
+(5, 3, 'variable-map node-ndoe1', 1, 0, 5, NULL, NULL, 760, 200);
+
 -- --------------------------------------------------------
 
 --
@@ -125,6 +164,17 @@ CREATE TABLE `map_node_path` (
   `to_node_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `map_node_path`
+--
+
+INSERT INTO `map_node_path` (`map_node_path_id`, `from_node_id`, `from_link_name`, `from_link_page`, `to_node_id`) VALUES
+(1, 2, 'mt_node1', 0, 3),
+(2, 2, 'mt_node2', 0, 4),
+(3, 3, 'Link 1', 0, 2),
+(4, 4, 'Link 1', 0, 2),
+(5, 5, 'Link 1', 0, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -136,6 +186,13 @@ CREATE TABLE `schools` (
   `name` varchar(255) NOT NULL,
   `outdated` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `schools`
+--
+
+INSERT INTO `schools` (`ID`, `name`, `outdated`) VALUES
+(1, 'sdfg', 1);
 
 -- --------------------------------------------------------
 
@@ -152,6 +209,13 @@ CREATE TABLE `series` (
   `priority` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `series`
+--
+
+INSERT INTO `series` (`ID`, `name`, `deleted`, `version`, `folder`, `priority`) VALUES
+(9, 'map node', 0, 1, '', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -163,6 +227,13 @@ CREATE TABLE `subjects` (
   `name` varchar(255) NOT NULL,
   `schoolID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `subjects`
+--
+
+INSERT INTO `subjects` (`ID`, `name`, `schoolID`) VALUES
+(1, 'sfdg', 1);
 
 -- --------------------------------------------------------
 
@@ -181,6 +252,13 @@ CREATE TABLE `swaps` (
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `fileModified` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `swaps`
+--
+
+INSERT INTO `swaps` (`refSeries`, `refBook`, `originalAssetName`, `newAssetName`, `sizeOrLoc`, `swapTimestamp`, `username`, `deleted`, `fileModified`) VALUES
+('map node', 'node2', 'Field 1', 'Tm9kZSAy', 'size', '2019-04-05 18:01:35', 'Jason', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -216,6 +294,13 @@ CREATE TABLE `units` (
   `tutorialType` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `units`
+--
+
+INSERT INTO `units` (`ID`, `name`, `outdated`, `order`, `schoolID`, `subjectID`, `levelID`, `isGame`, `isTutorial`, `tutorialType`) VALUES
+(1, 'sdfg', 0, 1, 1, 1, 1, 0, 0, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -229,6 +314,13 @@ CREATE TABLE `user` (
   `email` varchar(255) NOT NULL,
   `hint` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`user_id`, `username`, `password`, `email`, `hint`) VALUES
+(1, 'jason', '$2y$10$DEk1AeOhPSt.ftlXfKREaO1yi7SA.TsnDHHlvwHQHvqpgfhTpgt.m', 'Jason@JasonHorsley.tech', 'HR');
 
 --
 -- Indexes for dumped tables
@@ -315,68 +407,57 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `books`
 --
 ALTER TABLE `books`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `children`
 --
 ALTER TABLE `children`
-  MODIFY `child_id` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `child_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `levels`
 --
 ALTER TABLE `levels`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `map`
 --
 ALTER TABLE `map`
-  MODIFY `map_id` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `map_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `map_node`
 --
 ALTER TABLE `map_node`
-  MODIFY `map_node_id` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `map_node_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `map_node_path`
 --
 ALTER TABLE `map_node_path`
-  MODIFY `map_node_path_id` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `map_node_path_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `schools`
 --
 ALTER TABLE `schools`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `series`
 --
 ALTER TABLE `series`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `subjects`
 --
 ALTER TABLE `subjects`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `units`
 --
 ALTER TABLE `units`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- Constraints for dumped tables
 --
@@ -396,7 +477,6 @@ ALTER TABLE `map_node`
 ALTER TABLE `map_node_path`
   ADD CONSTRAINT `map_node_path_ibfk_1` FOREIGN KEY (`from_node_id`) REFERENCES `map_node` (`map_node_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `map_node_path_ibfk_2` FOREIGN KEY (`to_node_id`) REFERENCES `map_node` (`map_node_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

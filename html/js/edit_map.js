@@ -171,10 +171,10 @@ $(document).ready(function () {
                 id: "pullFromTabBar",
                 borderless: true,
                 view: "tabbar",
-                value: "listView",
+                value: "unitList",
                 multiview: true,
                 options: [
-                    {value: "Unit", id: "unitList"},
+                    {value: "Stitched", id: "unitList"},
                     {value: "Variable", id: "variableList"},
                     {value: "Static", id: "staticList"},
                 ]

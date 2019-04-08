@@ -73,7 +73,9 @@ let selectMap = {
                         window.selectedMapName = item.name;
                         $$("editMap").enable();
                         $$("export_server").enable();
-                        $$("export_zip").enable();
+                        $$("export_zip_market").enable();
+                        $$("export_zip_local").enable();
+
                     },
                 }
             },
@@ -176,43 +178,29 @@ let actionBar = {
                 {
                     rows: [
                         {
-                            id: "export_zip", view: "button", label: "Export for market",
-                            disabled: false, on: {
+                            id: "export_zip_market", view: "button", label: "Export for market",
+                            disabled: true, on: {
                                 onItemClick: function () {
-                                    // ajax call to see if export exists
-                                    /*
-                                    var request = new XMLHttpRequest();
-                                    request.open('GET', 'http://www.mozilla.org', true);
-                                    request.onreadystatechange = function () {
-                                        if (request.readyState === 4) {
-                                            if (request.status === 404) {
-                                                createMapDownloadForMarket({
-                                                    done: function (url) {
-                                                        window.location.href = url;
-                                                    },
-                                                    fail: function (message) {
-                                                        webix.message("Error: " + message);
-                                                    }
-                                                });
-                                            } else {
-                                                when = Date.now();
-                                                // Ask if you want old or new
-                                                webix.modalbox({
-                                                    title: "<h2>There is an existing export on the server</h2>",
-                                                    buttons: ["Download old", "Re-export new"],
-                                                    width: 500,
-                                                    text: "Old zip exported: <b>" + when + "</b>",
-                                                    callback:function(result){
-                                                        webix.message(result);
-                                                    }
-                                                })
-                                            }
-                                        }
-                                    };
-                                    request.send();
-                                    */
                                     $$("exportingNewMap").show();
-                                    createMapDownloadForMarket({
+                                    createMapDownloadFort("market", {
+                                        done: function (url) {
+                                            $$("exportingNewMap").hide();
+                                            window.location.href = url;
+                                        },
+                                        fail: function (message) {
+                                            $$("exportingNewMap").hide();
+                                            webix.message("Error: " + message);
+                                        }
+                                    });
+                                }
+                            }
+                        },
+                        {
+                            id: "export_zip_local", view: "button", label: "Export for local/APK",
+                            disabled: true, on: {
+                                onItemClick: function () {
+                                    $$("exportingNewMap").show();
+                                    createMapDownloadFor("local", {
                                         done: function (url) {
                                             $$("exportingNewMap").hide();
                                             window.location.href = url;
@@ -251,6 +239,8 @@ let actionBar = {
                     ]
                 },
                 { gravity: 0.2 },
+
+                /*
                 {
                     rows: [
                         {
@@ -286,13 +276,14 @@ let actionBar = {
                         },
                     ]
                 },
+                */
             ]
         }
     ]
 }
 
-function createMapDownloadForMarket(cbs) {
-    $.ajax("ajax/download/prepMapDownload.php?type=market&mapName=" + window.selectedMapName).done(
+function createMapDownloadFor(what, cbs) {
+    $.ajax("ajax/download/prepMapDownload.php?type=" + what + "&mapName=" + window.selectedMapName).done(
         function (ret) {
             try {
                 ret = JSON.parse(ret);
@@ -334,53 +325,6 @@ $(document).ready(function () {
             ]
         }
     });
-    /*
-    webix.ui({
-        view: "popup",
-        id: "exportOldOrNew",
-        height: 250,
-        width: 300,
-        body: {
-            rows: [
-                {
-                    view: "template",
-                    template: "<h2>There is an existing export on the server, last updated:<b>" + when + "</b></h2>"
-                },
-                {
-                    view: "template",
-                    template: "<p>Do you want to download the existing, or create a new one?</p>"
-                },
-                {
-                    cols: [
-                        {
-                            view: "button", value: "Download old", on: {
-                                onItemClick: function () {
-                                    w_exportOldOrNew_popup.hide();
-                                }
-                            }
-                        },
-                        {
-                            view: "button", value: "Create new", on: {
-                                onItemClick: function () {
-                                    createMapDownloadForMarket({
-                                        done: function (url) {
-                                            w_exportOldOrNew_popup.hide();
-                                            window.location.href = url;
-                                        },
-                                        fail: function (message) {
-                                            w_exportOldOrNew_popup.hide();
-                                            webix.message("Error: " + message);
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                    ]
-                }
-            ]
-        }
-    });
-    */
     webix.ui({
         view: "scrollview",
         width: "100%",
