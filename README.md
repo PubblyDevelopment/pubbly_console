@@ -6,52 +6,80 @@ The pubbly console is what TeamCCI developed in house and used to create the con
 
 If you don't want to buy your own server and install our LAMP CMS yourself, you can register at [sandbox.pubbly.com](sandbox.pubbly.com). We are currently hosting this server, and you may upload your own content but all user posted files will be wiped on a weekly basis. If you want to host your own personal console repository, manual install is not so bad. I will be giving instructions for a clean up to date AWS ubuntu server, with ports open for SSH, SFTP, and HTTP. You _can_ use other servers builds, but this is largely untested/unsupported
 
-Download console repo to your server's web root
+### Install Apache 2.0, MySQL, and PHP 7+
 
-* SSH into server (putty)
-* cd /var/www
-* sudo rm -r html
-* sudo chown ubuntu:ubuntu .
-* sudo git clone https://github.com/PubblyDevelopment/pubbly_console.git .
-
-Install Apache 2.0, MySQL, and PHP 7+
-
+* Buy or rent an ubuntu server (I use AWS, but have previously self hosted)
+* (Optional) Associate a domain or alias for easy group usage.
+* SSH into server (I prefer putty)
 * sudo apt-get upgrade
 * sudo apt-get update
 * sudo apt install tasksel
 * sudo tasksel install lamp-server
+> You can verify the LAMP server installation by checking the IP address in a browser... It should resolve to the Apache default page.
 
-Install PHP plugins 
+### Download console repo to your server's web root
+
+* cd /var/www
+* sudo rm -r html
+* sudo chown ubuntu:ubuntu . -R
+* sudo git clone https://github.com/PubblyDevelopment/pubbly_console.git .
+> Pasting in putty or similar HTML shells is done with Control - Shift - Insert.
+> To check that the clone worked, navigate to (YourDomain)/phpinfo.php or (YourIP)/phpinfo.php. This will show system information for your server. If it does, PHP is working and the console has been cloned. (Console WILL NOT work without further setup)
+
+### Install PHP plugins 
 
 * sudo apt-get install php-zip
 * sudo apt-get install php-xml
 
-Edit your php.ini to increase max upload file size.
+### Edit your php.ini to increase max upload file size.
 
-* vim /etc/php/7.2/apache/php.ini
+* sudo vim /etc/php/7.2/apache2/php.ini
+> Your php.ini location may vary with alternative apache versions, php versions, or Linux OS verions. To find your specific php.ini location, reference the domain/phpinfo.php, column "Loaded Configuration File"
 * find upload_max_filesize
-* change to 200M
+* change to "200M"
+* Write and quite
+> The Pubbly Design Tools exports used in the Xprize were usually large in size, about 5MB per page.
 
-Import our database structure, using your own password (PutPasswordHere)
+### Import our database structure, using your own password (PutPasswordHere)
 
 * sudo mysql -u root -p
+> mysql root password is default empty, and you should probably change that.
 * CREATE DATABASE pubbly_console;
 * CREATE USER 'pubbly_console'@'localhost' IDENTIFIED BY 'PutPasswordHere';
-* grant all privileges on pubbly_console.* to 'pubbly_console'@'localhost';
+* grant all privileges on pubbly_console.* to 'phpmyadmin'@'localhost';
 * flush privileges;
+> This creates a new user account and database on your server, to be used exclusively by PHP scripts running via ajax calls. This allows you to have multiple projects on the same server without site contamination risks.
 * USE mysql;
 * SET sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
+> Some SQL queries used for console projects require multiple group by statements, and MySQL has a default "ONLY_FULL_GROUP_BY" set. If you're using other sql modes for other projects, it is (presently) suffice to remove only the "ONLY_FULL_GROUP_BY" property from the sql_mode string.
 * exit;
-* sudo mysql -u root -p pubbly_console < /var/www/sql/freshBuild.sql
+* sudo mysql -u root -p pubbly_console < /var/www/sql/FreshBuild.sql
+> This imports the _structure only_ for console servers, which allows Export uploading and management.
 
-Copy and modify the server's config file
+### Copy and modify the server's config file
 
 * cd /var/www/html/
 * sudo vim config_default.php
 * change password on line 4 to whatever you used for PutPasswordHere
-* save config.php
+* (Optional) Enable open registration (allows ANY IPs to registrer as new users to your console)
+    * Change line 14 from 'define("OPEN_REGISTRATION", false);' to 'define("OPEN_REGISTRATION", true);'
+* (Optional) Attach your own brand name (will prefix all pages with inputed string)
+    * Change line 15 from 'define("BRAND", "");' to 'define("BRAND", "YourBrandHere");'
+* save as "config.php"
+> config.php is git ignored, to prevent YOUR password from getting uploaded to the main repository. Without a correct MySQL password, all php script on the site will be unable to run (security error). 
 
-Get python up and running (Optional, probably for future development)
+You can test your steps so far by refreshing your Domain name or IP address (not /phpinfo.php). If it resoloves to a consle login page, it worked!
+
+> If it didn't work, you can debug by enabling php errors and warnings in the php.ini file you edited above. This will at least show what kind of an error you're getting. It may be a good idea to enable errors/warnings anyway, for bug fixing and your own development.
+
+### Pull the Pubbly_Engine (submodule of console
+
+* cd /var/www/
+* sudo git submodule update --init --recursive
+
+### (Optional) Get python up and running 
+
+Python is not currently critical for console projects, but we may use it in the future.
 
 * sudo apt-get install python3
 * sudo vim /etc/apache2/conf-available/cgi-enabled.conf
@@ -62,23 +90,82 @@ Get python up and running (Optional, probably for future development)
  </Directory>
 ```
 * sudo a2enconf cgi-enabled
+
+### Permissions and restarts
+
+Change permissions on folders accessed via Ajax called php scripts
+
+* cd /var/www/html
+* sudo chmod 755 books series schools map zips deleted* -R
+* sudo chown www-data:ubuntu books series schools map zips deleted* -R
+
+Restart apache 2 to update with all custom settings
 * sudo service apache2 restart
+
+### FINISH
 
 Your server is now ready. I strongly advice that you change the root password to something secure, that you disallow the following of system indexes, and other smart software people things.
 
-You can start from absolute scratch, start from a collection of Xprize design tools exports, or duplicate your own console to match ours (right before we packed and deployed our submission).
+This is a "from scratch" build of the console, and has no pre-loaded content. To create and upload your own new content, see section "Adding content". You can also create a mirror image of TeamCCI's xprize console. For full instructions, see [Pubbly](https://github.com/PubblyDevelopment/pubbly) section "Submission from existing content". For convenience sake, I have also included a copy of the server specific "Preloading content: Xprize console duplication" steps below.
+
+## Preloading content: Xprize console duplication
+
+> Copied from [Pubbly](https://github.com/PubblyDevelopment/pubbly) section "Preloading content: Xprize console duplication"
+
+Log into your console, download and unzip the Xprize console content zips to their local folders, and import an associated sql file.
+
+| Type             |                      Zip location                      |   Extract location    |
+|------------------|:------------------------------------------------------:|:---------------------:|
+| Static Exports   |  xprize.pubbly.com/DuplicateConsole/StaticExports.zip  |  /var/www/html/books  |
+| Variable Exports | xprize.pubbly.com/DuplicateConsole/VariableExports.zip | /var/www/html/series  |
+| Stitched Exports | xprize.pubbly.com/DuplicateConsole/StitchedExports.zip | /var/www/html/schools |
+| Mapped Exports   |  xprize.pubbly.com/DuplicateConsole/MappedExports.zip  |   /var/www/html/map   |
+| Content SQL file |     xprize.pubbly.com/DuplicateConsole/Content.sql     |       mysql db        |
+
+* Log into your personal console using SSH (EG putty)
+> Add the base sql structure if you haven't already (i.e. finish [Pubbly Console](https://github.com/PubblyDevelopment/pubbly_console) section "Getting started")
+> Download content zips from our Xprize server to a local folder
+* cd ~/
+* mkdir tmp
+* cd tmp
+* wget xprize.pubbly.com/DuplicateConsole/StaticExports.zip
+* wget xprize.pubbly.com/DuplicateConsole/VariableExports.zip
+* wget xprize.pubbly.com/DuplicateConsole/StitchedExports.zip
+* wget xprize.pubbly.com/DuplicateConsole/MappedExports.zip
+> Unzip content to respective web roots
+* sudo apt-get install unzip
+* sudo unzip StaticExports.zip -d /var/www/html/books
+* sudo unzip VariableExports.zip -d /var/www/html/series
+* sudo unzip StitchedExports.zip -d /var/www/html/schools
+* sudo unzip MappedExports.zip -d /var/www/html/map
+> (re)Fix permissions issues
+* cd /var/www/html
+* sudo chmod 755 books series schools map zips deleted* -R
+* sudo chown www-data:ubuntu books series schools map zips deleted* -R
+> Download and import a sql file which reflects your new content.
+* wget xprize.pubbly.com/DuplicateConsole/Content.sql
+* sudo mysql -u root -p pubbly_console < Content_Ordered.sql
+> Cleanup
+* cd ../
+* rm -r tmp
+
+You now have an exact snapshot (minus user accounts) of the console TeamCCI used to create the Xprize English/Swahili program.
+
+For how this content was structured, from a content designer's perspective, see [Pubbly](https://github.com/PubblyDevelopment/pubbly) section "Submission from existing: Design overview". For how this content can be supplemented, edited, modified, or removed from the console, keep reading. 
 
 ## Adding content
 
 It is entirely possible to create a brand new program from brand new assets using our tools. This is a large job, and will take artists, content creators, and developers. For a full overview of the process, checkout [Pubbly](https://github.com/PubblyDevelopment/pubbly) section "Submission from scratch".
 
-If you would like to instead start with a mirror image of the console TeamCCI used to create Xprize android applications, checkout [Pubbly](https://github.com/PubblyDevelopment/pubbly) section "Submission from existing: Xprize console duplication"
+If you would like to instead start with a mirror image of the console TeamCCI used to create Xprize android applications, checkout [Pubbly](https://github.com/PubblyDevelopment/pubbly) section "Submission from existing content"
+
+You can upload new content to either scratch consoles or Xprize dupe console in the same way. (Cont)
 
 ### Adding content: Design Tools Export
 
 To upload content to the pubbly console, first author and export a zip from the design tools. Full instructions can be found at [Pubbly Design Tools](https://github.com/PubblyDevelopment/pubbly_design_tools) section "Authoring books" and "Exports"
 
-Once you have a zip, you can upload to two places in the console, Static and Variable exports.
+Once you have a zip, you can upload to two places in the console, Static and Variable exports. A list of all Design Tools exported zips used to create our Xprize Console can be found at [Pubbly Xprize Original Exports](https://github.com/PubblyDevelopment/pubbly_xprize_original_exports)
 
 ### Adding content: Uploading to Static
 

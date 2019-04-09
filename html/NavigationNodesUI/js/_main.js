@@ -66,9 +66,9 @@ class NavigationNodes {
             // Shamelessly copied to helper.js from the first result of 
             // "github javascript distance of point and line MIT" (MIT best license)
             return distanceToLineSegment(
-                    ln.start[0], ln.start[1],
-                    ln.end[0], ln.end[1],
-                    mx, my) < 10 // line thickness
+                ln.start[0], ln.start[1],
+                ln.end[0], ln.end[1],
+                mx, my) < 10 // line thickness
         });
 
         return firstHoveredLine;
@@ -78,6 +78,11 @@ class NavigationNodes {
 
     // Loads in relevant image files
     loadAssets(cb) {
+        let loader = (this.inputs.initialLoad) ? $(this.inputs.initialLoad) : false;
+        if (loader) {
+            loader.removeClass("hidden");
+        }
+        
         let needed = 0;
         let recieved = 0;
         for (let nodeName in this.json) {
@@ -91,8 +96,14 @@ class NavigationNodes {
                 // Still references the variable declared at top of this.loadAssets
                 recieved++;
                 if (recieved == needed) {
+                    if (loader) {
+                        loader.addClass("hidden");
+                    }
                     // All images loaded in good... We can call a first draw function
                     cb();
+                } else if (loader) {
+                    let perc = Math.round((recieved / needed) * 100);
+                    loader.find(".percent")[0].innerHTML = perc + "%";
                 }
             };
             node.img.src = node.cover;
@@ -133,11 +144,11 @@ class NavigationNodes {
             let img = this.json[nodeName].img;
             if (img) {
                 this.inputs.nodeCanvas.drawImage(
-                        img,
-                        this.json[nodeName].x,
-                        this.json[nodeName].y,
-                        this.json[nodeName].width,
-                        this.json[nodeName].height);
+                    img,
+                    this.json[nodeName].x,
+                    this.json[nodeName].y,
+                    this.json[nodeName].width,
+                    this.json[nodeName].height);
                 if (this.json[nodeName].isEntryNode) {
                     this.drawEntryNodeStar(this.json[nodeName]);
                 }
@@ -145,16 +156,16 @@ class NavigationNodes {
         }
     }
 
-    
+
     // Draws a rectangle around a node cover
     drawNodeRect(color, node) {
         if (node !== undefined) {
             this.inputs.nodeCanvas.drawRect(
-                    color,
-                    node.x,
-                    node.y,
-                    node.width,
-                    node.height);
+                color,
+                node.x,
+                node.y,
+                node.width,
+                node.height);
         }
     }
 
@@ -174,8 +185,8 @@ class NavigationNodes {
     // Should theoretically be the entry point node
     drawEntryNodeStar(node) {
         this.inputs.nodeCanvas.drawImage(this.starImg,
-                node.x + node.width / 2 - 25,
-                node.y + node.height / 2 - 25, 50, 50);
+            node.x + node.width / 2 - 25,
+            node.y + node.height / 2 - 25, 50, 50);
     }
 
     // Returns the center of the canvas
@@ -186,7 +197,7 @@ class NavigationNodes {
         let c = this.inputs.nodeCanvas.getCenter();
         let widthMod = this.inputs.nodeCanvas.width * (1 / z / 2);
         let heightMod = this.inputs.nodeCanvas.height * (1 / z / 2);
-        return[-o[0] + widthMod, -o[1] + heightMod, 50, 50];
+        return [-o[0] + widthMod, -o[1] + heightMod, 50, 50];
     }
 
     // Creates a list of ALL paths' start points, end points,
@@ -245,11 +256,11 @@ class NavigationNodes {
         }
         for (let path in paths) {
             this.inputs.nodeCanvas.drawArrow(paths[path].color,
-                    paths[path].start[0],
-                    paths[path].start[1],
-                    paths[path].end[0],
-                    paths[path].end[1],
-                    Math.min(30, paths[path].lineWidth));
+                paths[path].start[0],
+                paths[path].start[1],
+                paths[path].end[0],
+                paths[path].end[1],
+                Math.min(30, paths[path].lineWidth));
         }
     }
 
@@ -363,11 +374,12 @@ class NavigationNodes {
         justPoints = JSON.stringify(justPoints);
         let type = (justPoints.length) > 512 ? "POST" : "GET";
         ajax_general("moveNodesOnMap",
-                {nodePlacements: justPoints, mapName: btoa(mapName)},
-                {done: function () {
-                        console.log("done");
-                    }
-                }, type);
+            { nodePlacements: justPoints, mapName: btoa(mapName) },
+            {
+                done: function () {
+                    console.log("done");
+                }
+            }, type);
         let mapZoom = this.inputs.nodeCanvas.zoom;
         let mapOffset = this.inputs.nodeCanvas.offset;
         this.cookies.set('edit_map-zoom', mapZoom, 1);
@@ -384,12 +396,12 @@ class NavigationNodes {
             let currDate = new Date();
             let timeString = "Last saved: " + currDate.toLocaleTimeString();
 
-            $("#savePrompt").css({"opacity": 1});
+            $("#savePrompt").css({ "opacity": 1 });
             $("#savePrompt").html(timeString);
 
             window.clearTimeout(this.fadeTimeout);
             this.fadeTimeout = window.setTimeout(function () {
-                $("#savePrompt").animate({"opacity": 0}, 1000);
+                $("#savePrompt").animate({ "opacity": 0 }, 1000);
             }, 2000);
 
 
@@ -418,8 +430,7 @@ class NavigationNodes {
         return hoveredNodes[0]; // either a node, or undefined (which is falsy)
     }
 
-    eventMouseUpCanvas(loc, e, elem)
-    {
+    eventMouseUpCanvas(loc, e, elem) {
         // Turn off panning on mouse up
         this.isPanning = false;
 
@@ -440,7 +451,7 @@ class NavigationNodes {
         this.changeNodePhoto();
 
         this.autoSave();
-        
+
 
     }
 
@@ -468,11 +479,11 @@ class NavigationNodes {
             // Run a php script to upload a new cover for clicked node
             let id = clickedNode.node_id;
             $("#file_upload_form").attr("action", "php/ajax/uploadNodeCover.php?nodeID=" + id);
-            
+
             this.curNode = clickedNode;
             this.curMovingNode = clickedNode;
             this.inputs.dropDown.populateDropdown(this.curNode);
-            
+
             if (this.inputs.dropDown.populateDropdown(this.curNode) == 0) {
                 // Disable buttons if no links exist
                 this.inputs.pathButton.disableEvent("click");
@@ -489,7 +500,7 @@ class NavigationNodes {
             // Draw all
             this.drawNodesRectanglesAndLines();
 
-        // Logic for selected second node (green rectangle)
+            // Logic for selected second node (green rectangle)
         } else if (clickedNode && e.shiftKey) {
             this.secondNode = clickedNode;
             this.curMovingNode = clickedNode;
@@ -508,7 +519,7 @@ class NavigationNodes {
             this.inputs.dropDown.setSecondNodeTitle(this.secondNode);
             this.changeNodePhoto();
 
-        // Logic for clicking a line
+            // Logic for clicking a line
         } else if (clickedLine) {
             this.curNode = this.play_getNodeInfoByFancyName(clickedLine.fromNode);
             this.secondNode = this.play_getNodeInfoByFancyName(clickedLine.toNode);
@@ -559,7 +570,7 @@ class NavigationNodes {
 
             // Redraw as movement occurs
             this.drawNodesRectanglesAndLines();
-        // If we're moving the red node, change location as it moves
+            // If we're moving the red node, change location as it moves
         } else if (this.curMovingNode && e.shiftKey) {
             this.secondNode = this.curMovingNode;
             this.curMovingNode.x = loc.x - this.curMovingNode.width / 2;
@@ -567,9 +578,9 @@ class NavigationNodes {
 
             this.drawNodesRectanglesAndLines();
 
-        // Not moving a book, and NOT PANNING
-        // So mouse is moving over stuff, but not doing anything
-        // Draw rectangles over nodes mouse is hovering on 
+            // Not moving a book, and NOT PANNING
+            // So mouse is moving over stuff, but not doing anything
+            // Draw rectangles over nodes mouse is hovering on 
         } else {
             let hoverNode = this.getFirstNodeUnderneathMouseLoc(loc);
 
@@ -671,10 +682,11 @@ class NavigationNodes {
                 mapID: window.mapID,
                 fromPathID: fromPathId,
                 toNodeID: this.secondNode.node_id,
-            }, {done: function () {
+            }, {
+                done: function () {
                     console.log("done");
                 }
-            }, "get");
+                }, "get");
         }
     }
 
@@ -695,9 +707,11 @@ class NavigationNodes {
         this.drawNodesRectanglesAndLines();
         ajax_general("setNodeToEntryPoint", {
             nodeID: this.curNode.node_id,
-        }, {done: function () {
+        }, {
+            done: function () {
                 console.log("done");
-            }}, "get");
+            }
+            }, "get");
     }
 
     // delete that boi
@@ -705,10 +719,12 @@ class NavigationNodes {
         if (this.curNode) {
             ajax_general("deleteNodeFromMap", {
                 nodeID: this.curNode.node_id,
-            }, {done: function () {
+            }, {
+                done: function () {
                     console.log("done");
                     window.location.href = window.location.href;
-                }}, "get");
+                }
+                }, "get");
         }
     }
 
@@ -726,17 +742,17 @@ class NavigationNodes {
         $("#modalWhite").removeClass("hidden");
 
         ajax_general("updateAllNodesOnMap",
-                {
-                    mapID: window.mapID,
+            {
+                mapID: window.mapID,
+            },
+            {
+                done: function () {
+                    // TODO: Change to a soft refresh
+                    window.location.href = window.location.href;
+                    $("#modalBlack").addClass("hidden");
+                    $("#modalWhite").addClass("hidden");
                 },
-                {
-                    done: function () {
-                        // TODO: Change to a soft refresh
-                        window.location.href = window.location.href;
-                        $("#modalBlack").addClass("hidden");
-                        $("#modalWhite").addClass("hidden");
-                    },
-                }, "get");
+            }, "get");
 
 
 
@@ -804,7 +820,7 @@ class NavigationNodes {
         this.inputElements = inputElements;
 
         // Debuggin!
-        this.debugInfo = Object.assign({fakeProjectVirgin: false}, debugInfo);
+        this.debugInfo = Object.assign({ fakeProjectVirgin: false }, debugInfo);
 
         // Default properties for class itself
         this.isDraggable = false;
@@ -847,7 +863,8 @@ class NavigationNodes {
             // Will tell you if something goes bad with your inputs
             this.inputs.nodeCanvas = new NavigationNodes_Canvas(inputElements.canvas, {
                 defaultZoom: mapZoom,
-                defaultOffset: mapOffset});
+                defaultOffset: mapOffset
+            });
             // Seperate canvas for just the connecting arrows? Cut down on redraw time.
             // this.inputs.connectionsCanvas = new NavigationNodes_Canvas(inputElements.canvas);
             this.inputs.save = new NavigationNodes_Save(inputElements.saveButton);
@@ -860,6 +877,7 @@ class NavigationNodes {
             this.inputs.viewAt = new NavigationNodes_Save(inputElements.viewAt);
             this.inputs.allPathButton = new NavigationNodes_Path(inputElements.allPathButton);
             this.inputs.updateButton = new NavigationNodes_Save(inputElements.updateButton);
+            this.inputs.initialLoad = (inputElements.initialLoad) ? inputElements.initialLoad : false;
 
         } catch (e) {
             console.error("Error with NavigationNodes init.");
@@ -879,7 +897,7 @@ class NavigationNodes {
         function afterLoad() {
 
             if (this.checkIfProjectVirgin() ||
-                    this.debugInfo.fakeProjectVirgin) {
+                this.debugInfo.fakeProjectVirgin) {
                 this.placeVirginProjectNodes.call(_NavigationNodes);
                 this.saveJSON.call(_NavigationNodes);
             }

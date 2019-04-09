@@ -8,10 +8,14 @@ if (ENVIRONMENT === "sandbox") {
         ["ERROR_LIST", $errors],
     ]);
 } else {
-    $frag = new Html_fragment("html/register.html", [
-        ["ERROR_LIST", $errors],
-    ]);
+    if (defined("OPEN_REGISTRATION") && OPEN_REGISTRATION) {
+        $frag = new Html_fragment("html/register.html", [
+            ["ERROR_LIST", $errors],
+        ]);
+    }   else    {
+        $frag = new Html_fragment("html/closedRegistration.html", []);
+    }
+    
 }
 
 $frag->echoOut();
-?>
