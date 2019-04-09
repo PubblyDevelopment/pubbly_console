@@ -321,7 +321,9 @@ We never needed to do specifically this, so the instructions are a little raw, b
 * Create a temporary folder on your desktop (~/tmp)
 * Navigate to the variable export you want to download (eg /var/www/html/series/{NAME_OF_VARIABLE_EXPORT})
 * Download folder "audio", "images", "videos" along with every XML file to your desktop folder ~/tmp
-* From the pubbly_engine repository, copy and paste 
+* Clone the [Pubbly Engine](https://github.com/PubblyDevelopment/pubbly_engine) repository to your local
+> The Pubbly Engine is the required JS and CSS to take the XML and assets of a console based Export, and create an interactive web page (for deployment via Cordova APK wrapper, hosted server, or offline hand-to-hand zips).
+* From the Pubbly Engine repository on your local, copy and paste 
     - pubbly_engine/assets to ~/tmp/pubbly_engine/assets
     - pubbly_engine/css to ~/tmp/pubbly_engine/css
     - pubbly_engine/js to ~/tmp/pubbly_engine/js
