@@ -291,7 +291,7 @@ Node names are "-" joined strings of their source.
 |----------|------------------------------------|
 | Static   | static-$exportName                 |
 | Variable | variable-$seriesName-$childName    |
-| Stitched | unit-$School-$Subject-$Level-$Unit |
+| Stitched | unit-$school-$subject-$level-$unit |
 
 Unfortunately, map outdating is buggy. If you update a Static/Variable/Stitched export, reliant maps will NOT mark themselves as outdated. But if you manually update, changes will flow through.
 
@@ -354,7 +354,7 @@ This process may take time for larger maps, but it will automatically download a
 
 ### Deploying a Static/Variable Packet
 
-### Deploying a Stitched packet.
+### Deploying a Stitched school packet.
 
 Unfinished... TODO: Code and instructions (5hr)
 
