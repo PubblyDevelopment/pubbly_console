@@ -103,60 +103,15 @@ Restart apache 2 to update with all custom settings
 
 Your server is now ready. I strongly advice that you change the root password to something secure, that you disallow the following of system indexes, and other smart software people things.
 
-This is a "from scratch" build of the console, and has no pre-loaded content. To create and upload your own new content, see section "Adding content". You can also create a mirror image of TeamCCI's xprize console. For full instructions, see [Pubbly](https://github.com/PubblyDevelopment/pubbly) section "Submission from existing content". For convenience sake, I have also included a copy of the server specific "Preloading content: Xprize console duplication" steps below.
-
-## Preloading content: Xprize console duplication
-
-> Copied from [Pubbly](https://github.com/PubblyDevelopment/pubbly) section "Preloading content: Xprize console duplication"
-
-Log into your console, download and unzip the Xprize console content zips to their local folders, and import an associated sql file.
-
-| Type             |                      Zip location                      |   Extract location    |
-|------------------|:------------------------------------------------------:|:---------------------:|
-| Static Exports   |  xprize.pubbly.com/DuplicateConsole/StaticExports.zip  |  /var/www/html/books  |
-| Variable Exports | xprize.pubbly.com/DuplicateConsole/VariableExports.zip | /var/www/html/series  |
-| Stitched Exports | xprize.pubbly.com/DuplicateConsole/StitchedExports.zip | /var/www/html/schools |
-| Mapped Exports   |  xprize.pubbly.com/DuplicateConsole/MappedExports.zip  |   /var/www/html/map   |
-| Content SQL file |     xprize.pubbly.com/DuplicateConsole/Content.sql     |       mysql db        |
-
-* Log into your personal console using SSH (EG putty)
-> Add the base sql structure if you haven't already (i.e. finish [Pubbly Console](https://github.com/PubblyDevelopment/pubbly_console) section "Getting started")
-> Download content zips from our Xprize server to a local folder
-* cd ~/
-* mkdir tmp
-* cd tmp
-* wget xprize.pubbly.com/DuplicateConsole/StaticExports.zip
-* wget xprize.pubbly.com/DuplicateConsole/VariableExports.zip
-* wget xprize.pubbly.com/DuplicateConsole/StitchedExports.zip
-* wget xprize.pubbly.com/DuplicateConsole/MappedExports.zip
-> Unzip content to respective web roots
-* sudo apt-get install unzip
-* sudo unzip StaticExports.zip -d /var/www/html/books
-* sudo unzip VariableExports.zip -d /var/www/html/series
-* sudo unzip StitchedExports.zip -d /var/www/html/schools
-* sudo unzip MappedExports.zip -d /var/www/html/map
-> (re)Fix permissions issues
-* cd /var/www/html
-* sudo chmod 755 books series schools map zips deleted* -R
-* sudo chown www-data:ubuntu books series schools map zips deleted* -R
-> Download and import a sql file which reflects your new content.
-* wget xprize.pubbly.com/DuplicateConsole/Content.sql
-* sudo mysql -u root -p pubbly_console < Content_Ordered.sql
-> Cleanup
-* cd ../
-* rm -r tmp
-
-You now have an exact snapshot (minus user accounts) of the console TeamCCI used to create the Xprize English/Swahili program.
-
-For how this content was structured, from a content designer's perspective, see [Pubbly](https://github.com/PubblyDevelopment/pubbly) section "Submission from existing: Design overview". For how this content can be supplemented, edited, modified, or removed from the console, keep reading. 
+This is a "from scratch" build of the console, and has no pre-loaded content. To create and upload your own new content, see section "Adding content". You can also create a mirror image of TeamCCI's xprize console. For full instructions, see [Pubbly](https://github.com/PubblyDevelopment/pubbly) section "Submission from existing content". For convenience sake, I have also included a copy of the server specific "Adding content: Preloading Xprize content" steps below.
 
 ## Adding content
 
 It is entirely possible to create a brand new program from brand new assets using our tools. This is a large job, and will take artists, content creators, and developers. For a full overview of the process, checkout [Pubbly](https://github.com/PubblyDevelopment/pubbly) section "Submission from scratch".
 
-If you would like to instead start with a mirror image of the console TeamCCI used to create Xprize android applications, checkout [Pubbly](https://github.com/PubblyDevelopment/pubbly) section "Submission from existing content"
+If you would like to instead start with a mirror image of the console TeamCCI used to create Xprize android applications, checkout [Pubbly](https://github.com/PubblyDevelopment/pubbly) section "Submission from existing: Xprize console duplication"
 
-You can upload new content to either scratch consoles or Xprize dupe console in the same way. (Cont)
+You can upload new content to either scratch consoles or Xprize dupe console in the same way.
 
 ### Adding content: Design Tools Export
 
@@ -440,6 +395,8 @@ This process may take time for larger maps, but it will automatically download a
 
 ### Deploying a Static/Variable Packet
 
+TODO: Instructions in engine?
+
 ### Deploying a Stitched school packet.
 
 Unfinished... TODO: Code and instructions (5hr)
@@ -450,16 +407,10 @@ Still possible with SFTP or SSH access to server. Real quick instructions, SFTP 
 
 To deploy a packet, first create and download the packet to your local machine. (Steps in section Creating Packets). If you wish to deploy as an offline zip, to be viewed from a desktop browser, email it to whoever you want to have it, tell them to extract and open the index.html file. If you wish to deploy as a hosted webpage, extract to a web accessible folder on your server.
 
-If you wish to distribute as a cordova APK...
-
-* Install Cordova, [Instructions here](https://cordova.apache.org/docs/en/latest/guide/cli/)
-* Create a new cordova project
-* Extract the zip to it's web root (path/to/cordova/www)
-* Add whatever platform you want (iOS is largely untested, but Android works fine)
-* Build and distribute your APK.
+If you wish to distribute as a cordova APK, see [Pubbly SchoolHouse](https://github.com/PubblyDevelopment/pubbly_schoolhouse) section Adding content: Console Map packet
 
 ### Deploying a Pubbly School house
 
 For our submission in the XPRIZE, Pubbly created a lightweight but messy HTML front end cordova application, and filled it with Stitched and Mapped console packets.
 
-For full instructions on how to take new console packets and distribute in our exact structure, or how to modify the application structure to fit your new idea for a learning program, see [Pubbly SchoolHouse](https://github.com/PubblyDevelopment/pubbly_schoolhouse) section "Adding content"
+For full instructions on how to take new console packets and distribute in our exact structure, or how to modify the application structure to fit your new idea for a learning program, see [Pubbly SchoolHouse](https://github.com/PubblyDevelopment/pubbly_schoolhouse) section "Adding content" and "Adding content: New program"

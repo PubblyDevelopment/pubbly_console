@@ -182,7 +182,7 @@ let actionBar = {
                             disabled: true, on: {
                                 onItemClick: function () {
                                     $$("exportingNewMap").show();
-                                    createMapDownloadFort("market", {
+                                    createMapDownloadFor("market", {
                                         done: function (url) {
                                             $$("exportingNewMap").hide();
                                             window.location.href = url;

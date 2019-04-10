@@ -83,11 +83,6 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
                     $entranceNodeName . ".html';</script></head></html>";
                 file_put_contents("$mapExportLoc/index.html", $entranceHTML);
             };
-            if ($exportType === "market") {
-                $noZip = array("index.php", "index.html");
-            } else if ($exportType === "local") {
-                $noZip = array("index.php");
-            }
 
             $rootPath = realpath($mapExportLoc);
             $zip = new ZipArchive();
@@ -102,9 +97,16 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
                     // Get real and relative path for current file
                     $filePath = $file->getRealPath();
                     $relativePath = substr($filePath, strlen($rootPath) + 1);
-
-                    // Add current file to archive
-                    if (!in_array($relativePath, $noZip)) {
+                    $exp = explode(".", $relativePath);
+                    $relativeExt = array_pop($exp);
+                    if (
+                        $relativePath == "index.html" ||
+                        $relativePath == "index.php" ||
+                        $relativeExt === "json" ||
+                        $relativeExt === "modified"
+                    ) {
+                        // Skipping those.
+                    } else {
                         $zip->addFile($filePath, $relativePath);
                     }
                 }
