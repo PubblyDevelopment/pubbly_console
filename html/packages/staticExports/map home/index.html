@@ -1,0 +1,584 @@
+<!-- 
+    The pubbly offline-json template
+
+    Builds a pubbly book for offline browser viewing from a JSON object and assets
+
+    NEEDED SWITCHES
+
+    PATH_TO_ENGINE: Switch with the relative path to the engine folder, end with a trailing slash (./pubbly_engine/) OR switch to blank if along side ""
+
+    PATH_TO_BOOK: Switch with the relative path to the book folder, end with a trailing slash (./testBooks/SinglePager/) OR switch to blank if along side ""
+
+    PUBBLY_JSON: Switch with the FULL contents of MainXML.json. DO NOT put in quotes, paste in as it appears in the file.
+
+-->
+<html>
+
+<head>
+    <title>Pubbly</title>
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 
+        MIT 
+        https://jquery.org/license/ 
+    -->
+    <script src="pubbly_engine/js/third_party/jquery.min.js"></script>
+    <!-- 
+        GPL FLOSS exception (Apache 2.0 compat)
+        https://blog.webix.com/using-webix-in-open-source/
+    -->
+    <script src="pubbly_engine/js/third_party/webix.js"></script>
+    <!--
+        From Modernizr: MIT
+        https://modernizr.com/license/
+    -->
+    <script src="pubbly_engine/js/third_party/detectAutoplay.js"></script>
+    <!--
+        FloydPink: MIT
+        https://github.com/floydpink/lzwCompress.js/blob/master/LICENSE
+    -->
+    <script src="pubbly_engine/js/third_party/lzwCompress.js"></script>
+    <script>
+        $(document).ready(function () {
+            window.pubbly = new Pubbly(pubbly_json, {
+                rootToEngine: "pubbly_engine/",
+            });
+        });
+        let pubbly_json = JSON.parse(`{
+    "info": {
+        "name": "NewName",
+        "height": 600,
+        "width": 514,
+        "display": "single",
+        "bullet": "#8867AC",
+        "interrupt": true,
+        "saveStates": false,
+        "navigation": true,
+        "snapDrops": true,
+        "lastPageSpread": false,
+        "assetLocationPrefix": "undefined_",
+        "HighlightLinkColor": "128,255,255",
+        "HighlightLinkTransparency": 50,
+        "HighlightLinkTime": 500,
+        "HighlightLinkColorRGBA": "RGBA(128,255,255,0.5)"
+    },
+    "pages": [
+        {
+            "points": {
+                "page points": 0,
+                "changed": [],
+                "init": {
+                    "page points": 0,
+                    "changed": []
+                }
+            },
+            "reloadOnLeave": false,
+            "name": "Page 1",
+            "countdown": 0,
+            "objs": [
+                {
+                    "type": "field",
+                    "name": "Main",
+                    "layer": 0,
+                    "vis": true,
+                    "loc": [
+                        36,
+                        36
+                    ],
+                    "width": 438,
+                    "height": 242,
+                    "opacity": 1,
+                    "mobility": "fixed",
+                    "frontDrag": false,
+                    "animations": {},
+                    "align": "center",
+                    "displayType": "fixed text",
+                    "display": "Fixed Text",
+                    "font": "DidactGothic",
+                    "editable": false,
+                    "size": "auto",
+                    "color": "#000000",
+                    "contents": "Main",
+                    "calculated": {},
+                    "highlight": {
+                        "wordNum": false,
+                        "style": "front",
+                        "color": "#5aacc5"
+                    },
+                    "init": {
+                        "height": 242,
+                        "width": 438,
+                        "loc": [
+                            36,
+                            36
+                        ],
+                        "vis": true,
+                        "layer": 0,
+                        "mobility": "fixed",
+                        "opacity": 1
+                    }
+                },
+                {
+                    "type": "field",
+                    "name": "mt_1",
+                    "layer": 1,
+                    "vis": true,
+                    "loc": [
+                        322,
+                        45
+                    ],
+                    "width": 214,
+                    "height": 214,
+                    "opacity": 1,
+                    "mobility": "fixed",
+                    "frontDrag": false,
+                    "animations": {},
+                    "align": "center",
+                    "displayType": "fixed text",
+                    "display": "Fixed Text",
+                    "font": "DidactGothic",
+                    "editable": false,
+                    "size": "auto",
+                    "color": "#000000",
+                    "contents": "Map test\nNode 1",
+                    "calculated": {},
+                    "highlight": {
+                        "wordNum": false,
+                        "style": "front",
+                        "color": "#5aacc5"
+                    },
+                    "init": {
+                        "height": 214,
+                        "width": 214,
+                        "loc": [
+                            322,
+                            45
+                        ],
+                        "vis": true,
+                        "layer": 1,
+                        "mobility": "fixed",
+                        "opacity": 1
+                    }
+                },
+                {
+                    "type": "field",
+                    "name": "mt_2",
+                    "layer": 2,
+                    "vis": true,
+                    "loc": [
+                        322,
+                        259
+                    ],
+                    "width": 214,
+                    "height": 214,
+                    "opacity": 1,
+                    "mobility": "fixed",
+                    "frontDrag": false,
+                    "animations": {},
+                    "align": "center",
+                    "displayType": "fixed text",
+                    "display": "Fixed Text",
+                    "font": "DidactGothic",
+                    "editable": false,
+                    "size": "auto",
+                    "color": "#000000",
+                    "contents": "Map test\nNode 2",
+                    "calculated": {},
+                    "highlight": {
+                        "wordNum": false,
+                        "style": "front",
+                        "color": "#5aacc5"
+                    },
+                    "init": {
+                        "height": 214,
+                        "width": 214,
+                        "loc": [
+                            322,
+                            259
+                        ],
+                        "vis": true,
+                        "layer": 2,
+                        "mobility": "fixed",
+                        "opacity": 1
+                    }
+                }
+            ],
+            "auds": [],
+            "audKey": {},
+            "links": [
+                {
+                    "triggers": {
+                        "clicks": [
+                            {
+                                "type": "click",
+                                "condition": "click",
+                                "targets": [
+                                    {
+                                        "id": "tid0",
+                                        "type": "flash",
+                                        "action": "flashon",
+                                        "destination": "Main",
+                                        "blocking": false,
+                                        "hold": false,
+                                        "num": 5,
+                                        "stateChangeInterval": 150
+                                    }
+                                ],
+                                "run": 0
+                            }
+                        ],
+                        "points": [],
+                        "dragStops": [],
+                        "lineStarts": [],
+                        "lineStops": [],
+                        "countdowns": [],
+                        "openPages": []
+                    },
+                    "name": "mt_main",
+                    "type": "graphic",
+                    "drawing": false,
+                    "poly": [
+                        [
+                            36,
+                            31
+                        ],
+                        [
+                            479,
+                            31
+                        ],
+                        [
+                            479,
+                            284
+                        ],
+                        [
+                            36,
+                            284
+                        ],
+                        [
+                            36,
+                            31
+                        ]
+                    ],
+                    "pinned": false,
+                    "enabled": true,
+                    "clickHighlight": false,
+                    "clickHighlightOn": false,
+                    "layer": 1,
+                    "init": {
+                        "poly": [
+                            [
+                                36,
+                                31
+                            ],
+                            [
+                                479,
+                                31
+                            ],
+                            [
+                                479,
+                                284
+                            ],
+                            [
+                                36,
+                                284
+                            ],
+                            [
+                                36,
+                                31
+                            ]
+                        ],
+                        "enabled": true,
+                        "drawing": "false",
+                        "pinned": false,
+                        "layer": 1
+                    }
+                },
+                {
+                    "triggers": {
+                        "clicks": [
+                            {
+                                "type": "click",
+                                "condition": "click",
+                                "targets": [
+                                    {
+                                        "id": "tid1",
+                                        "type": "log",
+                                        "action": "alert",
+                                        "destination": "window",
+                                        "blocking": false,
+                                        "hold": false,
+                                        "value": "URL link undetermined... Please set in Program section of console."
+                                    }
+                                ],
+                                "run": 0
+                            }
+                        ],
+                        "points": [],
+                        "dragStops": [],
+                        "lineStarts": [],
+                        "lineStops": [],
+                        "countdowns": [],
+                        "openPages": []
+                    },
+                    "name": "mt_node1",
+                    "type": "graphic",
+                    "drawing": false,
+                    "poly": [
+                        [
+                            48,
+                            321
+                        ],
+                        [
+                            265,
+                            321
+                        ],
+                        [
+                            265,
+                            540
+                        ],
+                        [
+                            48,
+                            540
+                        ],
+                        [
+                            48,
+                            321
+                        ]
+                    ],
+                    "pinned": false,
+                    "enabled": true,
+                    "clickHighlight": false,
+                    "clickHighlightOn": false,
+                    "layer": 2,
+                    "init": {
+                        "poly": [
+                            [
+                                48,
+                                321
+                            ],
+                            [
+                                265,
+                                321
+                            ],
+                            [
+                                265,
+                                540
+                            ],
+                            [
+                                48,
+                                540
+                            ],
+                            [
+                                48,
+                                321
+                            ]
+                        ],
+                        "enabled": true,
+                        "drawing": "false",
+                        "pinned": false,
+                        "layer": 2
+                    }
+                },
+                {
+                    "triggers": {
+                        "clicks": [
+                            {
+                                "type": "click",
+                                "condition": "click",
+                                "targets": [
+                                    {
+                                        "id": "tid2",
+                                        "type": "log",
+                                        "action": "alert",
+                                        "destination": "window",
+                                        "blocking": false,
+                                        "hold": false,
+                                        "value": "URL link undetermined... Please set in Program section of console."
+                                    }
+                                ],
+                                "run": 0
+                            }
+                        ],
+                        "points": [],
+                        "dragStops": [],
+                        "lineStarts": [],
+                        "lineStops": [],
+                        "countdowns": [],
+                        "openPages": []
+                    },
+                    "name": "mt_node2",
+                    "type": "graphic",
+                    "drawing": false,
+                    "poly": [
+                        [
+                            257,
+                            320
+                        ],
+                        [
+                            475,
+                            320
+                        ],
+                        [
+                            475,
+                            536
+                        ],
+                        [
+                            257,
+                            536
+                        ],
+                        [
+                            257,
+                            320
+                        ]
+                    ],
+                    "pinned": false,
+                    "enabled": true,
+                    "clickHighlight": false,
+                    "clickHighlightOn": false,
+                    "layer": 3,
+                    "init": {
+                        "poly": [
+                            [
+                                257,
+                                320
+                            ],
+                            [
+                                475,
+                                320
+                            ],
+                            [
+                                475,
+                                536
+                            ],
+                            [
+                                257,
+                                536
+                            ],
+                            [
+                                257,
+                                320
+                            ]
+                        ],
+                        "enabled": true,
+                        "drawing": "false",
+                        "pinned": false,
+                        "layer": 3
+                    }
+                }
+            ]
+        }
+    ],
+    "drawingTool": {},
+    "points": {}
+}`);
+    </script>
+
+    <link href="pubbly_engine/css/main.css" rel="stylesheet" />
+
+    <script src="pubbly_engine/js/utility/filePathManipulations.js"></script>
+    <script src="pubbly_engine/js/utility/findAndReplace.js"></script>
+    <script src="pubbly_engine/js/utility/findDifferenceBetweenTwoArrays.js"></script>
+    <script src="pubbly_engine/js/utility/random.js"></script>
+    <script src="pubbly_engine/js/utility/redrawDependency.js"></script>
+    <script src="pubbly_engine/js/utility/variableFrameRateInt.js"></script>
+
+    <script src="pubbly_engine/js/build/preflight.js"></script>
+    <script src="pubbly_engine/js/build/xmlFormattingFunctions.js"></script>
+    <script src="pubbly_engine/js/build/xmlToJson.js"></script>
+    <script src="pubbly_engine/js/build/_Build.js"></script>
+
+    <script src="pubbly_engine/js/run/_Pubbly.js"></script>
+    <script src="pubbly_engine/js/run/countdown.js"></script>
+    <script src="pubbly_engine/js/run/dom.js"></script>
+    <script src="pubbly_engine/js/run/domInteractionCover.js"></script>
+    <script src="pubbly_engine/js/run/drawingTools.js"></script>
+    <script src="pubbly_engine/js/run/events.js"></script>
+    <script src="pubbly_engine/js/run/events_cursorInput.js"></script>
+    <script src="pubbly_engine/js/run/links.js"></script>
+    <script src="pubbly_engine/js/run/navigationUI.js"></script>
+    <script src="pubbly_engine/js/run/presetAssets.js"></script>
+    <script src="pubbly_engine/js/run/sequence.js"></script>
+    <script src="pubbly_engine/js/run/states.js"></script>
+    <script src="pubbly_engine/js/run/turns.js"></script>
+    <script src="pubbly_engine/js/run/urlNav.js"></script>
+    <script src="pubbly_engine/js/run/workspaces.js"></script>
+
+    <script src="pubbly_engine/js/shared/assetListLoader.js"></script>
+    <script src="pubbly_engine/js/shared/buffer.js"></script>
+    <script src="pubbly_engine/js/shared/color_codes.js"></script>
+    <script src="pubbly_engine/js/shared/cursors.js"></script>
+    <script src="pubbly_engine/js/shared/defaultCallbacks.js"></script>
+    <script src="pubbly_engine/js/shared/error.js"></script>
+    <script src="pubbly_engine/js/shared/globals.js"></script>
+    <script src="pubbly_engine/js/shared/helpers.js"></script>
+    <script src="pubbly_engine/js/shared/messyHTML.js"></script>
+    <script src="pubbly_engine/js/shared/progressGraph.js"></script>
+    <!--
+            There are a few images that are NOT book specific, that load with every pubbly.
+
+            These images are in the pubbly engine asset folder, but if loaded from CSS, well
+            Different build and run environments currently have the luxury of sticking the engine anywhere.
+            They can swap out the pubbly_engine/ with whatever they want, and it just works
+            Except the CSS doesn't get swapped, and the image assets aren't loaded properly.
+
+            So better to keep definitions here, to root to engine swaps apply to anything that needs it...
+        -->
+    <style>
+        #main {
+            background-image:url("pubbly_engine/assets/logo_background.png");
+        }
+
+        .logo {
+            content:url("pubbly_engine/assets/logo_powered_by.png");
+        }
+
+        .previous img,
+        .next img {
+            content:url("pubbly_engine/assets/UI_navigation_arrow.png");
+        }
+
+        ._asset_logoEmptyColors {
+            content: url("pubbly_engine/assets/logo_fill_letters.png");
+        }
+
+        ._asset_eatCarrotGif {
+            content: url("pubbly_engine/assets/loader_carrot_eat.gif");
+        }
+
+        @font-face {
+            font-family: DidactGothic;
+            src: url("pubbly_engine/fonts/DidactGothic/regular.otf");
+        }
+
+        @font-face {
+            font-family: Garamond;
+            src: url("pubbly_engine/fonts/Garamond/regular.otf");
+        }
+
+        @font-face {
+            font-family: MyriadPro;
+            src: url("pubbly_engine/fonts/MyriadPro/regular.otf");
+        }
+
+        @font-face {
+            font-family: NotoSans;
+            src: url("pubbly_engine/fonts/NotoSans/regular.ttf");
+        }
+    </style>
+</head>
+
+<body class="noSelect">
+    <div id="main" class="transformCenterCont">
+        <div class="transformCenter">
+            <div id="pubbly_main"></div>
+        </div>
+    </div>
+    <div id="fontForcePreload" style="visibility:hidden;position:absolute;height:0;widht:0;overflow:hidden">
+        <p style="font-family:DidactGothic">The quick young fox jumped over the lazy dog.</p>
+        <p style="font-family:Garamond">The quick young fox jumped over the lazy dog.</p>
+        <p style="font-family:MyriadPro">The quick young fox jumped over the lazy dog.</p>
+        <p style="font-family:NotoSans">The quick young fox jumped over the lazy dog.</p>
+        <img src="pubbly_engine/assets/loader_carrot_eat.gif" />
+    </div>
+</body>
+
+</html>

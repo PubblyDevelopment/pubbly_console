@@ -101,7 +101,7 @@ if (isset($loc)) {
         }
         header("location: $loc/$htmlFileName");
     } else {
-        $jsonLoc = "$loc/$jsonName.$engineCode.json";
+        $jsonLoc = "$loc/$jsonName.json";
         $jsonUpdated = (file_exists("$jsonLoc")) ? filemtime("$jsonLoc") : 0;
         $xmlUpdated = (file_exists("$loc/$xmlName")) ? filemtime("$loc/$xmlName") : 0;
         $engineUpdated = stat("pubbly_engine/")['mtime'];

@@ -1,6 +1,7 @@
 <?php
 
-class Html_fragment {
+class Html_fragment
+{
 
     private $fsLoc = "";
     private $fileContents = "";
@@ -9,7 +10,8 @@ class Html_fragment {
     // HTML string that will eventually get echoed
     private $html = "";
 
-    private function genSwappedHTML() {
+    private function genSwappedHTML()
+    {
         $swaps = $this->swaps;
         $out = file_get_contents($this->fsLoc);
         for ($s = 0; $s < count($swaps); $s++) {
@@ -24,7 +26,8 @@ class Html_fragment {
         return $out;
     }
 
-    private function genComments() {
+    private function genComments()
+    {
         $commentLoc = "<!-- " . $this->fsLoc . " -->";
         $commentSwaps = "<!-- SWAPS" . "\r\n";
         $swaps = $this->swaps;
@@ -41,32 +44,41 @@ class Html_fragment {
         return $commentLoc . $commentSwaps;
     }
 
-    private function addDefaultSwaps() {
+    private function addDefaultSwaps()
+    {
         // SHOULD be in config.php
         $brand = (defined(BRAND)) ? BRAND : "";
         array_push($this->swaps, ["BRAND", $brand]);
     }
 
-    public function echoOut() {
+    public function echoOut()
+    {
         echo $this->html;
     }
 
-    public function printOut($where) {
+    public function printOut($where)
+    {
         file_put_contents($where, $this->html);
     }
 
-    function __construct($fsLoc, $swaps) {
+    function __construct($fsLoc, $swaps)
+    {
         $this->fsLoc = $fsLoc;
         $this->swaps = $swaps;
         // Load HTML file passed through
         if (file_exists($fsLoc)) {
-            $this->addDefaultSwaps();
-            $comments = $this->genComments();
-            $htmlText = $this->genSwappedHTML();
-            $this->html = $comments . $htmlText;
+            $comment = false;
+            if ($comment) {
+                $this->addDefaultSwaps();
+                $comments = $this->genComments();
+                $htmlText = $this->genSwappedHTML();
+                $this->html = $comments . $htmlText;
+            } else {
+                $this->addDefaultSwaps();
+                $this->html = $this->genSwappedHTML();;
+            }
         } else {
             echo "File $fsLoc not found in FS";
         }
     }
-
 }

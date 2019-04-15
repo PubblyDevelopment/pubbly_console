@@ -130,11 +130,13 @@ $(document).ready(function () {
             window.selectedBook = unitName;
             window.selectedBookID = this.getItem(id).id;
             $$("deleteBook").enable();
-            $$("viewBookOld").enable();
+            // $$("viewBookOld").enable();
             $$("viewBookNew").enable();
             $$("reuploadBook").enable();
             $$('reuploadBook').data.upload = "ajax/upload/uploadBook.php?bookName=" + window.selectedBook;
             $$("downloadBook").enable();
+            $$("packageBookStandalone").enable();
+            $$("packageBookDependent").enable();
             $$("renameBook").enable();
         }
 
@@ -187,6 +189,39 @@ $(document).ready(function () {
             .fail(function () {
                 webix.message("error: Bad ajax call");
             })
+    }
+    function packageStaticFor(what, cbs) {
+        $.ajax("ajax/package/static.php?type=" + what + "&staticID=" + window.selectedBookID).done(
+            function (ret) {
+                try {
+                    ret = JSON.parse(ret);
+                    if (ret.status === "success") {
+                        cbs.done(ret.url)
+                    } else {
+                        cbs.fail(ret.message);
+                    }
+                } catch (err) {
+                    document.body.innerHTML = ret;
+                }
+            }
+        );
+    }
+    function wb_packageBook_click(button, packageType) {
+        var url = "ajax/package/static.php?type=" + packageType + "&id=" + selectedBookID;
+        $$(button).disable();
+        $$("exportingPackage").show();
+        packageStaticFor(packageType, {
+            done: function (url) {
+                $$(button).enable();
+                $$("exportingPackage").hide();
+                window.location.href = url;
+            },
+            fail: function (message) {
+                $$(button).enable();
+                $$("exportingPackage").hide();
+                webix.message({type:"error", text: message});
+            }
+        })
     }
     function wb_renameBook_click() {
         let newName = window.prompt("New name please: ");
@@ -284,6 +319,26 @@ $(document).ready(function () {
     // Webix.ui function here... Unfortunately since data is ajaxed in, not echoed, the call is behind this function, with the two args getting generated from the top $.ajax call
     function ready(treeData, folders) {
         webix.ui({
+            view: "window",
+            position: "center",
+            id: "exportingPackage",
+            head: "Working on it",
+            body: {
+                rows: [
+                    {
+                        view: "label",
+                        align: "center",
+                        label: "Packaging Static Export, Please be patient"
+                    },
+                    {
+                        view: "label",
+                        align: "center",
+                        label: "Package will download automatically once ready"
+                    },
+                ]
+            }
+        });
+        webix.ui({
             view: "scrollview",
             body: {
                 type: "space",
@@ -359,6 +414,7 @@ $(document).ready(function () {
                                         },
                                         {},
 
+                                        /*
                                         {
                                             value: "View old", id: "viewBookOld", view: "button", disabled: true, on: {
                                                 onItemClick: function () {
@@ -366,8 +422,9 @@ $(document).ready(function () {
                                                 }
                                             }
                                         },
+                                        */
                                         {
-                                            value: "View new", id: "viewBookNew", view: "button", disabled: true, on: {
+                                            value: "View", id: "viewBookNew", view: "button", disabled: true, on: {
                                                 onItemClick: function () {
                                                     window.location.href = "read.php?engineCode=new&t=b&id=" + window.selectedBookID;
                                                 }
@@ -375,16 +432,6 @@ $(document).ready(function () {
                                         },
 
                                         {},
-                                        {
-                                            view: "button",
-                                            id: "downloadBook",
-                                            disabled: true,
-                                            width: 150,
-                                            value: "Download",
-                                            on: {
-                                                onItemClick: wb_downloadBook_click
-                                            },
-                                        },
                                         {
                                             view: "uploader",
                                             id: "reuploadBook",
@@ -406,6 +453,46 @@ $(document).ready(function () {
                                                 }
                                             },
                                         },
+                                        {
+                                            view: "button",
+                                            id: "downloadBook",
+                                            disabled: true,
+                                            width: 150,
+                                            value: "Download",
+                                            tooltip: "Download original Design Tools exports for edits",
+                                            on: {
+                                                onItemClick: wb_downloadBook_click
+                                            },
+                                        },
+                                        {},
+
+                                        {
+                                            view: "button",
+                                            id: "packageBookStandalone",
+                                            disabled: true,
+                                            width: 150,
+                                            value: "Package Standalone",
+                                            tooltip: "Create webpage from book as a Standalone (Works out the box)",
+                                            on: {
+                                                onItemClick: function() {
+                                                    wb_packageBook_click("packageBookStandalone", "standalone")
+                                                }
+                                            },
+                                        },
+                                        {
+                                            view: "button",
+                                            id: "packageBookDependent",
+                                            disabled: true,
+                                            width: 150,
+                                            value: "Package Dependent",
+                                            tooltip: "Create webpage from book as a Dependent piece of a larger program (DOES NOT have an attached engine)",
+                                            on: {
+                                                onItemClick: function() {
+                                                    wb_packageBook_click("packageBookDependent", "dependent")
+                                                }
+                                            },
+                                        },
+
                                         {},
                                         {
                                             value: "Rename", id: "renameBook", view: "button", disabled: true, on: {

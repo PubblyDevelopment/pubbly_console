@@ -42,12 +42,13 @@ if ($bookLoc) {
 	if ($prettyBookData == "null") {
 		$prettBookData = $data;
 		$response['message'] = "JSON pretty printing failed... using raw data instead";
-		file_put_contents("$bookLoc/$jsonName.$engineCode.json", $data);
+		file_put_contents("$bookLoc/$jsonName.json", $data);
+
 	}	else	{
-		file_put_contents("$bookLoc/$jsonName.$engineCode.json", $prettyBookData);
+		file_put_contents("$bookLoc/$jsonName.json", $prettyBookData);
 	}
-	$jsonModified = filemtime("$bookLoc/$jsonName.$engineCode.json") . "000"; // JS and PHP stamp difs
-	file_put_contents("$bookLoc/$jsonName.$engineCode.json.modified", $jsonModified);
+	$jsonModified = filemtime("$bookLoc/$jsonName.json") . "000"; // JS and PHP stamp difs
+	file_put_contents("$bookLoc/$jsonName.json.modified", $jsonModified);
 	$response['status'] = 'success';
 } else {
 	$response['status'] = 'error';
