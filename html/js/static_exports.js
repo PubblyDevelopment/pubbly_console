@@ -98,10 +98,10 @@ $(document).ready(function () {
                                 scroll: "y",
                                 data: treeData,
                                 columns: [
-                                    {id: "ID", header: "", width: 50, },
-                                    {id: "name", header: "Name", width: 200, editor: "text", },
-                                    {id: "pages", header: "Pages", width: 100, editor: false, },
-                                    {id: "longname", header: "Long Name", fillspace: true, editor: "text", },
+                                    { id: "ID", header: "", width: 50, },
+                                    { id: "name", header: "Name", width: 200, editor: "text", },
+                                    { id: "pages", header: "Pages", width: 100, editor: false, },
+                                    { id: "longname", header: "Long Name", fillspace: true, editor: "text", },
                                 ],
                                 on: {
                                     onBeforeDrop: function (context) {
@@ -125,7 +125,7 @@ $(document).ready(function () {
                                             $.ajax({
                                                 type: 'get',
                                                 url: 'ajax/set/setBooksFolder.php',
-                                                data: {"bookID": seriesID, "folderName": folderName},
+                                                data: { "bookID": seriesID, "folderName": folderName },
                                                 success: function (ret) {
                                                     if (ret == "done") {
                                                         // window.location.href = window.location.href;
@@ -153,7 +153,7 @@ $(document).ready(function () {
                                         $.ajax({
                                             type: 'post',
                                             url: 'ajax/set/setSeriesOrder.php',
-                                            data: {"orderByID": JSON.stringify(orderByID)},
+                                            data: { "orderByID": JSON.stringify(orderByID) },
                                             success: function (ret) {
                                                 if (ret == "done") {
                                                     // window.location.href = window.location.href;
@@ -176,7 +176,6 @@ $(document).ready(function () {
                                             window.selectedBook = unitName;
                                             window.selectedBookID = this.getItem(id).id;
                                             $$("deleteBook").enable();
-                                            $$("viewBookOld").enable();
                                             $$("viewBookNew").enable();
                                             $$("reuploadBook").enable();
                                             $$('reuploadBook').data.upload = "ajax/upload/uploadBook.php?bookName=" + window.selectedBook;
@@ -227,13 +226,16 @@ $(document).ready(function () {
                                         }
                                     },
                                     {},
-
+                                    /*
                                     {value: "View old", id: "viewBookOld", view: "button", disabled: true, on: {onItemClick: function () {
                                                 window.location.href = "read.php?t=b&id=" + window.selectedBookID;
                                             }
                                         }
                                     },
-                                    {value: "View new", id: "viewBookNew", view: "button", disabled: true, on: {onItemClick: function () {
+                                    */
+                                    {
+                                        value: "View new", id: "viewBookNew", view: "button", disabled: true, on: {
+                                            onItemClick: function () {
                                                 window.location.href = "read.php?engineCode=new&t=b&id=" + window.selectedBookID;
                                             }
                                         }
@@ -253,24 +255,24 @@ $(document).ready(function () {
                                                 $$("downloadBook").disable();
                                                 $$("downloadBook").refresh();
                                                 $.ajax(url)
-                                                        .done(function (ret) {
-                                                            $$("downloadBook").setValue("Done!");
+                                                    .done(function (ret) {
+                                                        $$("downloadBook").setValue("Done!");
+                                                        $$("downloadBook").refresh();
+                                                        if (ret == "done") {
+                                                            window.location.href = "books/" + window.selectedBookID + "/" + window.selectedBook + ".zip";
+                                                        } else {
+                                                            console.log(ret);
+                                                        }
+                                                        window.setTimeout(function () {
+                                                            $$("downloadBook").setValue("Download");
+                                                            $$("downloadBook").enable();
                                                             $$("downloadBook").refresh();
-                                                            if (ret == "done") {
-                                                                window.location.href = "books/" + window.selectedBookID + "/" + window.selectedBook + ".zip";
-                                                            } else {
-                                                                console.log(ret);
-                                                            }
-                                                            window.setTimeout(function () {
-                                                                $$("downloadBook").setValue("Download");
-                                                                $$("downloadBook").enable();
-                                                                $$("downloadBook").refresh();
-                                                            }, 500)
+                                                        }, 500)
 
-                                                        })
-                                                        .fail(function () {
-                                                            webix.message("error: Bad ajax call");
-                                                        })
+                                                    })
+                                                    .fail(function () {
+                                                        webix.message("error: Bad ajax call");
+                                                    })
                                             }
                                         },
                                     },
@@ -287,34 +289,35 @@ $(document).ready(function () {
                                                 webix.message("Upload complete!");
                                                 window.location.href = window.location.href;
                                             },
-                                            onFileUploadError: function(file, err) {
+                                            onFileUploadError: function (file, err) {
                                                 console.alert(err);
                                             },
-                                            onFileUpload: function() {
+                                            onFileUpload: function () {
                                                 console.log("here");
                                             }
                                         },
                                     },
                                     {},
                                     {
-                                        value: "Rename", id: "renameBook", view: "button", disabled: true, on: {onItemClick: function () {
+                                        value: "Rename", id: "renameBook", view: "button", disabled: true, on: {
+                                            onItemClick: function () {
                                                 let newName = window.prompt("New name please: ");
                                                 $.ajax("ajax/rename/renameBook.php?name=" + newName + "&id=" + window.selectedBookID + "&oldname=" + window.selectedBook).done(
-                                                        function (ret) {
-                                                            if (ret == "done") {
-                                                                webix.message("Done.");
-                                                                window.location.href = window.location.href
-                                                            } else if (ret == "taken") {
-                                                                var sel = THIS.getSelectedId();
-                                                                var row = THIS.getItem(sel.row);
-                                                                row.name = state.old;
-                                                                THIS.updateItem(sel.row, row);
-                                                                THIS.refresh();
-                                                                webix.message("Name already taken! Rename to something else.");
-                                                            } else {
-                                                                document.body.innerHTML = ret;
-                                                            }
+                                                    function (ret) {
+                                                        if (ret == "done") {
+                                                            webix.message("Done.");
+                                                            window.location.href = window.location.href
+                                                        } else if (ret == "taken") {
+                                                            var sel = THIS.getSelectedId();
+                                                            var row = THIS.getItem(sel.row);
+                                                            row.name = state.old;
+                                                            THIS.updateItem(sel.row, row);
+                                                            THIS.refresh();
+                                                            webix.message("Name already taken! Rename to something else.");
+                                                        } else {
+                                                            document.body.innerHTML = ret;
                                                         }
+                                                    }
                                                 );
                                             }
                                         },
@@ -343,13 +346,13 @@ $(document).ready(function () {
                                 id: "createTab",
                                 header: "New Book",
                                 cols: [
-                                    {gravity: 1},
+                                    { gravity: 1 },
                                     {
                                         gravity: 5,
                                         maxWidth: 400,
                                         autoheight: true,
                                         rows: [
-                                            {height: 10, },
+                                            { height: 10, },
                                             {
                                                 header: "Step 1", collapsed: false, body: {
                                                     view: "form",
@@ -368,20 +371,20 @@ $(document).ready(function () {
                                                                         $$("newBook").refresh();
                                                                         window.newBookTimeout = window.setTimeout(function () {
                                                                             var jqxhr = $.ajax("ajax/check/checkBookName.php?name=" + requestName)
-                                                                                    .done(function (ret) {
-                                                                                        if (ret == "") {
-                                                                                            $$("newBook").enable();
-                                                                                            $$("newBook").setValue("Create");
-                                                                                            $$("newBook").refresh();
-                                                                                        } else {
-                                                                                            $$("newBook").disable();
-                                                                                            $$("newBook").setValue("Name taken");
-                                                                                            $$("newBook").refresh();
-                                                                                        }
-                                                                                    })
-                                                                                    .fail(function () {
-                                                                                        alert("error");
-                                                                                    })
+                                                                                .done(function (ret) {
+                                                                                    if (ret == "") {
+                                                                                        $$("newBook").enable();
+                                                                                        $$("newBook").setValue("Create");
+                                                                                        $$("newBook").refresh();
+                                                                                    } else {
+                                                                                        $$("newBook").disable();
+                                                                                        $$("newBook").setValue("Name taken");
+                                                                                        $$("newBook").refresh();
+                                                                                    }
+                                                                                })
+                                                                                .fail(function () {
+                                                                                    alert("error");
+                                                                                })
                                                                         }, 500);
                                                                     } else {
                                                                         $$("newBook").disable();
@@ -476,10 +479,10 @@ $(document).ready(function () {
                                                     ]
                                                 }
                                             },
-                                            {height: 10, },
+                                            { height: 10, },
                                         ]
                                     },
-                                    {gravity: 1},
+                                    { gravity: 1 },
                                 ],
                             },
                         ]

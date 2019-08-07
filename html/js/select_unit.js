@@ -31,7 +31,7 @@ function deselectCat(level) {
         $$("deleteUnit").disable();
         $$("deleteUnitAction").disable();
         $$("editUnitAction").disable();
-        $$("saveUnitActionOld").disable();
+        // $$("saveUnitActionOld").disable();
         $$("saveUnitActionNew").disable();
         $$("downloadUnit").disable();
         window.selectedUnit = false;
@@ -81,10 +81,10 @@ function renameSchool(newName) {
             if (noBadNameChars(newName)) {
                 deselectCat(4);
                 $.ajax("ajax/rename/renameSchool.php?oldName=" + oldName + "&newName=" + newName).done(
-                        function (ret) {
-                            updateRename("school", oldName, newName);
-                            window.selectedSchool = newName;
-                        }
+                    function (ret) {
+                        updateRename("school", oldName, newName);
+                        window.selectedSchool = newName;
+                    }
                 )
             } else {
                 // bad chars sends error
@@ -101,11 +101,11 @@ function renameSubject(newName) {
             if (noBadNameChars(newName)) {
                 deselectCat(3);
                 $.ajax("ajax/rename/renameSubject.php?schoolName=" + window.selectedSchool + "&oldName=" + oldName + "&newName=" + newName).done(
-                        function (ret) {
-                            console.log(ret);
-                            updateRename("subject", oldName, newName);
-                            window.selectedSubject = newName;
-                        }
+                    function (ret) {
+                        console.log(ret);
+                        updateRename("subject", oldName, newName);
+                        window.selectedSubject = newName;
+                    }
                 )
             } else {
                 // bad chars sends error
@@ -122,10 +122,10 @@ function renameLevel(newName) {
             if (noBadNameChars(newName)) {
                 deselectCat(2);
                 $.ajax("ajax/rename/renameLevel.php?schoolName=" + window.selectedSchool + "&subjectName=" + window.selectedSubject + "&oldName=" + oldName + "&newName=" + newName).done(
-                        function (ret) {
-                            updateRename("level", oldName, newName);
-                            window.selectedLevel = newName;
-                        }
+                    function (ret) {
+                        updateRename("level", oldName, newName);
+                        window.selectedLevel = newName;
+                    }
                 )
             } else {
                 // bad chars sends error
@@ -144,10 +144,10 @@ function renameUnit(newName) {
                 if (noBadNameChars(newName)) {
                     deselectCat(1);
                     $.ajax("ajax/rename/renameUnit.php?schoolName=" + window.selectedSchool + "&subjectName=" + window.selectedSubject + "&levelName=" + window.selectedLevel + "&oldName=" + oldName + "&newName=" + newName).done(
-                            function (ret) {
-                                updateRename("unit", oldName, newName);
-                                window.selectedUnit = newName;
-                            }
+                        function (ret) {
+                            updateRename("unit", oldName, newName);
+                            window.selectedUnit = newName;
+                        }
                     )
                 } else {
                     // bad chars sends error
@@ -186,7 +186,7 @@ var header = {
             view: "label",
             template: "<p class='toolbarCenterLabel'>Select Unit</p>"
         },
-        {width: 80},
+        { width: 80 },
         {
             view: "button", value: "Logout", width: 80, on: {
                 onItemClick: function () {
@@ -207,7 +207,7 @@ var unitActions = {
                 label: "<-- Please select a School, Subject and Level",
                 align: "center",
             },
-            {height: 5},
+            { height: 5 },
             {
                 id: "unitList",
                 view: "list",
@@ -240,33 +240,33 @@ var unitActions = {
                         var outdated = this.getItem(id).outdated;
                         window.currentUnitOutdated = (outdated == "OUTDATED") ? true : false;
                         if (currentUnitOutdated) {
-                            $$("saveUnitActionOld").setValue("Update+View Old");
+                            // $$("saveUnitActionOld").setValue("Update+View Old");
                             $$("saveUnitActionNew").setValue("Update+View New");
                         } else {
-                            $$("saveUnitActionOld").setValue("View Old");
+                            // $$("saveUnitActionOld").setValue("View Old");
                             $$("saveUnitActionNew").setValue("View New");
                         }
                         if (isGame(unitName)) {
                             $$("uploadIconAction").enable();
                             $$("uploadIconAction").define("value", "Upload G" + isGame(unitName)[0] + " icon");
                             $$('uploadIconAction').data.upload = "ajax/upload/uploadGameIcon.php?" +
-                                    "schoolName=" + window.selectedSchool +
-                                    "&subjectName=" + window.selectedSubject +
-                                    "&levelName=" + window.selectedLevel +
-                                    "&unitName=" + unitName;
+                                "schoolName=" + window.selectedSchool +
+                                "&subjectName=" + window.selectedSubject +
+                                "&levelName=" + window.selectedLevel +
+                                "&unitName=" + unitName;
                         } else {
                             $$("uploadIconAction").define("value", "Upload icon");
                             $$("uploadIconAction").disable();
                             $$('uploadIconAction').data.upload = "";
                         }
                         $$("uploadIconAction").refresh();
-                        $$("saveUnitActionOld").refresh();
+                        // $$("saveUnitActionOld").refresh();
                         $$("saveUnitActionNew").refresh();
                         $$("unitCombo").setValue(id);
                         $$("deleteUnit").enable();
                         $$("deleteUnitAction").enable();
                         $$("editUnitAction").enable();
-                        $$("saveUnitActionOld").enable();
+                        // $$("saveUnitActionOld").enable();
                         $$("saveUnitActionNew").enable();
                         $$("downloadUnit").enable();
                         window.selectedUnit = unitName;
@@ -278,8 +278,10 @@ var unitActions = {
                 hidden: false,
                 height: 150,
                 rows: [
-                    {cols: [
-                            {rows: [
+                    {
+                        cols: [
+                            {
+                                rows: [
                                     {},
                                     {
                                         id: "newUnitAction",
@@ -306,8 +308,9 @@ var unitActions = {
                                     {},
                                 ]
                             },
-                            {gravity: 0.05},
-                            {rows: [
+                            { gravity: 0.05 },
+                            {
+                                rows: [
                                     {},
                                     {
                                         id: "editUnitAction",
@@ -359,6 +362,7 @@ var unitActions = {
                                     },
                                     {
                                         cols: [
+                                            /*
                                             {
                                                 id: "saveUnitActionOld",
                                                 view: "button",
@@ -381,7 +385,9 @@ var unitActions = {
                                                         }
                                                     }
                                                 }
-                                            }, {
+                                            },
+                                            */
+                                            {
                                                 id: "saveUnitActionNew",
                                                 view: "button",
                                                 value: "View New",
@@ -410,8 +416,9 @@ var unitActions = {
                                     {},
                                 ]
                             },
-                            {gravity: 0.05},
-                            {rows: [
+                            { gravity: 0.05 },
+                            {
+                                rows: [
                                     {},
                                     {
                                         id: "uploadIconAction",
@@ -463,11 +470,13 @@ var unitActions = {
                 cols: [
                     {},
                     {},
-                    {id: "downloadUnit", view: "button", disabled: true, value: "Download Unit", on: {
+                    {
+                        id: "downloadUnit", view: "button", disabled: true, value: "Download Unit", on: {
                             onItemClick: function () {
                                 download("unit");
                             }
-                        }},
+                        }
+                    },
                 ],
             },
         ]
@@ -494,20 +503,20 @@ function download(what) {
         var url = "ajax/download/prepUnitDownload.php?loc=" + loc + "&name=" + zipName;
         webix.message("Preparing download...");
         $.ajax(url).done(
-                function (ret) {
-                    var isError = ret.split("error: ").length > 1;
-                    if (isError) {
-                        document.body.innerHTML = ret;
-                    } else if (ret == "done") {
-                        webix.message("Starting download...");
-                        window.location.href = loc + "/" + zipName + ".zip";
-                    } else {
-                        document.body.innerHTML = ret;
-                    }
-                });
+            function (ret) {
+                var isError = ret.split("error: ").length > 1;
+                if (isError) {
+                    document.body.innerHTML = ret;
+                } else if (ret == "done") {
+                    webix.message("Starting download...");
+                    window.location.href = loc + "/" + zipName + ".zip";
+                } else {
+                    document.body.innerHTML = ret;
+                }
+            });
     }
 }
-var tutorialTypes = {"app": "<b>Application</b>", "float": "<i>Float</i>"};
+var tutorialTypes = { "app": "<b>Application</b>", "float": "<i>Float</i>" };
 function setTutorialTypes(subjects) {
     var options = $$("tutorialsTable").config.columns[1].options;
     // Deletes leftover subject specific crap
@@ -532,15 +541,17 @@ var tutorials = {
         id: "editTutorials",
         hidden: false,
         elements: [
-            {cols: [
+            {
+                cols: [
                     {},
-                    {view: "datatable", id: "tutorialsTable", minHeight: 300, width: 1030, rowHeight: 50, select: "multiselect", drag: true,
+                    {
+                        view: "datatable", id: "tutorialsTable", minHeight: 300, width: 1030, rowHeight: 50, select: "multiselect", drag: true,
                         columns: [
-                            {id: "order", header: "Order", width: 60, },
-                            {id: "tutorialType", header: "Tutorial Type", editor: "select", options: tutorialTypes, width: 200, },
-                            {id: "name", header: "Name", width: 250, editor: "text", },
-                            {id: "icon", header: "Icon", width: 250},
-                            {id: "outdated", header: "outdated", width: 250, },
+                            { id: "order", header: "Order", width: 60, },
+                            { id: "tutorialType", header: "Tutorial Type", editor: "select", options: tutorialTypes, width: 200, },
+                            { id: "name", header: "Name", width: 250, editor: "text", },
+                            { id: "icon", header: "Icon", width: 250 },
+                            { id: "outdated", header: "outdated", width: 250, },
                         ],
                         editable: true,
                         data: [
@@ -570,16 +581,16 @@ var tutorials = {
                                     if (oldName !== newName) {
                                         var url = "ajax/rename/renameUnit.php?schoolName=" + window.selectedSchool + "&oldName=" + oldName + "&newName=" + newName + "&isTutorial=true";
                                         $.ajax(url).done(
-                                                function (ret) {
-                                                    var isError = ret.split("error: ").length > 1;
-                                                    if (isError) {
-                                                        document.body.innerHTML = ret;
-                                                    } else if (ret == "done") {
-                                                        webix.message("Tutorial renamed");
-                                                    } else {
-                                                        document.body.innerHTML = ret;
-                                                    }
+                                            function (ret) {
+                                                var isError = ret.split("error: ").length > 1;
+                                                if (isError) {
+                                                    document.body.innerHTML = ret;
+                                                } else if (ret == "done") {
+                                                    webix.message("Tutorial renamed");
+                                                } else {
+                                                    document.body.innerHTML = ret;
                                                 }
+                                            }
                                         )
                                     }
                                 } else if (e.column == "tutorialType") {
@@ -597,16 +608,16 @@ var tutorials = {
                                         url += "&type=sub&subjectName=" + subName;
                                     }
                                     $.ajax(url).done(
-                                            function (ret) {
-                                                var isError = ret.split("error: ").length > 1;
-                                                if (isError) {
-                                                    alert(ret);
-                                                } else if (ret == "done") {
-                                                    webix.message("Type updated");
-                                                } else {
-                                                    document.body.innerHTML = ret;
-                                                }
+                                        function (ret) {
+                                            var isError = ret.split("error: ").length > 1;
+                                            if (isError) {
+                                                alert(ret);
+                                            } else if (ret == "done") {
+                                                webix.message("Type updated");
+                                            } else {
+                                                document.body.innerHTML = ret;
                                             }
+                                        }
                                     );
                                 }
                             },
@@ -618,7 +629,7 @@ var tutorials = {
                                     console.log(e);
                                     var tutName = $$("tutorialsTable").data.pull[e.row].name;
                                     $$("uploadTutorialIcon").data.upload = "ajax/upload/uploadTutorialIcon.php?school=" + window.selectedSchool + "&tutorial=" + tutName;
-                                    $$("uploadTutorialIcon").fileDialog({rowid: e.row});
+                                    $$("uploadTutorialIcon").fileDialog({ rowid: e.row });
                                 }
                             }
                         },
@@ -626,8 +637,11 @@ var tutorials = {
                     {},
                 ]
             },
-            {cols: [
-                    {view: "button", value: "View", id: "viewTutorial", disabled: true, on: {onItemClick: function () {
+            {
+                cols: [
+                    {
+                        view: "button", value: "View", id: "viewTutorial", disabled: true, on: {
+                            onItemClick: function () {
                                 function goTut() {
                                     var url = "read.php?t=t&sc=" + btoa(selectedSchool) + "&u=" + btoa(selectedUnit);
                                     var win = window.open(url, '_blank');
@@ -670,12 +684,17 @@ var tutorials = {
                             }
                         }
                     },
-                    {view: "button", value: "Edit", id: "editTutorial", disabled: true, on: {onItemClick: function () {
+                    {
+                        view: "button", value: "Edit", id: "editTutorial", disabled: true, on: {
+                            onItemClick: function () {
                                 var win;
                                 win = window.open("stitch_app.php?schoolName=" + selectedSchool + "&unitName=" + window.selectedTutorial + "&isTutorial=true", '_blank');
                                 win.focus();
-                            }}},
-                    {view: "button", id: "orderTutorials", value: "Order", disabled: true, on: {
+                            }
+                        }
+                    },
+                    {
+                        view: "button", id: "orderTutorials", value: "Order", disabled: true, on: {
                             onItemClick: function () {
                                 var url = "ajax/set/setUnitOrder.php?schoolName=" + window.selectedSchool + "&isTutorial=true";
                                 var orig = $$("tutorialsTable").data.pull;
@@ -703,14 +722,22 @@ var tutorials = {
                                     }
                                 });
                             }
-                        }},
-                    {template: "<div style='height:100%;width:100%;background-color:black;padding-left:10px;padding-right:10px;'></div>", css: "noPad", width: 5},
-                    {view: "button", value: "Add", id: "newTutorial", disabled: true, on: {onItemClick: function () {
+                        }
+                    },
+                    { template: "<div style='height:100%;width:100%;background-color:black;padding-left:10px;padding-right:10px;'></div>", css: "noPad", width: 5 },
+                    {
+                        view: "button", value: "Add", id: "newTutorial", disabled: true, on: {
+                            onItemClick: function () {
                                 newTutorialAction();
-                            }}},
-                    {view: "button", id: "deleteTutorial", value: "Delete", css: "delete", disabled: true, on: {onItemClick: function () {
+                            }
+                        }
+                    },
+                    {
+                        view: "button", id: "deleteTutorial", value: "Delete", css: "delete", disabled: true, on: {
+                            onItemClick: function () {
                                 deletePrompt(window.selectedTutorial, "tutorial", "ajax/delete/deleteTutorial.php?schoolName=" + window.selectedSchool + "&tutorialName=" + window.selectedTutorial, loadTutorials);
-                            }},
+                            }
+                        },
                     },
                 ],
             },
@@ -719,13 +746,15 @@ var tutorials = {
                     {},
                     {},
                     {},
-                    {width: 7},
+                    { width: 7 },
                     {},
-                    {id: "downloadTutorial", view: "button", value: "Download Tutorial", disabled: true, on: {
+                    {
+                        id: "downloadTutorial", view: "button", value: "Download Tutorial", disabled: true, on: {
                             onItemClick: function () {
                                 download("tutorial");
                             }
-                        }},
+                        }
+                    },
                 ],
             },
         ],
@@ -746,7 +775,7 @@ var selectUnits = {
                             body: {
                                 id: "schoolDropDown",
                                 data: [
-                                    {id: 1, value: " -- School -- "},
+                                    { id: 1, value: " -- School -- " },
                                 ],
                                 on: {
                                     'onItemClick': function (id) {
@@ -782,16 +811,16 @@ var selectUnits = {
                                 var school = window.prompt("Enter a name for the new school");
                                 if (school && noBadNameChars(school)) {
                                     $.ajax("ajax/new/newSchool.php?schoolName=" + school).done(
-                                            function (ret) {
-                                                var isError = ret.split("error: ").length > 1;
-                                                if (isError) {
-                                                    alert(ret);
-                                                } else if (ret == "done") {
-                                                    loadSchools();
-                                                } else {
-                                                    document.body.innerHTML = ret;
-                                                }
+                                        function (ret) {
+                                            var isError = ret.split("error: ").length > 1;
+                                            if (isError) {
+                                                alert(ret);
+                                            } else if (ret == "done") {
+                                                loadSchools();
+                                            } else {
+                                                document.body.innerHTML = ret;
                                             }
+                                        }
                                     );
                                 }
                             }
@@ -814,7 +843,7 @@ var selectUnits = {
                             body: {
                                 id: "subjectDropDown",
                                 data: [
-                                    {id: 1, value: " -- Subject -- "},
+                                    { id: 1, value: " -- Subject -- " },
                                 ],
                                 on: {
 
@@ -848,18 +877,18 @@ var selectUnits = {
                                     var subject = window.prompt("Enter a name for the new subject");
                                     if (subject && noBadNameChars(subject)) {
                                         $.ajax("ajax/new/newSubject.php?schoolName=" + window.selectedSchool + "&subjectName=" + subject).done(
-                                                function (ret) {
-                                                    var isError = ret.split("error: ").length == 2;
-                                                    if (isError) {
-                                                        //alert(ret);
-                                                        webix.message(ret);
-                                                    } else if (ret == "done") {
-                                                        loadSubjects(selectedSchool);
-                                                        loadTutorials(selectedSchool);
-                                                    } else {
-                                                        document.body.innerHTML = ret;
-                                                    }
+                                            function (ret) {
+                                                var isError = ret.split("error: ").length == 2;
+                                                if (isError) {
+                                                    //alert(ret);
+                                                    webix.message(ret);
+                                                } else if (ret == "done") {
+                                                    loadSubjects(selectedSchool);
+                                                    loadTutorials(selectedSchool);
+                                                } else {
+                                                    document.body.innerHTML = ret;
                                                 }
+                                            }
                                         );
                                     }
                                 } else {
@@ -886,7 +915,7 @@ var selectUnits = {
                             body: {
                                 id: "levelDropDown",
                                 data: [
-                                    {id: 1, value: " -- Level -- "},
+                                    { id: 1, value: " -- Level -- " },
                                 ],
                                 on: {
                                     'onItemClick': function (id) {
@@ -922,17 +951,17 @@ var selectUnits = {
                                     var level = window.prompt("Enter a name for the new level");
                                     if (level && noBadNameChars(level)) {
                                         $.ajax("ajax/new/newLevel.php?schoolName=" + window.selectedSchool + "&subjectName=" + window.selectedSubject + "&levelName=" + level).done(
-                                                function (ret) {
-                                                    var isError = ret.split("error: ").length == 2;
-                                                    if (isError) {
-                                                        //alert(ret);
-                                                        webix.message(ret);
-                                                    } else if (ret == "done") {
-                                                        loadLevels(selectedSchool, selectedSubject);
-                                                    } else {
-                                                        document.body.innerHTML = ret;
-                                                    }
+                                            function (ret) {
+                                                var isError = ret.split("error: ").length == 2;
+                                                if (isError) {
+                                                    //alert(ret);
+                                                    webix.message(ret);
+                                                } else if (ret == "done") {
+                                                    loadLevels(selectedSchool, selectedSubject);
+                                                } else {
+                                                    document.body.innerHTML = ret;
                                                 }
+                                            }
                                         );
                                     }
                                 } else {
@@ -960,7 +989,7 @@ var selectUnits = {
                             body: {
                                 id: "unitDropDown",
                                 data: [
-                                    {id: 1, value: " -- Unit -- "},
+                                    { id: 1, value: " -- Unit -- " },
                                 ],
                                 on: {
                                     'onItemClick': function (id) {
@@ -972,7 +1001,7 @@ var selectUnits = {
                                             $$("deleteUnit").enable();
                                             $$("deleteUnitAction").enable();
                                             $$("editUnitAction").enable();
-                                            $$("saveUnitActionOld").enable();
+                                            // $$("saveUnitActionOld").enable();
                                             $$("saveUnitActionNew").enable();
                                             $$("downloadUnit").enable();
                                             window.selectedUnit = unitName;
@@ -1092,19 +1121,19 @@ function newUnitAction() {
             if (!isGame(unit.toLowerCase())) {
                 if (unit.toLowerCase() !== "Tutorial") {
                     $.ajax("ajax/new/newUnit.php?schoolName=" + window.selectedSchool + "&subjectName=" + window.selectedSubject + "&levelName=" + window.selectedLevel + "&unitName=" + unit).done(
-                            function (ret) {
-                                console.log(ret);
-                                var isError = ret.split("error: ").length == 2;
-                                if (isError) {
-                                    //alert(ret);
-                                    webix.message(ret);
-                                } else if (ret == "done") {
-                                    webix.message("done");
-                                    loadUnits(selectedSchool, selectedSubject, selectedLevel);
-                                } else {
-                                    document.body.innerHTML = ret;
-                                }
+                        function (ret) {
+                            console.log(ret);
+                            var isError = ret.split("error: ").length == 2;
+                            if (isError) {
+                                //alert(ret);
+                                webix.message(ret);
+                            } else if (ret == "done") {
+                                webix.message("done");
+                                loadUnits(selectedSchool, selectedSubject, selectedLevel);
+                            } else {
+                                document.body.innerHTML = ret;
                             }
+                        }
                     );
                 } else {
                     webix.message("Cannot name a unit 'Tutorial'");
@@ -1144,22 +1173,22 @@ function newTutorialAction() {
             }
             url += "&unitName=" + name + "&isTutorial=1";
             $.ajax(url).done(
-                    function (ret) {
-                        console.log(ret);
-                        var isError = ret.split("error: ").length == 2;
-                        if (isError) {
-                            //alert(ret);
-                            webix.message(ret);
-                        } else if (ret == "done") {
-                            webix.message("done");
-                            if (window.selectedSubject && window.selectedLevel) {
-                                loadUnits(selectedSchool, selectedSubject, selectedLevel);
-                            }
-                            loadTutorials(selectedSchool);
-                        } else {
-                            document.body.innerHTML = ret;
+                function (ret) {
+                    console.log(ret);
+                    var isError = ret.split("error: ").length == 2;
+                    if (isError) {
+                        //alert(ret);
+                        webix.message(ret);
+                    } else if (ret == "done") {
+                        webix.message("done");
+                        if (window.selectedSubject && window.selectedLevel) {
+                            loadUnits(selectedSchool, selectedSubject, selectedLevel);
                         }
+                        loadTutorials(selectedSchool);
+                    } else {
+                        document.body.innerHTML = ret;
                     }
+                }
             );
         } else {
             webix.message("Bad characters in name, try again");
@@ -1175,19 +1204,19 @@ function newIntroAction() {
         if (!introExtists) {
             var unit = "Intro";
             $.ajax("ajax/new/newUnit.php?schoolName=" + window.selectedSchool + "&unitName=" + unit + "&isIntro=1").done(
-                    function (ret) {
-                        console.log(ret);
-                        var isError = ret.split("error: ").length == 2;
-                        if (isError) {
-                            //alert(ret);
-                            webix.message(ret);
-                        } else if (ret == "done") {
-                            webix.message("done");
-                            loadUnits(selectedSchool, selectedSubject, selectedLevel);
-                        } else {
-                            document.body.innerHTML = ret;
-                        }
+                function (ret) {
+                    console.log(ret);
+                    var isError = ret.split("error: ").length == 2;
+                    if (isError) {
+                        //alert(ret);
+                        webix.message(ret);
+                    } else if (ret == "done") {
+                        webix.message("done");
+                        loadUnits(selectedSchool, selectedSubject, selectedLevel);
+                    } else {
+                        document.body.innerHTML = ret;
                     }
+                }
             );
         }
     } else {
@@ -1205,7 +1234,7 @@ function deleteUnitAction() {
 var elem = {
     id: "elem",
     rows: [
-        {height: 10},
+        { height: 10 },
         {
             id: "Edit", cols: [
                 selectUnits,
@@ -1221,18 +1250,18 @@ function addGame() {
     var gameName = this.data.label;
     if (gameName && noBadNameChars(gameName)) {
         $.ajax("ajax/new/newUnit.php?schoolName=" + window.selectedSchool + "&subjectName=" + window.selectedSubject + "&levelName=" + window.selectedLevel + "&unitName=" + gameName + "&isGame=1").done(
-                function (ret) {
-                    var isError = ret.split("error: ").length == 2;
-                    if (isError) {
-                        //alert(ret);
-                        webix.message(ret);
-                    } else if (ret == "done") {
-                        loadUnits(selectedSchool, selectedSubject, selectedLevel);
-                        $$('newGameWindow').hide();
-                    } else {
-                        document.body.innerHTML = ret;
-                    }
+            function (ret) {
+                var isError = ret.split("error: ").length == 2;
+                if (isError) {
+                    //alert(ret);
+                    webix.message(ret);
+                } else if (ret == "done") {
+                    loadUnits(selectedSchool, selectedSubject, selectedLevel);
+                    $$('newGameWindow').hide();
+                } else {
+                    document.body.innerHTML = ret;
                 }
+            }
         );
     }
 }
@@ -1244,152 +1273,152 @@ function clearSchools() {
 }
 function loadSchools() {
     $.ajax("ajax/get/getSchools.php").done(
-            function (ret) {
-                ret = window.eval(ret);
-                for (var i = 0; i < ret.length; i++) {
-                    ret[i].ID = i + 2;
-                }
-                for (var i = $$("schoolDropDown").count(); i > 0; i--) {
-                    $$("schoolDropDown").remove(i);
-                }
-                $$("schoolDropDown").add({id: 1, value: " -- School -- "}, 0);
-                for (var i = 1; i < ret.length + 1; i++) {
-                    $$("schoolDropDown").add({id: ret[i - 1].ID, value: ret[i - 1].name}, i);
-                }
-                $$("schoolCombo").setValue(1);
-                $$("schoolDropDown").refresh();
-                $$("schoolCombo").refresh();
+        function (ret) {
+            ret = window.eval(ret);
+            for (var i = 0; i < ret.length; i++) {
+                ret[i].ID = i + 2;
             }
+            for (var i = $$("schoolDropDown").count(); i > 0; i--) {
+                $$("schoolDropDown").remove(i);
+            }
+            $$("schoolDropDown").add({ id: 1, value: " -- School -- " }, 0);
+            for (var i = 1; i < ret.length + 1; i++) {
+                $$("schoolDropDown").add({ id: ret[i - 1].ID, value: ret[i - 1].name }, i);
+            }
+            $$("schoolCombo").setValue(1);
+            $$("schoolDropDown").refresh();
+            $$("schoolCombo").refresh();
+        }
     );
 }
 
 function loadSubjects(schoolName) {
     $.ajax("ajax/get/getSubjects.php?school=" + schoolName).done(
-            function (ret) {
-                ret = window.eval(ret);
-                var subjectsForTutorials = {};
-                for (var s = 0; s < ret.length; s++) {
-                    subjectsForTutorials[ret[s].ID] = ret[s].name;
-                }
-                setTutorialTypes(subjectsForTutorials);
-                for (var i = 0; i < ret.length; i++) {
-                    ret[i].ID = i + 2;
-                }
-                for (var i = $$("subjectDropDown").count(); i > 0; i--) {
-                    $$("subjectDropDown").remove(i);
-                }
-                $$("subjectDropDown").add({id: 1, value: " -- Subject -- "}, 0);
-                for (var i = 1; i < ret.length + 1; i++) {
-                    $$("subjectDropDown").add({id: ret[i - 1].ID, value: ret[i - 1].name}, i);
-                }
-                $$("subjectCombo").setValue(1);
-                $$("subjectDropDown").refresh();
-                $$("subjectCombo").refresh();
+        function (ret) {
+            ret = window.eval(ret);
+            var subjectsForTutorials = {};
+            for (var s = 0; s < ret.length; s++) {
+                subjectsForTutorials[ret[s].ID] = ret[s].name;
             }
+            setTutorialTypes(subjectsForTutorials);
+            for (var i = 0; i < ret.length; i++) {
+                ret[i].ID = i + 2;
+            }
+            for (var i = $$("subjectDropDown").count(); i > 0; i--) {
+                $$("subjectDropDown").remove(i);
+            }
+            $$("subjectDropDown").add({ id: 1, value: " -- Subject -- " }, 0);
+            for (var i = 1; i < ret.length + 1; i++) {
+                $$("subjectDropDown").add({ id: ret[i - 1].ID, value: ret[i - 1].name }, i);
+            }
+            $$("subjectCombo").setValue(1);
+            $$("subjectDropDown").refresh();
+            $$("subjectCombo").refresh();
+        }
     );
 }
 function loadLevels(schoolName, subjectName) {
     $.ajax("ajax/get/getLevels.php?school=" + schoolName + "&subject=" + subjectName).done(
-            function (ret) {
-                ret = window.eval(ret);
-                for (var i = 0; i < ret.length; i++) {
-                    ret[i].ID = i + 2;
-                }
-                for (var i = $$("levelDropDown").count(); i > 0; i--) {
-                    $$("levelDropDown").remove(i);
-                }
-                $$("levelDropDown").add({id: 1, value: " -- Level -- "}, 0);
-                for (var i = 1; i < ret.length + 1; i++) {
-                    $$("levelDropDown").add({id: ret[i - 1].ID, value: ret[i - 1].name}, i);
-                }
-                $$("levelCombo").setValue(1);
-                $$("levelDropDown").refresh();
-                $$("levelCombo").refresh();
+        function (ret) {
+            ret = window.eval(ret);
+            for (var i = 0; i < ret.length; i++) {
+                ret[i].ID = i + 2;
             }
+            for (var i = $$("levelDropDown").count(); i > 0; i--) {
+                $$("levelDropDown").remove(i);
+            }
+            $$("levelDropDown").add({ id: 1, value: " -- Level -- " }, 0);
+            for (var i = 1; i < ret.length + 1; i++) {
+                $$("levelDropDown").add({ id: ret[i - 1].ID, value: ret[i - 1].name }, i);
+            }
+            $$("levelCombo").setValue(1);
+            $$("levelDropDown").refresh();
+            $$("levelCombo").refresh();
+        }
     );
 }
 function loadUnits(schoolName, subjectName, levelName) {
     $.ajax("ajax/get/getUnits.php?school=" + schoolName + "&subject=" + subjectName + "&level=" + levelName).done(
-            function (ret) {
-                ret = window.eval(ret);
-                console.log(ret);
-                var outdatedNum = 0;
-                window.gamesInLevel = [[], [], []];
-                for (var i = 0; i < ret.length; i++) {
-                    ret[i].ID = i + 2;
-                    if (ret[i].outdated == 1) {
-                        ret[i].outdated = "OUTDATED";
-                        outdatedNum++;
-                    } else {
-                        ret[i].outdated = "";
-                    }
-
-                    var gameLoc = isGame(ret[i].name);
-                    if (gameLoc) {
-                        window.gamesInLevel[gameLoc[0] - 1][gameLoc[1] - 1] = ret[i];
-                    }
-
-                }
-                // $$("newTutorialAction").enable();
-                // $$("newIntroAction").enable();
-                var unitListData = [];
-                for (var i = 0; i < ret.length; i++) {
-                    var curLevel = selectedLevel;
-                    var curSubject = selectedSubject;
-                    if (ret[i].name == "Tutorial") {
-                        curLevel = "All Levels";
-                        // $$("newTutorialAction").disable();
-                    }
-                    if (ret[i].name == "Intro") {
-                        curSubject = "All Subjects";
-                        // $$("newIntroAction").disable();
-                    }
-                    unitListData.push({
-                        id: ret[i].ID,
-                        name: ret[i].name,
-                        school: selectedSchool,
-                        subject: curSubject,
-                        level: curLevel,
-                        // unit: ret[i].order, // TODO: make order in db, set order with something something
-                        unit: i,
-                        outdated: ret[i].outdated,
-                    });
-                }
-
-                // Delete old shit from list
-                for (var i = $$("unitList").count() - 1; i >= 0; i--) {
-                    $$("unitList").remove($$("unitList").data.order[i])
-                }
-                // Delete old shit from combo
-                for (var i = $$("unitDropDown").count(); i > 0; i--) {
-                    $$("unitDropDown").remove(i);
-                }
-
-                // Add new shit to list
-                // $$("unitList").add({id: -1, "school": "testSchool", "subject": "math", "level": "ALL LEVELS", "name": "<b>Tutorial</b>", "outdated": ""});
-                for (var i = 0; i < ret.length; i++) {
-                    $$("unitList").add(unitListData[i]);
-                }
-
-
-                // Add new shit to combo
-                // $$("unitDropDown").add({id: -1, value: " -- Tutorial -- "}, 0);
-                $$("unitDropDown").add({id: 1, value: " -- Unit -- "}, 0);
-                for (var i = 1; i < ret.length + 1; i++) {
-                    $$("unitDropDown").add({id: ret[i - 1].ID, value: ret[i - 1].name}, i);
-                }
-
-                // refresh shit
-                $$("unitList").refresh();
-                $$("unitCombo").setValue(1);
-                $$("unitDropDown").refresh();
-                $$("unitCombo").refresh();
-                if (outdatedNum > 1) {
-                    $$("updateAllAction").enable();
+        function (ret) {
+            ret = window.eval(ret);
+            console.log(ret);
+            var outdatedNum = 0;
+            window.gamesInLevel = [[], [], []];
+            for (var i = 0; i < ret.length; i++) {
+                ret[i].ID = i + 2;
+                if (ret[i].outdated == 1) {
+                    ret[i].outdated = "OUTDATED";
+                    outdatedNum++;
                 } else {
-                    $$("updateAllAction").disable();
+                    ret[i].outdated = "";
                 }
+
+                var gameLoc = isGame(ret[i].name);
+                if (gameLoc) {
+                    window.gamesInLevel[gameLoc[0] - 1][gameLoc[1] - 1] = ret[i];
+                }
+
             }
+            // $$("newTutorialAction").enable();
+            // $$("newIntroAction").enable();
+            var unitListData = [];
+            for (var i = 0; i < ret.length; i++) {
+                var curLevel = selectedLevel;
+                var curSubject = selectedSubject;
+                if (ret[i].name == "Tutorial") {
+                    curLevel = "All Levels";
+                    // $$("newTutorialAction").disable();
+                }
+                if (ret[i].name == "Intro") {
+                    curSubject = "All Subjects";
+                    // $$("newIntroAction").disable();
+                }
+                unitListData.push({
+                    id: ret[i].ID,
+                    name: ret[i].name,
+                    school: selectedSchool,
+                    subject: curSubject,
+                    level: curLevel,
+                    // unit: ret[i].order, // TODO: make order in db, set order with something something
+                    unit: i,
+                    outdated: ret[i].outdated,
+                });
+            }
+
+            // Delete old shit from list
+            for (var i = $$("unitList").count() - 1; i >= 0; i--) {
+                $$("unitList").remove($$("unitList").data.order[i])
+            }
+            // Delete old shit from combo
+            for (var i = $$("unitDropDown").count(); i > 0; i--) {
+                $$("unitDropDown").remove(i);
+            }
+
+            // Add new shit to list
+            // $$("unitList").add({id: -1, "school": "testSchool", "subject": "math", "level": "ALL LEVELS", "name": "<b>Tutorial</b>", "outdated": ""});
+            for (var i = 0; i < ret.length; i++) {
+                $$("unitList").add(unitListData[i]);
+            }
+
+
+            // Add new shit to combo
+            // $$("unitDropDown").add({id: -1, value: " -- Tutorial -- "}, 0);
+            $$("unitDropDown").add({ id: 1, value: " -- Unit -- " }, 0);
+            for (var i = 1; i < ret.length + 1; i++) {
+                $$("unitDropDown").add({ id: ret[i - 1].ID, value: ret[i - 1].name }, i);
+            }
+
+            // refresh shit
+            $$("unitList").refresh();
+            $$("unitCombo").setValue(1);
+            $$("unitDropDown").refresh();
+            $$("unitCombo").refresh();
+            if (outdatedNum > 1) {
+                $$("updateAllAction").enable();
+            } else {
+                $$("updateAllAction").disable();
+            }
+        }
     );
 }
 
@@ -1401,22 +1430,22 @@ function loadTutorials(schoolName) {
         webix.message("Error loading tutorials, school not selected");
     } else {
         $.ajax("ajax/get/getTutorials.php?school=" + schoolName).done(
-                function (ret) {
-                    ret = window.eval(ret);
-                    // clear datatable
-                    emptyTutorialDB();
-                    // add new data
-                    if (ret) {
-                        for (var n = 0; n < ret.length; n++) {
-                            if (ret[n].tutorialType == "sub") {
-                                ret[n].tutorialType = ret[n].subjectID;
-                            }
-                            ret[n].icon = "<img onerror=tutIconError(this) class='tutIcon' src='schools/" + window.selectedSchool + "/tutorials/" + ret[n].name + "/icons/icon.png' />";
-                            $$("tutorialsTable").add(ret[n]);
+            function (ret) {
+                ret = window.eval(ret);
+                // clear datatable
+                emptyTutorialDB();
+                // add new data
+                if (ret) {
+                    for (var n = 0; n < ret.length; n++) {
+                        if (ret[n].tutorialType == "sub") {
+                            ret[n].tutorialType = ret[n].subjectID;
                         }
-                        $$("tutorialsTable").refresh();
+                        ret[n].icon = "<img onerror=tutIconError(this) class='tutIcon' src='schools/" + window.selectedSchool + "/tutorials/" + ret[n].name + "/icons/icon.png' />";
+                        $$("tutorialsTable").add(ret[n]);
                     }
+                    $$("tutorialsTable").refresh();
                 }
+            }
         )
     }
 }
@@ -1450,7 +1479,8 @@ $(document).ready(function () {
         id: "uploadTutorialIcon",
         apiOnly: true,
         upload: "ajax/upload/uploadTutorialIcon.php",
-        on: {onFileUpload: function () {
+        on: {
+            onFileUpload: function () {
                 loadTutorials()
             }
         }
@@ -1472,9 +1502,11 @@ $(document).ready(function () {
         position: "center",
         head: {
             view: "toolbar", margin: -4, cols: [
-                {view: "label", label: "New game"},
-                {view: "icon", icon: "times-circle",
-                    click: "$$('newGameWindow').hide();"}
+                { view: "label", label: "New game" },
+                {
+                    view: "icon", icon: "times-circle",
+                    click: "$$('newGameWindow').hide();"
+                }
             ]
         },
         body: {
@@ -1485,37 +1517,37 @@ $(document).ready(function () {
                 {},
                 {
                     cols: [
-                        {gravity: 0.1},
-                        {view: "button", id: "game1level1", label: "Game 1 dif 1", on: {onItemClick: addGame}},
-                        {gravity: 0.1},
-                        {view: "button", id: "game2level1", label: "Game 2 dif 1", on: {onItemClick: addGame}},
-                        {gravity: 0.1},
-                        {view: "button", id: "game3level1", label: "Game 3 dif 1", on: {onItemClick: addGame}},
-                        {gravity: 0.1},
+                        { gravity: 0.1 },
+                        { view: "button", id: "game1level1", label: "Game 1 dif 1", on: { onItemClick: addGame } },
+                        { gravity: 0.1 },
+                        { view: "button", id: "game2level1", label: "Game 2 dif 1", on: { onItemClick: addGame } },
+                        { gravity: 0.1 },
+                        { view: "button", id: "game3level1", label: "Game 3 dif 1", on: { onItemClick: addGame } },
+                        { gravity: 0.1 },
                     ]
                 },
-                {gravity: 0.1},
+                { gravity: 0.1 },
                 {
                     cols: [
-                        {gravity: 0.1},
-                        {view: "button", id: "game1level2", label: "Game 1 dif 2", on: {onItemClick: addGame}},
-                        {gravity: 0.1},
-                        {view: "button", id: "game2level2", label: "Game 2 dif 2", on: {onItemClick: addGame}},
-                        {gravity: 0.1},
-                        {view: "button", id: "game3level2", label: "Game 3 dif 2", on: {onItemClick: addGame}},
-                        {gravity: 0.1},
+                        { gravity: 0.1 },
+                        { view: "button", id: "game1level2", label: "Game 1 dif 2", on: { onItemClick: addGame } },
+                        { gravity: 0.1 },
+                        { view: "button", id: "game2level2", label: "Game 2 dif 2", on: { onItemClick: addGame } },
+                        { gravity: 0.1 },
+                        { view: "button", id: "game3level2", label: "Game 3 dif 2", on: { onItemClick: addGame } },
+                        { gravity: 0.1 },
                     ]
                 },
-                {gravity: 0.1},
+                { gravity: 0.1 },
                 {
                     cols: [
-                        {gravity: 0.1},
-                        {view: "button", id: "game1level3", label: "Game 1 dif 3", on: {onItemClick: addGame}},
-                        {gravity: 0.1},
-                        {view: "button", id: "game2level3", label: "Game 2 dif 3", on: {onItemClick: addGame}},
-                        {gravity: 0.1},
-                        {view: "button", id: "game3level3", label: "Game 3 dif 3", on: {onItemClick: addGame}},
-                        {gravity: 0.1},
+                        { gravity: 0.1 },
+                        { view: "button", id: "game1level3", label: "Game 1 dif 3", on: { onItemClick: addGame } },
+                        { gravity: 0.1 },
+                        { view: "button", id: "game2level3", label: "Game 2 dif 3", on: { onItemClick: addGame } },
+                        { gravity: 0.1 },
+                        { view: "button", id: "game3level3", label: "Game 3 dif 3", on: { onItemClick: addGame } },
+                        { gravity: 0.1 },
                     ]
                 },
                 {},

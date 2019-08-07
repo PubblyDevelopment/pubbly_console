@@ -421,13 +421,11 @@ $(document).ready(function () {
                                                 'onItemClick': function (id) {
                                                     var childName = this.getItem(id).value;
                                                     if (childName == " -- choose -- ") {
-                                                        $$("goChildOld").disable();
                                                         $$("goChildNew").disable();
                                                         $$("renameChild").disable();
                                                         $$("deleteChild").disable();
                                                         window.selectedChild = false;
                                                     } else {
-                                                        $$("goChildOld").enable();
                                                         $$("goChildNew").enable();
                                                         $$("renameChild").enable();
                                                         $$("deleteChild").enable();
@@ -500,7 +498,7 @@ $(document).ready(function () {
                                     }
                                 },
                                 {
-                                    view: "button", id: "goChildOld", value: "View new", gravity: 1, disabled: true, on: {
+                                    view: "button", id: "goChildNew", value: "View new", gravity: 1, disabled: true, on: {
                                         onItemClick: function () {
                                             if (window.selectedChild) {
                                                 let sn = btoa(window.selectedSeries);
@@ -512,6 +510,7 @@ $(document).ready(function () {
                                         }
                                     }
                                 },
+                                /*
                                 {
                                     view: "button", id: "goChildNew", value: "View old", gravity: 1, disabled: true, on: {
                                         onItemClick: function () {
@@ -525,6 +524,7 @@ $(document).ready(function () {
                                         }
                                     }
                                 },
+                                */
                             ]
                         },
                     ]

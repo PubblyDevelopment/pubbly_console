@@ -696,6 +696,7 @@ var unitPageList = {
                             }
                         },
                     },
+                    /*
                     {
                         value: "View Old", id: "viewUnitOld", view: "button", disabled: false, on: {
                             onItemClick: function () {
@@ -712,6 +713,7 @@ var unitPageList = {
                             }
                         }
                     },
+                    */
                     {
                         value: "View New", id: "viewUnitNew", view: "button", disabled: false, on: {
                             onItemClick: function () {
