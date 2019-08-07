@@ -9,13 +9,15 @@ $types = [
     "m" => "map",
 ];
 $type = $types[$_GET['t']];
-include("pubbly_engine/version.php");
-$engineCode = (isset($_GET['engineCode']) && $_GET['engineCode'] == "new") ? $latestEngineRelease : "old";
+
+$release = 2;
+$pathToEngine = "http://cdn.pubbly.com/pubbly_engine/releases/$release/";
+$version = file_get_contents("$pathToEngine/version.txt");
 $forceDebug = isset($_GET['fb']) ? $_GET['fb'] : false;
 
 $postSpecs = [
     "type" => $type,
-    "engineCode" => $engineCode,
+    "engineCode" => $version,
 ];
 $seriesName = "";
 if ($type == "book") {
@@ -86,33 +88,21 @@ if (isset($loc)) {
     require_once("php/classes/html_fragment.php");
     $htmlFileName = ($type == "child") ? "$childName.html" : "index.html";
 
-// Old garbage engine again
-    if ($engineCode == "old") {
-        if (!file_exists("$loc/$htmlFileName")) {
-            $oldHTML = file_get_contents("pubbly_engine/old/index.html");
-            $dots = ($type == "unit") ? "../../../../../" : "../../";
-            $frag = new Html_fragment("pubbly_engine/old/index.html", [
-                ["DOTS", "../../"],
-                ["SERIES_NAME", $seriesName],
-                ["XML_NAME", $xmlName],
-                ["DOTS", $dots],
-            ]);
-            $frag->printOut("$loc/$htmlFileName");
-        }
-        header("location: $loc/$htmlFileName");
-    } else {
-        $jsonLoc = "$loc/$jsonName.$engineCode.json";
+    // Old garbage engine again
+    
+        $jsonLoc = "$loc/$jsonName.$version.json";
         $jsonUpdated = (file_exists("$jsonLoc")) ? filemtime("$jsonLoc") : 0;
         $xmlUpdated = (file_exists("$loc/$xmlName")) ? filemtime("$loc/$xmlName") : 0;
-        $engineUpdated = stat("pubbly_engine/")['mtime'];
-        if ($jsonUpdated <= $xmlUpdated // JSON outdated from XML
-                || $jsonUpdated <= $engineUpdated // JSON outdated from build process
-                || $forceDebug // Lazy JASON
+        // $engineUpdated = stat("pubbly_engine/")['mtime'];
+        if (
+            $jsonUpdated <= $xmlUpdated // JSON outdated from XML
+            // || $jsonUpdated <= $engineUpdated // JSON outdated from build process
+            || $forceDebug // Lazy JASON
         ) {
             echo "<!-- $jsonLoc -->";
-            $frag = new Html_fragment("pubbly_engine/html/server-build.html", [
-                ["PATH_TO_ENGINE", "pubbly_engine/"],
-                ["ENGINE", "$engineCode"],
+            $frag = new Html_fragment("$pathToEngine/html/server-build.html", [
+                ["PATH_TO_ENGINE", "$pathToEngine"],
+                ["ENGINE", "$version"],
                 ["START_PAGE", 0],
                 ["BUILD_POST_SPECS", json_encode($postSpecs)],
                 ["BUILD_POST_LOC", "build.php"],
@@ -122,16 +112,14 @@ if (isset($loc)) {
             ]);
             $frag->echoOut();
         } else {
-            $frag = new Html_fragment("pubbly_engine/html/server-run.html", [
-                ["PATH_TO_ENGINE", "pubbly_engine/"],
-                ["ENGINE", "$engineCode"],
+            $frag = new Html_fragment("$pathToEngine/html/server-run.html", [
+                ["PATH_TO_ENGINE", "$pathToEngine"],
+                ["ENGINE", "$version"],
                 ["START_PAGE", 0],
-		["JSON_LOC", $jsonLoc],
+                ["JSON_LOC", $jsonLoc],
                 ["PUBBLY_JSON", file_get_contents("$jsonLoc")],
                 ["ENVIRONMENT", "console"]
             ]);
             $frag->echoOut();
         }
-    }
 }
-?>
