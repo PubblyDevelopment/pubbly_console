@@ -130,7 +130,7 @@ $(document).ready(function () {
             window.selectedBook = unitName;
             window.selectedBookID = this.getItem(id).id;
             $$("deleteBook").enable();
-            $$("viewBookOld").enable();
+            // $$("viewBookOld").enable();
             $$("viewBookNew").enable();
             $$("reuploadBook").enable();
             $$('reuploadBook').data.upload = "ajax/upload/uploadBook.php?bookName=" + window.selectedBook;
@@ -359,7 +359,7 @@ $(document).ready(function () {
                                             }
                                         },
                                         {},
-
+                                        /*
                                         {
                                             value: "View old", id: "viewBookOld", view: "button", disabled: true, on: {
                                                 onItemClick: function () {
@@ -367,6 +367,7 @@ $(document).ready(function () {
                                                 }
                                             }
                                         },
+                                        */
                                         {
                                             value: "View new", id: "viewBookNew", view: "button", disabled: true, on: {
                                                 onItemClick: function () {
