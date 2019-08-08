@@ -12,7 +12,7 @@ $type = $types[$_GET['t']];
 
 $release = 2;
 $pathToEngine = "http://cdn.pubbly.com/pubbly_engine/releases/$release/";
-$version = file_get_contents("$pathToEngine/version.txt");
+$version = rtrim(file_get_contents("$pathToEngine/version.txt"));
 $forceDebug = isset($_GET['fb']) ? $_GET['fb'] : false;
 
 $postSpecs = [
