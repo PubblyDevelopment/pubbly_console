@@ -402,8 +402,8 @@ $(document).ready(function () {
                 $$("deleteChild").disable();
                 window.selectedChild = false;
             } else {
-                $$("goChildOld").enable();
-                // $$("goChildNew").enable();
+                // $$("goChildOld").enable();
+                $$("goChildNew").enable();
                 $$("renameChild").enable();
                 $$("deleteChild").enable();
                 window.selectedChild = childName;
