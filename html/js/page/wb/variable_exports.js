@@ -669,7 +669,7 @@ $(document).ready(function () {
                                     }
                                 },
                                 {
-                                    view: "button", id: "goChildNew", value: "View new", gravity: 1, disabled: true, on: {
+                                    view: "button", id: "goChildNew", value: "View", gravity: 1, disabled: true, on: {
                                         onItemClick: function () {
                                             if (window.selectedChild) {
                                                 let sn = btoa(window.selectedSeries);
