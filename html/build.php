@@ -30,7 +30,7 @@ if ($postSpecs['type'] == "book") {
 	$nodeName = $postSpecs['nodeName'];
 	$bookLoc = "map/$mapName/$nodeName";
 	$jsonName = "Main";
-}   else    {
+} else {
 	print_r($_POST);
 }
 
@@ -43,11 +43,24 @@ if ($bookLoc) {
 		$prettBookData = $data;
 		$response['message'] = "JSON pretty printing failed... using raw data instead";
 		file_put_contents("$bookLoc/$jsonName.$engineCode.json", $data);
-	}	else	{
+	} else {
 		file_put_contents("$bookLoc/$jsonName.$engineCode.json", $prettyBookData);
 	}
 	$jsonModified = filemtime("$bookLoc/$jsonName.$engineCode.json") . "000"; // JS and PHP stamp difs
 	file_put_contents("$bookLoc/$jsonName.$engineCode.json.modified", $jsonModified);
+
+	// gifs to mp4
+	$images = scandir("$bookLoc/images/");
+	foreach ($images as $image) {
+		$pieces = explode(".", "$image");
+		if (array_pop($pieces) == "gif") {
+			$name = implode(".", $pieces);
+			$cmd = "ffmpeg -i $bookLoc/images/$name.gif $bookLoc/images/$name.mp4";
+			shell_exec($cmd);
+		}
+	}
+	echo "error";
+
 	$response['status'] = 'success';
 } else {
 	$response['status'] = 'error';
@@ -56,4 +69,3 @@ if ($bookLoc) {
 
 header('Content-type: application/json');
 echo json_encode($response);
-?>
