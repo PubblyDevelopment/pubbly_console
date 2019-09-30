@@ -57,9 +57,9 @@ if ($bookLoc) {
 			$name = implode(".", $pieces);
 			$cmd = "ffmpeg -i $bookLoc/images/$name.gif $bookLoc/images/$name.mp4";
 			shell_exec($cmd);
+			$response['command'] = $cmd;
 		}
 	}
-	echo "error";
 
 	$response['status'] = 'success';
 } else {
