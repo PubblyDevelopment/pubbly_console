@@ -395,7 +395,7 @@ $(document).ready(function () {
         }
         function wb_chilSelector_click(id) {
             var childName = this.getItem(id).value;
-            if (childName == " -- choose -- ") {
+            if (childName == " -- Choose -- ") {
                 // $$("goChildOld").disable();
                 $$("goChildNew").disable();
                 $$("renameChild").disable();
