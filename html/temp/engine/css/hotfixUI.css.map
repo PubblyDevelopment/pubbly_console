@@ -1,9 +1,0 @@
-{
-    "version": 3,
-    "mappings": "AAAA,AACI,SADK,CACL,aAAa,AAAC,CACV,KAAK,CAAC,GAAG,CACZ,AAHL,AAII,SAJK,CAIL,aAAa,AAAA,QAAQ,AAAC,CAClB,KAAK,CAAC,KAAK,CACd,AANL,AAOI,SAPK,CAOL,YAAY,AAAC,CACT,UAAU,CAAC,MAAM,CACpB,AATL,AAUI,SAVK,CAUL,WAAW,AAAC,CACR,SAAS,CAAC,IAAI,CACjB",
-    "sources": [
-        "../scss/hotfixUI.scss"
-    ],
-    "names": [],
-    "file": "hotfixUI.css"
-}

@@ -1,9 +1,0 @@
-{
-    "version": 3,
-    "mappings": "AAAA,UAAU,CACN,WAAW,CAAE,cAAc,CAC3B,GAAG,CAAE,2CAA2C",
-    "sources": [
-        "../scss/supportedFonts.scss"
-    ],
-    "names": [],
-    "file": "supportedFonts.css"
-}

@@ -160,11 +160,23 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
                     }
                 }
 
+                unlink("./temp/engine.zip");
+
+                
+
 
             }
 
             // Zip archive will be created only after closing object
             $zip->close();
+
+            // Delete temp engine files so we don't have copie of the engine everywhere.....
+            // Uses a recursive album at the bottom of this page
+            // Mess
+            if ($exportType === "local") {
+                $filesToDelete = './temp/engine';
+                deleteFiles($filesToDelete);
+            }
             echo '{"status":"success", "message": "Everything worked dawg", "url": "' . $mapExportFile . '"}';
         } else {
             echo '{"status":"error","message":"' . $errorMessage . '"}';
@@ -174,4 +186,14 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
     }
 } else {
     echo '{"status":"error","message":"Not logged in"}';
+}
+
+function deleteFiles($dir) {
+    foreach(glob($dir . "/*") as $file) {
+        if (is_dir($file))
+            deleteFiles($file);
+        else 
+            unlink($file);
+    }
+    rmdir($dir);
 }
