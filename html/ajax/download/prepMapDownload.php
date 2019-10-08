@@ -54,7 +54,9 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
                             }
                         }
                     } else if ($exportType === "local") {
-                        $runIndexLoc = "pubbly_engine/html/offline-xml.html";
+                        //$runIndexLoc = "pubbly_engine/html/offline-xml.html";
+                        //$runIndexLoc = "pubbly_engine/html/server-build.html";
+                        $runIndexLoc = "http://cdn.pubbly.com/pubbly_engine/releases/2//html/server-build.html";
 
                         // Forget JSOn, just build from XML
                         if (file_exists("$mapExportLoc/$nodePath/MainXML.xml")) {
@@ -113,17 +115,57 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
             }
             if ($exportType === "local") {
                 $rootPath = realpath("pubbly_engine");
-                $engineFiles = new RecursiveIteratorIterator(
-                    new RecursiveDirectoryIterator($rootPath),
+                
+                $file = "http://cdn.pubbly.com/downloads/engine.zip";
+                $newFile = "./temp/engine.zip";
+                $newFileUnzippedLoc = "./temp/engine";
+                copy($file, $newFile);
+
+                $innerZip = new ZipArchive(); // LOL I HATE THIS
+
+
+                if ($innerZip->open($newFile) === TRUE) {
+                    $innerZip->extractTo($newFileUnzippedLoc);
+                    $innerZip->close();
+                }
+                else {
+                    echo "dunno";
+                }
+
+                // I H A TE THIS TOO
+                $files = new RecursiveIteratorIterator(
+                    new RecursiveDirectoryIterator($newFileUnzippedLoc),
                     RecursiveIteratorIterator::LEAVES_ONLY
                 );
-                foreach ($engineFiles as $name => $file) {
-                    if (!$file->isDir()) {
-                        $filePath = $file->getRealPath();
-                        $relativePath = "pubbly_engine/" . substr($filePath, strlen($rootPath) + 1);
-                        $zip->addFile($filePath, $relativePath);
+
+                foreach ($files as $file) {
+                    
+                    $splitFilename = explode("/", $file);
+                    $subString = $splitFilename[3];
+                    //echo $file;
+                    //if (strcmp($gitString, '.git')) {
+                    //    echo $gitString;
+                        //echo $file;
+                    //    echo "<br>";
+                    //} 
+                    //echo("String: " . $gitString . " Value: " . strcmp($gitString, '.git'));
+                    //echo "<br>";
+                    // Exclude git and other unrelated files >_>
+                    // This is SOOOOOOOO gross clean up later!!! OMFG!!!
+                    if (strcmp($subString, '.git') != 0 &&
+                        strcmp($subString, '.gitignore') != 0 &&
+                        strcmp($subString, '_package-lock.json') != 0 &&
+                        strcmp($subString, '_Gruntfile.js') != 0 &&
+                        strcmp($subString, '_package.json') != 0) {
+                            echo "currfile: " . $file;
+                            echo "<br>";
+                            echo "newfile: ";
+                            echo implode('/', array_slice($splitFilename, 2));
+                            echo "<br>";
                     }
                 }
+
+
             }
 
             // Zip archive will be created only after closing object
