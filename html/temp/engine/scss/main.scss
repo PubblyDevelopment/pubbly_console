@@ -1,0 +1,247 @@
+@import "header";
+@import "cursors";
+
+body {
+  font-family: "Didact", sans-serif;
+  margin: 0;
+  overflow: hidden;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+}
+.backgroundCont {
+  // needed for fullscreen
+  position:fixed;
+  top:0;
+  left:0;
+  height:100%;
+  width:100%;
+  z-index:-2;
+  background-color:#ebebeb;
+}
+#main {
+  background-size: cover;
+}
+#pubbly_main {
+  // padding:15px;
+  // border-radius:15px;
+  // background-color:RGB(34,34,34);
+  opacity: 0;
+
+  /* Header */
+  /* TODO: Alt styling for books < 300 px */
+
+  .loader {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    z-index: 10;
+    top: 0;
+    left: 0;
+  }
+  #assetVisitorCenter {
+    display: none;
+    * {
+      display: none;
+    }
+  }
+
+  .logo {
+    float: right;
+    height: 20px;
+  }
+
+  /* Canvases */
+  #canvases {
+    overflow: hidden;
+    #loaderCont {
+      background-color:white;
+    }
+    #cancover {
+      /* For overflow hidden on abs readerren */
+      position: absolute;
+      overflow: hidden;
+      /* height and width set in main.js to whatever is read in xml */
+      .canPlacer {
+        pointer-events: none;
+        position: absolute;
+        background-color:white;
+      }
+      canvas {
+        background-color: white;
+      }
+      .bufferCanvas {
+        display: none;
+        background-color: RGBA(0, 0, 0, 0);
+      }
+    }
+  }
+  /* For single page display, all animations are done with CSS (better performance) */
+  #canvases.singlePage {
+    .canPlacer.previous {
+      margin-left: -100%;
+    }
+    .canPlacer.current {
+      margin-left: 0%;
+    }
+    .canPlacer.next {
+      margin-left: 100%;
+    }
+  }
+  #canvases.composite {
+    canvas {
+      height: 100%;
+    }
+    .canPlacer {
+      overflow: hidden;
+    }
+    .canPlacer.current {
+      width: 100%;
+      margin-left: 0%;
+    }
+    .canPlacer.current.cover {
+      width: 50%;
+      margin-left: 25%;
+    }
+    .canPlacer.currentSpreadLeft,
+    .canPlacer.currentSpreadRight {
+      margin-left: 100%;
+    }
+    .canPlacer.next,
+    .canPlacer.nextSpreadLeft,
+    .canPlacer.nextSpreadRight {
+      margin-left: 100%;
+    }
+    .canPlacer.previous,
+    .canPlacer.previousSpreadLeft,
+    .canPlacer.previousSpreadRight {
+      margin-left: -100%;
+    }
+  }
+
+  #uiCont {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top:0;
+    z-index:12;
+  }
+
+  /* Footer */
+  #footer {
+    display: none;
+    padding-top: 15px;
+  }
+}
+.clearfix {
+  clear: both;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+    supported by Chrome and Opera */
+}
+
+.transformCenterCont {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  .transformCenter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+div#fatal {
+  width: 150px;
+  padding: 15px;
+  border-radius: 15px;
+  margin: auto;
+  margin-top: 25px;
+  background-color: RGBA(20, 20, 20, 0.2);
+  * {
+    text-align: center;
+    width: 100%;
+  }
+}
+
+/* Common bullshit */
+/* Like how to you center things in css? Do you know? You don't you big liar, no on knows */
+
+.tableCenterCont {
+  display: table;
+  height: 100%;
+  width: 100%;
+  .tableCenter {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+  }
+}
+.flexCenterCont {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  .flexCenter {
+    flex: none;
+  }
+}
+
+/* Cursor bullshit */
+/* SOMETIMES you have to put a moz in front, and you can't do more than one in jquery. So class to cursor and maybe we use this some other way in da future */
+.cursor-grabbing {
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+}
+.cursor-grab {
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+}
+.cursor-cell {
+  cursor: cell;
+}
+.cursor-default {
+  cursor: default;
+}
+.cursor-crosshair {
+  cursor: crosshair;
+}
+.cursor-text {
+  cursor: text;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.cursor-no-drop {
+  cursor: no-drop;
+}
+.cursor-wait {
+  cursor: wait;
+}
+.cursor-progress {
+  cursor: progress;
+}
+
+
+// Mod the others
+.ProgressGraph_SpinningWheel {
+  img {
+    margin-top: -60px;
+  }
+  p {
+    color: #8867ac;
+    margin-top: 30px;
+  }
+}

@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,YAAY,AAAC,CACT,gBAAgB,CAAC,kBAAkB,CACtC",
+    "sources": [
+        "../scss/authorEdits.scss"
+    ],
+    "names": [],
+    "file": "authorEdits.css"
+}

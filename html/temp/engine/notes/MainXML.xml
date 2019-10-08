@@ -1,0 +1,768 @@
+<!--
+    plz turn on line wrap
+
+    This is the XML document exported by the design tools. This particular example is the first few pages from the first lesson used in the Global Learning Xprize http://console.pubbly.com/read.php?engineCode=new&t=c&sn=U3dfUmVhZGluZ19sdmwxX0RvdWJsZURyb3A=&cn=UlNXTDAxQmE=
+
+    The Pubbly livecode design tools export something that looks pretty much like this, except without formatting or comments.
+
+    These xml files are then modified further on console servers. Stitching two pages together is basically the same as copying and pasting a page from another book into the <Pages> node. Making an asset swap is basically the same as editing the <Object>'s source node to represent the new asset. Making a map node link is basically the same as editing the <Destination>To be determined</Destination> to the node ID of where you just determined the link to take you. This XML contains ALL the information that seperates 1 pubbly book from another.
+
+    It's broken up into two major sections. <Info> and <Pages>
+
+    <Info> contains book specific information, global to all pages in the book.
+
+    <Pages> contain <Page> nodes, each representing one page in the book.
+
+        UNLESS it's a composite display, in which case the first <Page> is the cover, the second <Page> is the spread (2-3) and the final <Page> is either a double or single wide cover again.
+
+        Meaning, no matter the TYPE of display, a pubbly will ONLY ever show/run ONE PAGE AT A TIME.
+
+    The XML was a decent enough solution. However the design tools were somewhat unstable, and XML requirements would change seemingly at random. In addition, older versions of the XML would require messy backwards compat support. So in an attempt to better control this format, I eventually switched to it being an inbetween step.
+
+    XML is now parsed by javascript inside the js/build/* folder, and is converted to a JSON format, which I fully controll. This json format is also easier to plug in and out of a running pubbly book, and _could_ be the first step towards a fully web based design tools environment.
+
+    Each time the XML changes, the JSON needs to be re-exported. And because the XML is still the "original", and the console still uses legacy XML editing api calls (when making a stitch, a node, or a swap), the XML is still around for a little while longer.
+
+
+    /* UNUSED */
+        A node I have never needed
+
+    /* LEGACY */
+        A node I no longer need
+-->
+
+<Project>
+    <Info>
+        <!-- 
+            Some of the nodes in <Info> are required.
+
+            Some _were_ required, but are no longer needed
+
+            Some have never been used.
+       -->
+        <!-- REQUIRED -->
+        <!-- NAME OF PROJECT, still used behind the scenes -->
+        <PrjName>RSWL01Ba</PrjName>
+        <!-- Highlight targets are this color globally -->
+        <HighlightLinkColor>128,255,255</HighlightLinkColor>
+        <!-- and this opacity (0.5 opacity) -->
+        <HighlightLinkTransparency>50</HighlightLinkTransparency>
+        <!-- ... included twice, just to be nice (kidding, design tools weirdness, been around since 3) -->
+        <HighlightLinkTransparency>50</HighlightLinkTransparency>
+
+        <!-- IMPORTANT, whether it's one page at a time (like powerpoint), or a composite (like the cover, double wide, etc, cover for picture books) -->
+        <PageDisplay>single</PageDisplay>
+        <!-- Is the last page a double wide cover, or a regular (determines turn animation and placement) -->
+        <LastPageSingleOrDouble>Single</LastPageSingleOrDouble>
+        <!-- Boolean for (can the kid drag over his own pages, or can that only be triggered from sequencing) -->
+        <DisallowPageNavigation>false</DisallowPageNavigation>
+        <!-- FOR RANDOM TARGETS, should the chosen item be REMOVED from the list of available, or kept there. I.e., if the target is to play 1 of 4 possible sounds, should the NEXT trigger only have the 3 UNPLAYED sounds, or the original 4 list -->
+        <ResetRandomRemovals>true</ResetRandomRemovals>
+        <!-- Height of a single page -->
+        <SinglePageHeight>641</SinglePageHeight>
+        <!-- Width of a single page (if book is composite, the book opens up to TWICE this width (for page 2-3) -->
+        <SinglePageWidth>500</SinglePageWidth>
+        <!-- Whether or not to keep a dropped object at it's dropped XY, or automatically move it to the center of the link it was dropped on
+        
+        NOTE, the center of the link is determined by it's bounding rectangle. Meaning, half way between it's left most and right most point (and top and bottom most). NOT weighted for surface area or anything -->
+        <SnapDroppedImagesIntoLocation>true</SnapDroppedImagesIntoLocation>
+
+
+        <!-- REQUIRED KINDOF -->
+        <!-- If this is a true, then an interruption is allowed, but it will return the book to whatever state it was in before the playing sequence started.
+
+        NY didn't like it and never used it. We were considering the true/false "Allow/Disallow interruptions", which I thought was a bad idea (because it would be overused to ensure the sanctity of the lesson, but it's overuse would kill the fun of a truly interactive book.)
+
+        The need was more for "If they stop a sequence mid animation, the object is at half opacity, in a weird position, and looks bad".
+
+        Think of it like a quick save/load. If this is true, starting a sequence creates a "quick save" of everything on the page. Then, if the sequence is interrupted, that save is reloaded, and things are in a "safe" location/rotation/opacity, everything.
+
+        this... might still work? But since we have literally zero books on the console/market that make use of it, I honestly don't know if it broke.
+        -->
+        <ReturnPageToPreviousStateOnInterruptions>false</ReturnPageToPreviousStateOnInterruptions>
+
+        <!-- 
+            In an attempt to appease me (after I added the SaveStates node above and no one used it), TimeToInterrupt was added instead of "allow interactivity".
+
+            Kids could click/touch and _hold_ for XXX milliseconds to stop a sequence.
+
+            However, NY ONLY ever used "0" or "999999", and since the feature was used as a boolean, I automatically convert it to one in the JSON (interruptable = (timeToInterrupt > 0))
+        -->
+        <TimeToInterrupt>600</TimeToInterrupt>
+
+
+        <!-- _WERE_ REQUIRED -->
+        <!-- "Pretty" name for the project -->
+        <PrjNameLong>RSWL01Ba</PrjNameLong>
+        <!-- "Pretty" name for the project (old node name) -->
+        <ProjectLongName>Parentrestartdd</ProjectLongName>
+        <!-- Back when the numbering was custom (instead of auto-generated client side) -->
+        <PageNumbering>1,2</PageNumbering>
+        <!-- OLD UI had a square bullet, this was it's hex color -->
+        <BulletColor>#8867AC</BulletColor>
+        <!-- Used to have a "Highlight this link when clicked" property for every link. This feature was retired, but the color info node stuck around -->
+        <HighlightLinkColor>128,255,255</HighlightLinkColor>
+        <!-- Version of the design tools used. Somewhat useful for narrowing down design tools bugs (this started to mess up after 7.x or whatever) -->
+        <CreatedWithVersion>5.17</CreatedWithVersion>
+        <!-- Math fields, used in the first gen Xprize submission, and then never again (points instead). This was the px or pt size of that field, maybe -->
+        <MathAnswerSize>5</MathAnswerSize>
+        <!-- body {background-color: this} -->
+        <BrowserBackgroundColor>255,255,255</BrowserBackgroundColor>
+        <!-- canvas {background-color: this} -->
+        <BookBackgroundColor>255,255,255</BookBackgroundColor>
+        <!-- Back when books were directly uploaded to a server from the design tools themselves, this tracked their remote IDs -->
+        <ProjectId />
+
+        <!-- UNUSED -->
+        <!-- 
+            For a little while, the pubbly design tools could create a new book from just an XML document (and the associated assets). Because of this, Ray added a lot more information to the XML. Information which, although I never had a use for, he supposedly needed to recreate an editable format of the book.
+
+            However, importing XML does not work, or if it does, does not work very well. And a lot of nodes are unused "fat" from that attempted feature.
+
+            Some actually cropped up before the attempted xml import, mostly from Ray's "XML export" script taking full property lists from livecode objects and just shoving them into nodes.
+
+            So any time you see "unused", that's what that is.
+
+            And during the XML->json conversion process, I try to strip out the unused information.
+        -->
+        <!-- Was going to add "known fonts" but never did -->
+        <FontNamesList />
+        <!-- unused -->
+        <UnnecessaryFilesFromLastUpload />
+        <!-- unused -->
+        <StartNumberingPagesAt>1</StartNumberingPagesAt>
+        <!-- Was going to consider "Must click/touch and DRAG 25 pixels to stop a sequence", but there was no good way to communicate that -->
+        <SameMouseLocThreshold>25</SameMouseLocThreshold>
+        <!-- no idea, cropped up after 4.x -->
+        <AlwaysDoubleWide>true</AlwaysDoubleWide>
+    </Info>
+    <Pages>
+        <Page>
+            <!-- unused -->
+            <RandomChoiceRemovals />
+            <!-- unused -->
+            <NeedToUpdateSnap>false</NeedToUpdateSnap>
+            <!-- Legacy. Used to have a "background image" below everything else, one for each half of the page. Easier to simply allow it as another object (at lowest z index) -->
+            <LeftBackground />
+            <!-- Unused. We STILL use page points, but points ALWAYS start at zero (this node is never not zero -->
+            <PagePoints>0</PagePoints>
+            <!-- Legacy. Trigger an automatic page reset after navigating away. -->
+            <ResetWhenLeaving>true</ResetWhenLeaving>
+            <!-- unused -->
+            <RunningOpenPageLinks>false</RunningOpenPageLinks>
+            <!-- PagePoints at zero - 1 will either go negative (-1) or min out at 0 -->
+            <AllowPointsToGoNegative>false</AllowPointsToGoNegative>
+            <!-- unused -->
+            <CurrentObject />
+            <!-- unused: Will always be false -->
+            <HasPlayedOpenPageFirstTime>false</HasPlayedOpenPageFirstTime>
+            <!-- Legacy: "proper" name of page. But page names are now generated automatically (COVER, 2-3, 4-5, 6-7, 8)-->
+            <PageName>1</PageName>
+
+            <!-- Holds all objects on page (images, videos, gifs, workspaces, fields, everything visual-->
+            <Objects>
+                <Object>
+                    <!-- Internal name for object. Used in sequencing. E.G., show object Background3_Marsh2, will resolve to THIS NODE. -->
+                    <ObjName>Background3_Marsh2</ObjName>
+
+                    <!-- asset the object displays, can be different from reference name above. If object "dog"  displays file "BlackLab.jpg", this node is "BlackLab"... -->
+                    <ObjFileName>P_Background3_Marsh2</ObjFileName>
+                    <!-- ... and THIS node is "jpg" -->
+                    <ObjExt>jpg</ObjExt>
+
+                    <!-- At least that was the old way of doing it. Then we needed to swap out assets for the parent child swap app console thing. And we needed to remember those swaps in a database. But how could we remember what it was before, if we're writing over the node after the swap is made?
+                    
+                    So we added "ParentSource"  Meaning ParentSource is what it was pre-swap
+                    -->
+                    <ParentSource>P_Background3_Marsh2.jpg</ParentSource>
+
+                    <!-- I think this is just a duplicate of the above node... LEGACY -->
+                    <Source>P_Background3_Marsh2.jpg</Source>
+
+                    <!-- Static means it can only be moved by internal logic (move to, animate, something in sequencing). "draggable" means kids can click/touch and move it. "clonnable" means that when to click/touch and start to move it, a new instance of the object is spawned at the same location.
+                    
+                    NOTE, if an object is "cleared" (target), and there are CLONES of the object on the page, all the clones will be destroyed.
+
+                    If an object is dragged and dropped, and then reset, it goes to it's original undropped position.
+                    -->
+                    <ObjMobility>static</ObjMobility>
+                    <!-- This can be gif, video, workspace, field, image sequence, etc -->
+                    <ObjType>image</ObjType>
+                    <!-- If it's an image sequence... -->
+                    <ObjIsImageSequence>false</ObjIsImageSequence>
+                    <!-- It's sequence folder has a list of <ObjImageSequenceFrames, each with an asset source (dog-frame-1.jpg, dog-frame-2.jpg) -->
+                    <ObjImageSequenceFolder />
+                    <!-- It's z-index of the page. Sometimes zero based, sometimes not... Just do "relative to everything else" -->
+                    <ObjLayer>5</ObjLayer>
+                    <!-- show/hide. initially visible or not -->
+                    <ObjInitVis>show</ObjInitVis>
+                    <!-- comma delimited position. (representing the TOP LEFT CORNER of the image, not the center) -->
+                    <ObjInitTopLeft>0,0</ObjInitTopLeft>
+                    <!-- Width of object on page -->
+                    <ObjInitWidth>1000</ObjInitWidth>
+                    <!-- Height of object on page -->
+                    <ObjInitHeight>641</ObjInitHeight>
+                </Object>
+                <Object>
+                    <!-- Most of this same as above -->
+                    <ObjName>SW_PB_01_BA</ObjName>
+                    <ObjFileName>C1_SW_PB_01_BA</ObjFileName>
+                    <ObjMobility>static</ObjMobility>
+                    <ObjType>image</ObjType>
+                    <ObjExt>png</ObjExt>
+                    <ObjIsImageSequence>false</ObjIsImageSequence>
+                    <ObjImageSequenceFolder />
+                    <ObjLayer>6</ObjLayer>
+                    <ObjInitVis>hide</ObjInitVis>
+                    <ObjInitTopLeft>91,122</ObjInitTopLeft>
+                    <ObjInitWidth>416</ObjInitWidth>
+                    <ObjInitHeight>275</ObjInitHeight>
+                    <!-- ANIMATIONS are saved as properties of the objects. Multiple animations can be loaded up as <ObjAnimation> nodes -->
+                    <ObjAnimations>
+                        <!-- Represents one animation -->
+                        <ObjAnimation>
+                            <!-- Internal name, a target of "play animation Center_grow" refers to THIS animation -->
+                            <AnimationName>Center_grow</AnimationName>
+                            <!-- ... hoooookay, so for some reason, animation data is a comma, pipe, colon dilimated string with double dashes for nulls... Let me explain -->
+                            <!-- 
+                                Example animation, move a ball from the top left to bottom right of screen. Decrease it's size to nothing, rotate it once, animation lasts 1 second. Meaning, you want to go from 
+
+                                top:0,
+                                left: 0,
+                                height: 100%,
+                                width: 100%,
+                                opacity: 100%,
+                                angle: 0,
+
+                                to
+
+                                top: 600px,
+                                left: 800px,
+                                height: 0%,
+                                width: 0%,
+                                opacity: 0%,
+                                angle: 360deg
+
+                                in 1,000 ms.
+
+                                Represented in this AnimationData node, that would be
+
+                                <AnimationData>
+                                    0,0|100%|100%|100%|1|1:600,800|0%|0%|0%|doubledash|doubledash
+                                </AnimationData>
+
+                                (if you change the doubledash to two "-"s, sorry, xml comments are double dashes)
+
+                                Pre-emptively, I want you to know that I understand _just how stupid_ all that actually is.
+
+                                top,left|height%|width%|opacity|next frame's end angle|time until next frame:
+
+                                * Why isn't the top,left pipe dilimited like everything else?
+                                * Why are the "null" values two dashes, in a format that's super sensitive to double dashes?
+                                * Why is the angle a decimal instead of degrees?
+                                * Why is EVERYTHING one big string instead of multiple nodes?
+                                * Why is the time between frames on the previous frame?
+                                * WHY IS THE ANGLE ON THE PREVIOUS FRAME?
+
+                                Golly gee jeepers I don't know man. But it's something better in the JSON, and you probably won't have to worry about all this.
+                            -->
+                            <AnimationData>300,500|0%|0%|100%|0|0.25:300,500|100%|100%|100%|--|--</AnimationData>
+                            <!-- Unused. I think ray had this to "undo" changes to the animation? -->
+                            <OriginalAnimationData>300,500|100%|100%|100%|0|.5:357,537|100%|100%|100%|--|--</OriginalAnimationData>
+                        </ObjAnimation>
+                    </ObjAnimations>
+                    <!-- Well lookity here, the SOURCE is different from the ObjFileName. That means THIS object has been swapped.
+                    
+                    So the file on disk that is being loaded and displayed on the page is "C1_SW_PB_01_BA.png", but it USED to be "P_SW_PB_01_BA.png". Somewhere in the asset databases, they'll be an entry for "Hey, on page 0 of child X in series Y, the object with the original source of P_... was swapped for new file C1_... 
+                        
+                    And if the book is updated, re-exported, and re-uploaded to the same location, a php script will say "Hey I've got an object with a source of P_..., was this changed for anything?" and the database will be like "Yeah it was changed for C1_...", and the php will be like "Cool, I'll just add that as a node". And then they'll go out for icecream.
+                    -->
+                    <Source>P_SW_PB_01_BA.png</Source>
+                    <!-- legacy... duplicate of above -->
+                    <ParentSource>P_SW_PB_01_BA.png</ParentSource>
+                    <!-- AAAAAAAAAA BUT WHAT ABOUT SIZING!??! HUH MORON?
+                    
+                        Yeah our parent child swap system worked great until NY started to use it. And then we realized that their perfect library of assets were _all over the fuck place_. Some at the exact same dimensions, some are 50% bigger, some have a bigger width and smaller height, some aaaaaaaaaaah
+
+                        So the swapWidth is the width of the image that has been swapped into it (gotten from an imagick call on the server or something)., as is the swapHeight
+                    -->
+                    <swapWidth>416</swapWidth>
+                    <swapHeight>275</swapHeight>
+                    <!-- 
+                        And depending on the type of swap that this is, we're either going to..
+
+                        size: Resize the image (keeping the new file's dimensions) to the largest possible without being bigger than the original
+
+                        loc: Just shoving it in at the new file's actual height/width, but keeping the location the same.
+
+                        Location, not top/left. Meaning, get the center x-y of the object at it's original loc and height width, then stick the NEW swapped asset in, centered to the same point.
+
+                        For example, is the original was at 0,0 with dimensions of 100X100, it's center point would have been at 50,50. And if the NEW image is 200X200, then for it to have the same center (50,50), it's top left would have to be -50,-50.
+
+                         << ORIGINAL IMAGE >>
+                        _______________________           
+                        |                     | 
+                        |         ____        | 
+                        |        |____|       |  
+                        |                     |          
+                        |_____________________|
+                        
+                         << BIGGER SWAPPED IMAGE >>
+                        _______________________           
+                        |       _________     | 
+                        |      |         |    | 
+                        |      |         |    |  
+                        |      |_________|    |          
+                        |_____________________|
+
+                        Different size, same center.
+
+                        (The actual offsetting of the image takes place in the draw method inside _Pubbly.js)
+                    -->
+                    <swapSizeOrLoc>size</swapSizeOrLoc>
+                    <!-- Everything else basically the same, skip to <Links> -->
+                </Object>
+                <Object>
+                    <ObjName>SW_PB_01_BA_blue</ObjName>
+                    <ObjFileName>C1_SW_PB_01_BA_blue</ObjFileName>
+                    <ObjMobility>static</ObjMobility>
+                    <ObjType>image</ObjType>
+                    <ObjExt>png</ObjExt>
+                    <ObjIsImageSequence>false</ObjIsImageSequence>
+                    <ObjImageSequenceFolder />
+                    <ObjLayer>7</ObjLayer>
+                    <ObjInitVis>hide</ObjInitVis>
+                    <ObjInitTopLeft>163,292</ObjInitTopLeft>
+                    <ObjInitWidth>416</ObjInitWidth>
+                    <ObjInitHeight>275</ObjInitHeight>
+                    <Source>P_SW_PB_01_BA_blue.png</Source>
+                    <ParentSource>P_SW_PB_01_BA_blue.png</ParentSource>
+                    <swapWidth>416</swapWidth>
+                    <swapHeight>275</swapHeight>
+                    <swapSizeOrLoc>size</swapSizeOrLoc>
+                </Object>
+                <Object>
+                    <ObjName>replay_button_stroke2</ObjName>
+                    <ObjFileName>P_replay_button_stroke2</ObjFileName>
+                    <ObjMobility>static</ObjMobility>
+                    <ObjType>image</ObjType>
+                    <ObjExt>png</ObjExt>
+                    <ObjIsImageSequence>false</ObjIsImageSequence>
+                    <ObjImageSequenceFolder />
+                    <ObjLayer>8</ObjLayer>
+                    <ObjInitVis>show</ObjInitVis>
+                    <ObjInitTopLeft>552,16</ObjInitTopLeft>
+                    <ObjInitWidth>75</ObjInitWidth>
+                    <ObjInitHeight>75</ObjInitHeight>
+                </Object>
+                <Object>
+                    <ObjName>right_arrow_button_stroke2</ObjName>
+                    <ObjFileName>P_right_arrow_button_stroke2</ObjFileName>
+                    <ObjMobility>static</ObjMobility>
+                    <ObjType>image</ObjType>
+                    <ObjExt>png</ObjExt>
+                    <ObjIsImageSequence>false</ObjIsImageSequence>
+                    <ObjImageSequenceFolder />
+                    <ObjLayer>9</ObjLayer>
+                    <ObjInitVis>hide</ObjInitVis>
+                    <ObjInitTopLeft>552,911</ObjInitTopLeft>
+                    <ObjInitWidth>75</ObjInitWidth>
+                    <ObjInitHeight>75</ObjInitHeight>
+                </Object>
+            </Objects>
+            <!-- <LINKS> are a collections of <LINK> nodes on the page. -->
+            <Links>
+                <!-- Links do not have a layer node, so they are layered in whatever order they appear here (first link on top, second link below first, etc) -->
+                <Link>
+                    <!-- Internal name, used for target "disable link Link 1"-->
+                    <Name>Link 1</Name>
+                    <!-- unused, they're always graphics-->
+                    <LinkType>graphic</LinkType>
+                    <!-- Maybe legacy, but probably still works. Links with a line drawing of "Single" or "Multiple" can... they start drawing a line when you click them. And they end at lines that accept lines from either "Link 1" (just one link) or "all"-->
+                    <LineDrawing>none</LineDrawing>
+                    <!-- 
+                        The polygon of the link. All links are polygons, even square ones. It's pt1-x,pt1-y.pt2-x,pt2-y.etc. So this one is
+                        285,157
+                        717,157
+                        717,442
+                        285,442
+                        (a square starting at 285, 157)
+                    -->
+                    <Points>285,157.717,157.717,442.285,442</Points>
+                    <!-- MAYBE legacy, but probably still works. Links pinned to objects will follow that object's relative offset from it's original position. For instance, lets say this link is a polygon of 
+
+                        100,100
+                        100,200
+                        200,200
+                        200,100
+
+                    And it's pinned to an object called "dog" and the dog object is initially at 300,300.
+
+                    If the dog object moves to 400,400, the link moves by the same amount, and it's new polygon is 
+
+                        200,200
+                        200,300
+                        300,300
+                        300,200
+
+                    The dog could be moved by a kid dragging it, or maybe an animation playing on it, or maybe a "move to" target.
+                    -->
+                    <PinnedTo />
+                    <!-- Initial status of link. Enabled means it triggers, disabled means it doesn't -->
+                    <InitialStatus>disabled</InitialStatus>
+                    <!-- Definitely legacy. Used to be a boolean for "Highlight link in blue for a second after a clikc, to show something happened", but was scrapped for being too ugly -->
+                    <AutoHighlightLink />
+                    <!-- THIS is where multiple triggerable sequences are stored.-->
+                    <Triggers>
+                        <!-- One of many possible sequences (although this particular link has just one sequence) -->
+                        <Trigger>
+                            <!-- What happeneds to trigger the sequence (kid clicks link). Could also be "points = 5" or "countdown finished" or "Page opened" -->
+                            <TriggerType>click</TriggerType>
+                            <!-- TARGETS which run sequentially (making up the sequence) -->
+                            <Targets>
+                                <!-- This is the first target that will run -->
+                                <Target>
+                                    <!-- 
+                                        Targets used to be very very simple. We figured "Three nodes, that's all you'll need to describe interaction", and that was a stupid thought and we were stupid for thinking it. And because it was already in place, we just kept it in place. So now, every target exported from the design tools will have the following three nodes.
+                                        
+                                        Type: What kind of a target is it?
+                                        Action: What should you actually _do_?
+                                        Destination: Should have named it "description" for the type's action.
+                                    -->
+                                    <!-- For this target, the type is "Audio". Meaning do something with an audio file. -->
+                                    <Type>Audio</Type>
+                                    <!-- PLAY the audio file -->
+                                    <Action>play</Action>
+                                    <!-- PLAY the C1_Aud_inst_sw_BA_rev.wav audio file -->
+                                    <Destination>C1_Aud_inst_sw_BA_rev</Destination>
+                                    <!-- ... and then we needed to remember which audio files have been swapped with other audio files, so we could redo the swaps, so I stuck this on via the "add swap" php api. ORIGINAL audio file that used to be here during first upload. -->
+                                    <ParentSource>P_Aud_inst_sw_BA</ParentSource>
+                                    <!-- Targets will hopefully be readable with 
+                                        "We have a [type] target. It will [action] the [destination]"
+                                    -->
+                                </Target>
+                                <!-- This is the second target that will run -->
+                                <Target>
+                                    <!-- We have an Object target. It will Show the SW_PB_01_BA_blue (object)-->
+                                    <Type>Object</Type>
+                                    <Action>Show</Action>
+                                    <Destination>SW_PB_01_BA_blue</Destination>
+                                </Target>
+                                <Target>
+                                    <!-- We have an Wait target. It will ...
+                                        wait 0.75 seconds
+
+                                        yeah, type action destination already broke down
+                                    -->
+                                    <Type>Wait</Type>
+                                    <Action>time</Action>
+                                    <Destination>0.75</Destination>
+                                </Target>
+                                <Target>
+                                    <Type>Object</Type>
+                                    <Action>Hide</Action>
+                                    <Destination>SW_PB_01_BA_blue</Destination>
+                                </Target>
+                                <!-- 
+                                    
+                                    AND AS SUCH, I threw away the type action destination format for a better JSON format, which also kind of broke down, but slightly less.
+
+                                    The one consistant node was "Type". Type would always point to the THING that the target was operating on or with.
+
+                                    The different types, formats, delimiters, and rules for how to interepret each target were and are terrible. They also changed all the time, sometimes intentionally, sometimes unintentionally. They also had to backward support every other possible way we ever came up with to trigger a certain thing. And it's such a terrible aweful horrible mess that I've written a terrible aweful horrible script file to deal with it one time only. It is build/xmlFormattingFunctions, function messyTargetToPretty
+
+                                    Some targets wait for the previous to complete, and some don't. Some targets will HOLD the next target until they themselves complete and others don't. Some require the page to redraw, some require the page to redraw NEXT TIC, and some require that new flags are triggered at the end of the currently running sequence.
+
+                                    So if you need to add a new feature all the way from the design tools, ask ray for a "new type", agree on something that might change in the future, and trap for a new type in the messyTargetToPretty switch statement, and convert the nonsense into something you might be able to handle. in run/sequence.js
+
+                                    No comments for the rest of the page. Skip to <Assets>
+
+                                -->
+                            </Targets>
+                        </Trigger>
+                    </Triggers>
+                </Link>
+                <Link>
+                    <Name>Link 2</Name>
+                    <LinkType>graphic</LinkType>
+                    <LineDrawing>none</LineDrawing>
+                    <Points>11,548.106,548.106,630.11,630</Points>
+                    <PinnedTo />
+                    <InitialStatus>enabled</InitialStatus>
+                    <AutoHighlightLink />
+                    <Triggers>
+                        <Trigger>
+                            <TriggerType>click</TriggerType>
+                            <Targets>
+                                <Target>
+                                    <Type>Object</Type>
+                                    <Action>Reset</Action>
+                                    <Destination>Page</Destination>
+                                </Target>
+                                <Target>
+                                    <Type>Object</Type>
+                                    <Action>send click to</Action>
+                                    <Destination>V Link 1</Destination>
+                                </Target>
+                            </Targets>
+                        </Trigger>
+                    </Triggers>
+                </Link>
+                <Link>
+                    <Name>Link 3</Name>
+                    <LinkType>graphic</LinkType>
+                    <LineDrawing>none</LineDrawing>
+                    <Points>905,547.988,547.988,630.905,630</Points>
+                    <PinnedTo />
+                    <InitialStatus>disabled</InitialStatus>
+                    <AutoHighlightLink />
+                    <Triggers>
+                        <Trigger>
+                            <TriggerType>click</TriggerType>
+                            <Targets>
+                                <Target>
+                                    <Type>Page</Type>
+                                    <Action />
+                                    <Destination>Next</Destination>
+                                </Target>
+                            </Targets>
+                        </Trigger>
+                    </Triggers>
+                </Link>
+                <Link>
+                    <Name>V Link 1</Name>
+                    <LinkType>graphic</LinkType>
+                    <LineDrawing>none</LineDrawing>
+                    <Points>-80,0.-10,0.-10,70.-80,70</Points>
+                    <PinnedTo />
+                    <InitialStatus>enabled</InitialStatus>
+                    <AutoHighlightLink />
+                    <Triggers>
+                        <Trigger>
+                            <TriggerType>click</TriggerType>
+                            <Targets>
+                                <Target>
+                                    <Type>Object</Type>
+                                    <Action>reset</Action>
+                                    <Destination>Page</Destination>
+                                </Target>
+                                <Target>
+                                    <Type>Audio</Type>
+                                    <Action>play</Action>
+                                    <Destination>P_Aud_inst_sw_1</Destination>
+                                </Target>
+                                <Target>
+                                    <Type>Wait</Type>
+                                    <Action>time</Action>
+                                    <Destination>Silence</Destination>
+                                </Target>
+                                <Target>
+                                    <Type>Object</Type>
+                                    <Action>Show</Action>
+                                    <Destination>SW_PB_01_BA</Destination>
+                                </Target>
+                                <Target>
+                                    <Type>Audio</Type>
+                                    <Action>play</Action>
+                                    <Destination>C1_Aud_inst_sw_BA_rev</Destination>
+                                    <ParentSource>P_Aud_inst_sw_BA</ParentSource>
+                                </Target>
+                                <Target>
+                                    <Type>Object</Type>
+                                    <Action>Play</Action>
+                                    <Destination>SW_PB_01_BA|Center_grow</Destination>
+                                </Target>
+                                <Target>
+                                    <Type>Object</Type>
+                                    <Action>Enable</Action>
+                                    <Destination>Link 1</Destination>
+                                </Target>
+                                <Target>
+                                    <Type>Object</Type>
+                                    <Action>Enable</Action>
+                                    <Destination>Link 3</Destination>
+                                </Target>
+                                <Target>
+                                    <Type>Wait</Type>
+                                    <Action>time</Action>
+                                    <Destination>1</Destination>
+                                </Target>
+                                <Target>
+                                    <Type>Object</Type>
+                                    <Action>Show</Action>
+                                    <Destination>right_arrow_button_stroke2</Destination>
+                                </Target>
+                            </Targets>
+                        </Trigger>
+                    </Triggers>
+                </Link>
+                <Link>
+                    <Name>Page</Name>
+                    <LinkType>page</LinkType>
+                    <LineDrawing />
+                    <Points />
+                    <PinnedTo />
+                    <InitialStatus />
+                    <Triggers>
+                        <Trigger>
+                            <TriggerType>Open Page</TriggerType>
+                            <Targets>
+                                <Target>
+                                    <Type>Audio</Type>
+                                    <Action>play</Action>
+                                    <Destination>P_Aud_inst_sw_1</Destination>
+                                </Target>
+                                <Target>
+                                    <Type>Wait</Type>
+                                    <Action>time</Action>
+                                    <Destination>Silence</Destination>
+                                </Target>
+                                <Target>
+                                    <Type>Object</Type>
+                                    <Action>Show</Action>
+                                    <Destination>SW_PB_01_BA</Destination>
+                                </Target>
+                                <Target>
+                                    <Type>Audio</Type>
+                                    <Action>play</Action>
+                                    <Destination>C1_Aud_inst_sw_BA_rev</Destination>
+                                    <ParentSource>P_Aud_inst_sw_BA</ParentSource>
+                                </Target>
+                                <Target>
+                                    <Type>Object</Type>
+                                    <Action>Play</Action>
+                                    <Destination>SW_PB_01_BA|Center_grow</Destination>
+                                </Target>
+                                <Target>
+                                    <Type>Object</Type>
+                                    <Action>Enable</Action>
+                                    <Destination>Link 1</Destination>
+                                </Target>
+                                <Target>
+                                    <Type>Object</Type>
+                                    <Action>Enable</Action>
+                                    <Destination>Link 3</Destination>
+                                </Target>
+                                <Target>
+                                    <Type>Wait</Type>
+                                    <Action>time</Action>
+                                    <Destination>1</Destination>
+                                </Target>
+                                <Target>
+                                    <Type>Object</Type>
+                                    <Action>Show</Action>
+                                    <Destination>right_arrow_button_stroke2</Destination>
+                                </Target>
+                            </Targets>
+                        </Trigger>
+                    </Triggers>
+                </Link>
+            </Links>
+        </Page>
+    </Pages>
+    <!-- In order to tell which assets need to be swapped out and which remain the same between children, we added a third MAIN node to the XML. This is just a list of every file used for the pubbly, it's type (image, audio video), and whether or not it's "fixed" or "variable" -->
+    <Assets>
+        <Asset>
+            <Source>P_green line.png</Source>
+            <Type>Image</Type>
+            <FixedOrVariable>fixed</FixedOrVariable>
+        </Asset>
+        <Asset>
+            <Source>P_red line.png</Source>
+            <Type>Image</Type>
+            <FixedOrVariable>fixed</FixedOrVariable>
+        </Asset>
+        <Asset>
+            <Source>P_replay_button_stroke2.png</Source>
+            <Type>Image</Type>
+            <FixedOrVariable>fixed</FixedOrVariable>
+        </Asset>
+        <Asset>
+            <Source>P_right_arrow_button_stroke2.png</Source>
+            <Type>Image</Type>
+            <FixedOrVariable>fixed</FixedOrVariable>
+        </Asset>
+        <Asset>
+            <!-- Variable image P_suffix.png. Meaning, when you create the UI to make the swaps on the console, P_suffix can be swapped. But what page is P_suffix on? Idk, go loop through the <Pages> node and find out, then filter the list before echoing out the UI -->
+            <Source>P_suffix.png</Source>
+            <Type>Image</Type>
+            <FixedOrVariable>variable</FixedOrVariable>
+        </Asset>
+        <Asset>
+            <Source>P_SW_PB_01_BA.png</Source>
+            <Type>Image</Type>
+            <FixedOrVariable>variable</FixedOrVariable>
+        </Asset>
+        <Asset>
+            <Source>P_SW_PB_01_Baba.png</Source>
+            <Type>Image</Type>
+            <FixedOrVariable>variable</FixedOrVariable>
+        </Asset>
+        <Asset>
+            <Source>P_SW_PB_01___ba.png</Source>
+            <Type>Image</Type>
+            <FixedOrVariable>variable</FixedOrVariable>
+        </Asset>
+        <Asset>
+            <Source>P_Assoc pic.png</Source>
+            <Type>Image</Type>
+            <FixedOrVariable>variable</FixedOrVariable>
+        </Asset>
+        <Asset>
+            <Source>P_SW_PB_01_BA_blue.png</Source>
+            <Type>Image</Type>
+            <FixedOrVariable>variable</FixedOrVariable>
+        </Asset>
+        <Asset>
+            <Source>P_Background3_Marsh2.jpg</Source>
+            <Type>Image</Type>
+            <FixedOrVariable>variable</FixedOrVariable>
+        </Asset>
+        <Asset>
+            <Source>P_Aud_inst_sw_1.wav</Source>
+            <Type>Audio</Type>
+            <FixedOrVariable>fixed</FixedOrVariable>
+        </Asset>
+        <Asset>
+            <Source>P_Aud_inst_sw_2.wav</Source>
+            <Type>Audio</Type>
+            <FixedOrVariable>fixed</FixedOrVariable>
+        </Asset>
+        <Asset>
+            <Source>P_drop effect.wav</Source>
+            <Type>Audio</Type>
+            <FixedOrVariable>fixed</FixedOrVariable>
+        </Asset>
+        <Asset>
+            <Source>P_glint half second.wav</Source>
+            <Type>Audio</Type>
+            <FixedOrVariable>fixed</FixedOrVariable>
+        </Asset>
+        <Asset>
+            <Source>P_slide flute half second.wav</Source>
+            <Type>Audio</Type>
+            <FixedOrVariable>fixed</FixedOrVariable>
+        </Asset>
+        <Asset>
+            <!-- P_Aud_inst_sw_BA.wav is swappable. Same deal, except this time, loop through every page, link, trigger and target until you find a PLAY AUDIO THIS target, then you'll know what pages this file has been used on -->
+            <Source>P_Aud_inst_sw_BA.wav</Source>
+            <Type>Audio</Type>
+            <FixedOrVariable>variable</FixedOrVariable>
+        </Asset>
+        <Asset>
+            <Source>P_Aud_inst_sw_find_ba.wav</Source>
+            <Type>Audio</Type>
+            <FixedOrVariable>variable</FixedOrVariable>
+        </Asset>
+        <Asset>
+            <Source>P_Aud_sw_baba-.wav</Source>
+            <Type>Audio</Type>
+            <FixedOrVariable>variable</FixedOrVariable>
+        </Asset>
+    </Assets>
+    <!-- 
+        These nodes are unused, I think from a dirty php pretty print call
+    -->
+    <preserveWhiteSpace />
+    <formatOutput>1</formatOutput>
+</Project>

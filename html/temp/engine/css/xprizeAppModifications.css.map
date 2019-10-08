@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,IAAI,AAAC,CACD,gBAAgB,CAAE,KAAK,CACvB,QAAQ,CAAC,MAAM,CAClB,AAED,AAAA,KAAK,AAAC,CACF,QAAQ,CAAE,MAAM,CAInB,AALD,AAEC,KAFI,CAEJ,GAAG,AAAC,CACH,QAAQ,CAAC,MAAM,CACf,AAGF,AAAA,CAAC,AAAC,CACE,2BAA2B,CAAE,WAAW,CAC3C",
+    "sources": [
+        "../scss/xprizeAppModifications.scss"
+    ],
+    "names": [],
+    "file": "xprizeAppModifications.css"
+}

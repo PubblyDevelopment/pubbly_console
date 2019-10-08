@@ -1,0 +1,45 @@
+#market {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 0;
+  width: 100%;
+  overflow: visible;
+
+  .back,
+  .home {
+    display: inline-block;
+    vertical-align: middle;
+    transition: 0.25s;
+    cursor: hand;
+    background-color: #9672be;
+    border: none;
+    height: 105px;
+    width: 55px;
+    margin-top: -105px;
+
+    &.show {
+      margin-top: 0px;
+    }
+    &:hover {
+      background-color: #91bd49;
+    }
+    .icon {
+      display: inline-block;
+      vertical-align: middle;
+
+      height: 29px;
+      padding: 38px 13px;
+      color: white;
+    }
+  }
+
+  .back {
+    border-bottom-right-radius: 25px;
+  }
+
+  .home {
+    margin-left: calc(100% - 110px);
+    border-bottom-left-radius: 25px;
+  }
+}

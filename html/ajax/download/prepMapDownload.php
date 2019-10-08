@@ -54,19 +54,27 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
                             }
                         }
                     } else if ($exportType === "local") {
-                        //$runIndexLoc = "pubbly_engine/html/offline-xml.html";
-                        //$runIndexLoc = "pubbly_engine/html/server-build.html";
-                        $runIndexLoc = "http://cdn.pubbly.com/pubbly_engine/releases/2//html/server-build.html";
+                        // Get correct server run file from the CDN...
+                        $runIndexLoc = "http://cdn.pubbly.com/pubbly_engine/releases/2/html/server-run.html";
 
-                        // Forget JSOn, just build from XML
-                        if (file_exists("$mapExportLoc/$nodePath/MainXML.xml")) {
-                            $xmlStr = file_get_contents("$mapExportLoc/$nodePath/MainXML.xml");
+
+                        if (file_exists("$mapExportLoc/$nodePath/Main.2.0.0.json")) {
+                            // Get JSON string of file
+                            $jsonStr = file_get_contents("$mapExportLoc/$nodePath/Main.2.0.0.json");
+                            
+                            // Explode the map path to get the map name
+                            $explodedMapName = explode('/', $mapExportLoc);
+                            $mapName = end($explodedMapName);
+                            
+                            // Replace all map\/[mapName]\/ with an empty string
+                            $cleanedUpJson = str_replace('map\/' . $mapName . '\/', '', $jsonStr);
+                            
                             $frag = new Html_fragment($runIndexLoc, [
-                                ["PATH_TO_ENGINE", "pubbly_engine/"],
+                                ["PATH_TO_ENGINE", "engine/"],
                                 ["ENGINE", "latest"],
                                 ["START_PAGE", 0],
                                 ["PATH_TO_BOOK", "$nodePath"],
-                                ["XML_STRING", $xmlStr],
+                                ["PUBBLY_JSON", $cleanedUpJson],
                             ]);
                             $frag->printOut("$mapExportLoc/$nodePath.html");
                         }
@@ -123,7 +131,6 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
 
                 $innerZip = new ZipArchive(); // LOL I HATE THIS
 
-
                 if ($innerZip->open($newFile) === TRUE) {
                     $innerZip->extractTo($newFileUnzippedLoc);
                     $innerZip->close();
@@ -139,29 +146,17 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
                 );
 
                 foreach ($files as $file) {
-                    
                     $splitFilename = explode("/", $file);
                     $subString = $splitFilename[3];
-                    //echo $file;
-                    //if (strcmp($gitString, '.git')) {
-                    //    echo $gitString;
-                        //echo $file;
-                    //    echo "<br>";
-                    //} 
-                    //echo("String: " . $gitString . " Value: " . strcmp($gitString, '.git'));
+                  
+                    //echo "currfile: " . $file;
                     //echo "<br>";
-                    // Exclude git and other unrelated files >_>
-                    // This is SOOOOOOOO gross clean up later!!! OMFG!!!
-                    if (strcmp($subString, '.git') != 0 &&
-                        strcmp($subString, '.gitignore') != 0 &&
-                        strcmp($subString, '_package-lock.json') != 0 &&
-                        strcmp($subString, '_Gruntfile.js') != 0 &&
-                        strcmp($subString, '_package.json') != 0) {
-                            echo "currfile: " . $file;
-                            echo "<br>";
-                            echo "newfile: ";
-                            echo implode('/', array_slice($splitFilename, 2));
-                            echo "<br>";
+                    $newFile = implode('/', array_slice($splitFilename, 2));
+                    //echo "<br>";
+
+                    // So stupid I even have to do this :/
+                    if (!$file->isDir()) {
+                        $zip->addFile($file, $newFile);
                     }
                 }
 
