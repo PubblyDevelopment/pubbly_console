@@ -20,6 +20,7 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
     $query = new Mysql_query();
     $entranceNodeName = $query->fetchSingle("SELECT mn.name FROM map mp LEFT JOIN map_node mn ON mp.map_id = mn.map_id WHERE mp.name = ? AND mn.is_entry = 1", ["s", $mapName]);
     if ($entranceNodeName) {
+        //echo $entranceNodeName;
         // first remove any old exports
         $mapServerLoc = "map/$mapName";
         $mapExportLoc = "download/map/$mapName";
@@ -57,7 +58,6 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
                         // Get correct server run file from the CDN...
                         $runIndexLoc = "http://cdn.pubbly.com/pubbly_engine/releases/2/html/server-run.html";
 
-
                         if (file_exists("$mapExportLoc/$nodePath/Main.2.0.0.json")) {
                             // Get JSON string of file
                             $jsonStr = file_get_contents("$mapExportLoc/$nodePath/Main.2.0.0.json");
@@ -77,6 +77,11 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
                                 ["PUBBLY_JSON", $cleanedUpJson],
                             ]);
                             $frag->printOut("$mapExportLoc/$nodePath.html");
+                        }
+                        else {
+                            $errorMessage .= "Bad JSON somewhere. Have you opened all the Pubblys?, ";
+                            echo '{"status":"error","message":"' . $errorMessage . '"}';
+                            break;
                         }
                     }
                 } else {
@@ -102,6 +107,7 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
                 RecursiveIteratorIterator::LEAVES_ONLY
             );
             foreach ($files as $name => $file) {
+                //echo $file;
                 // Skip directories (they would be added automatically)
                 if (!$file->isDir()) {
                     // Get real and relative path for current file
@@ -110,7 +116,8 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
                     $exp = explode(".", $relativePath);
                     $relativeExt = array_pop($exp);
                     if (
-                        $relativePath == "index.html" ||
+                        // WHY DID YOU SKIP THIS JASON
+                        //$relativePath == "index.html" ||
                         $relativePath == "index.php" ||
                         $relativeExt === "json" ||
                         $relativeExt === "modified"
