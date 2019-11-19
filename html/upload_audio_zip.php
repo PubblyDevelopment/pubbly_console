@@ -68,7 +68,7 @@ if ($file) {
 	        	}
 	        	$zip->close();
 	        	
-	        	rrmdir($stagingLoc . $shortName);
+	        	//rrmdir($stagingLoc . $shortName);
 
 	        	header("Location:" . $stagingLoc . $shortName . ".zip");
 	        	
