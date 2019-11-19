@@ -56,7 +56,8 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
                         }
                     } else if ($exportType === "local") {
                         // Get correct server run file from the CDN...
-                        $runIndexLoc = "http://cdn.pubbly.com/pubbly_engine/releases/2/html/server-run.html";
+                        // $runIndexLoc = "http://cdn.pubbly.com/pubbly_engine/releases/2/html/server-run.html";
+			$runIndexLoc = "http://cdn.pubbly.com/pubbly_engine/releases/2/html/offline-run.html";
 
                         if (file_exists("$mapExportLoc/$nodePath/Main.2.0.0.json")) {
                             // Get JSON string of file
@@ -70,7 +71,7 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
                             $cleanedUpJson = str_replace('map\/' . $mapName . '\/', '', $jsonStr);
 
                             // Stupid dang post vars don't work on local :/
-                            $cleanedUpJson = preg_replace('~\"\?engineCode.*variable-(.*)~\"', '\"${1}.html\"', $cleanedUpJson);
+                            // $cleanedUpJson = preg_replace('~"\?engineCode.*nn=(.*)"~', '"/${1}.html"', $cleanedUpJson);
                             
                             $frag = new Html_fragment($runIndexLoc, [
                                 ["PATH_TO_ENGINE", "engine/"],
