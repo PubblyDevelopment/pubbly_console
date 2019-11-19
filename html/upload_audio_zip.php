@@ -3,26 +3,6 @@
 require_once("config.php");
 $file = isset($_FILES['fileToUpload']) ? $_FILES['fileToUpload'] : false;
 
-
-// StackOverflow lol 
-// This shouldn't be so HARD god I hate PHP
-// https://stackoverflow.com/questions/3338123/how-do-i-recursively-delete-a-directory-and-its-entire-contents-files-sub-dir
-function rrmdir($dir) { 
-	if (is_dir($dir)) { 
-		$objects = scandir($dir); 
-			foreach ($objects as $object) { 
-				if ($object != "." && $object != "..") { 
-					if (is_dir($dir."/".$object) && !is_link($dir."/".$object))
-						rrmdir($dir."/".$object);
-					else
-						unlink($dir."/".$object); 
-			} 
-		}
-		rmdir($dir); 
-	} 
-}
-
-
 // Puts the uploaded zip into the staging area webroot/staging/audio_caps/theZip.zip
 if ($file) {
     if ($file['type'] == "application/x-zip-compressed" || $file['type'] == "application/zip") {
