@@ -55,19 +55,19 @@ if ($file) {
 
 	        }
 	        else {
-	        	echo "Couldn't make a new zip " . $res;
+	        	header("Location: audio_caps.php?err=0"); // echo  "Couldn't make a new zip"
 	        }
         }
         else {
-        	echo "Bad zip";
+        	header("Location: audio_caps.php?err=1"); //echo "Bad zip";
         }
     }
     else {
-    	echo "Has to be a zip file.";
+    	header("Location: audio_caps.php?err=2"); //echo "Has to be a zip file.";
     }
 }
 else {
-	echo "Something went wrong with the upload. Sorry.";
+	header("Location: audio_caps.php?err=3"); //echo "Something went wrong with the upload. Sorry.";
 }
 
 
