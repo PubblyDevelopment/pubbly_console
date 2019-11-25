@@ -1,5 +1,4 @@
 <?php 
-
 require_once("config.php");
 $file = isset($_FILES['fileToUpload']) ? $_FILES['fileToUpload'] : false;
 
@@ -9,16 +8,13 @@ if ($file) {
 
         $tmpLoc = $file['tmp_name'];
 
-
+		// Probs dumb + bad
         $stagingLoc = "staging/audio_caps/";
         $uniqueID = uniqid();
         $origName = basename($file['name'], ".zip");
         $shortName = $origName . $uniqueID;
         $newZipLoc = $stagingLoc . $shortName . ".zip";
-        
-        // Add uniqueID later , ".zip" // basename
-        //$whereToMoveTheThing = $stagingLoc . "/" . $shortName .;
-        
+                
         move_uploaded_file($tmpLoc, $newZipLoc);
         
         $zip = new ZipArchive;
@@ -48,32 +44,36 @@ if ($file) {
 	        	}
 	        	$zip->close();
 	        	
-	        	//rrmdir($stagingLoc . $shortName);
+				$downloadFile = $stagingLoc . $shortName . ".zip";
+				$stupid = filesize($downloadFile);
 
-	        	header("Location:" . $stagingLoc . $shortName . ".zip");
-	        	
-
+				// This is grotesque
+				header("HTTP/1.1 200 OK");
+				header('Content-Type: "application/zip"');
+				header('Content-Disposition: attachment; filename='. $origName . "_renamed.zip");
+				header('Expires: 0');
+				header('Cache-Control: must-revalidate');
+				header('Pragma: public');
+				header('Content-Length: ' . filesize($downloadFile));
+				readfile($downloadFile);
+				
+				// Move the thing to deleted cause we doooooo not need it (but also like......is the CRON even running??? Who's to say :) )
+				rename($stagingLoc . $shortName . ".zip", "deletedZips/" . $shortName . ".zip");
+				exit;
 	        }
 	        else {
-	        	header("Location: audio_caps.php?err=0"); // echo  "Couldn't make a new zip"
+	        	header("Location: audio_caps.php?err=1"); // echo  "Couldn't make a new zip"
 	        }
         }
         else {
-        	header("Location: audio_caps.php?err=1"); //echo "Bad zip";
+        	header("Location: audio_caps.php?err=2"); //echo "Bad zip";
         }
     }
     else {
-    	header("Location: audio_caps.php?err=2"); //echo "Has to be a zip file.";
+    	header("Location: audio_caps.php?err=3"); //echo "Has to be a zip file.";
     }
 }
 else {
-	header("Location: audio_caps.php?err=3"); //echo "Something went wrong with the upload. Sorry.";
+	header("Location: audio_caps.php?err=4"); //echo "Something went wrong with the upload. Sorry.";
 }
-
-
-
-// TODO: Turn this thing into an AJAX call.... :/
-// Add uniqueness
-
 ?>
-
