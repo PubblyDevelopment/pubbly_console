@@ -132,6 +132,7 @@ $(document).ready(function () {
             $$("deleteBook").enable();
             // $$("viewBookOld").enable();
             $$("viewBookNew").enable();
+            $$("viewBookNewTab").enable();
             $$("reuploadBook").enable();
             $$('reuploadBook').data.upload = "ajax/upload/uploadBook.php?bookName=" + window.selectedBook;
             $$("downloadBook").enable();
@@ -372,6 +373,15 @@ $(document).ready(function () {
                                             value: "View new", id: "viewBookNew", view: "button", disabled: true, on: {
                                                 onItemClick: function () {
                                                     window.location.href = "read.php?engineCode=new&t=b&id=" + window.selectedBookID;
+                                                }
+                                            }
+                                        },
+                                        {
+                                            value: "View new in new tab", id: "viewBookNewTab", view: "button", disabled: true, on: {
+                                                onItemClick: function () {
+                                                    window.open(
+                                                        "read.php?engineCode=new&t=b&id=" + window.selectedBookID,
+                                                        "_blank");
                                                 }
                                             }
                                         },
