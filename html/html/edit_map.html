@@ -28,6 +28,7 @@
    <script src="NavigationNodesUI/js/element_Save.js"></script>
    <script src="NavigationNodesUI/js/element_Dropdown.js?v=2"></script>
    <script src="NavigationNodesUI/js/element_Entry.js"></script>
+   <script src="NavigationNodesUI/js/element_Input.js"></script>
    <script src="NavigationNodesUI/js/canvas-arrow.js"></script>
 
    <script src="NavigationNodesUI/js/helper.js"></script>
@@ -52,6 +53,7 @@
             pathButton: $("#pathButton")[0],
             pathDropdown: $("#pathSelections")[0],
             fromNode: $("#firstNodePhoto")[0],
+            startPage: $("#startPage")[0],
             deleteNode: $("#deleteNodeButton")[0],
             viewAt: $("#viewAtButton")[0],
             allPathButton: $("#allPathButton")[0],
@@ -148,6 +150,7 @@
                   src="NavigationNodesUI/assets/nonodeselected.png">
                <!-- text-align:center centers text -->
                <p id="secondNodeSelected" style="text-align:center;">[No node selected]</p>
+               Page: <input id="startPage" type="number" name="quantity" min="1" max="99">
             </div>
          </div>
       </div>

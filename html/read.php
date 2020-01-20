@@ -11,7 +11,12 @@ $types = [
 $type = $types[$_GET['t']];
 
 $release = 2;
-$pathToEngine = "http://cdn.pubbly.com/pubbly_engine/releases/$release/";
+
+// CDN:
+//$pathToEngine = "http://cdn.pubbly.com/pubbly_engine/releases/$release/";
+
+// Local, for testing
+$pathToEngine = "pubbly_engine/";
 $version = rtrim(file_get_contents("$pathToEngine/version.txt"));
 $forceDebug = isset($_GET['fb']) ? $_GET['fb'] : false;
 
