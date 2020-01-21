@@ -65,7 +65,7 @@ if (LOGGED_IN) {
 
                 // Added 1-21-20
                 // $xmlLoc = getXmlLocFromNodeTypeAndId
-                //$pages = getPageInfoByLoc("$baseCoverSrc/$nodeName/MainXML.xml");
+                $pages = getPageInfoByLoc("$baseCoverSrc/$nodeName/MainXML.xml");
 
                 //var_dump($pages);
                 
@@ -75,7 +75,7 @@ if (LOGGED_IN) {
                     "y" => $node['y'],
                     "name" => $nodeName,
                     "cover" => $cover,
-                    //"all_page_names" => $pages[0]["names"],
+                    "all_page_names" => $pages[0]["names"],
                     "isEntryNode" => $node['isEntryNode'],
                     "paths" => []
                 ];

@@ -9,6 +9,9 @@
     [ ]  -->  [ ]
          ==>
 
+    1-21-19: Gonna refactor this to be more re-usable. 
+    Current status: trash
+
 */
 
 class NavigationNodes_Dropdown extends NavigationNodes_element {

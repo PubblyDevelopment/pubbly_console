@@ -55,17 +55,17 @@ if (LOGGED_IN) {
 
 
         $allConnections = $query->fetchRows("SELECT
-    frm.map_node_path_id AS map_node_path_id,
-    frm.from_link_name AS from_link_name,
-    frm.from_link_page AS from_link_page,
-    frm.to_node_id AS to_node_id,
-    ton.name AS to_node_name
-FROM
-    map_node_path frm
-LEFT JOIN map_node ton ON
-    frm.to_node_id = ton.map_node_id
-WHERE
-    frm.from_node_id = ?", ["s", $id]);
+                frm.map_node_path_id AS map_node_path_id,
+                frm.from_link_name AS from_link_name,
+                frm.from_link_page AS from_link_page,
+                frm.to_node_id AS to_node_id,
+                ton.name AS to_node_name
+            FROM
+                map_node_path frm
+            LEFT JOIN map_node ton ON
+                frm.to_node_id = ton.map_node_id
+            WHERE
+                frm.from_node_id = ?", ["s", $id]);
         foreach ($allConnections as $connection) {
             $foundInXml = false;
             $toNodeName = $connection['to_node_name'];
