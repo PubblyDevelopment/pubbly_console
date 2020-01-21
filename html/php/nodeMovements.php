@@ -42,6 +42,7 @@ function moveNodeXmlToNodeFsLoc($xmlFromLoc, $fromAssetPrefix, $toLoc) {
 function createNodeSkeletonPathsFromXmlDoc($nodeID, $xmlLoc) {
     require_once(CLASS_ROOT . "/mysql_query.php");
     $query = new Mysql_query();
+    echo $xmlLoc;
     $xml = simplexml_load_file($xmlLoc);
     $p = -1;
     foreach ($xml->Pages->children() as $page) {
