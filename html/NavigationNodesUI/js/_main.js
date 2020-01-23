@@ -484,6 +484,7 @@ class NavigationNodes {
             this.curMovingNode = clickedNode;
             this.inputs.dropDown.populateDropdown(this.curNode);
 
+
             if (this.inputs.dropDown.populateDropdown(this.curNode) == 0) {
                 // Disable buttons if no links exist
                 this.inputs.pathButton.disableEvent("click");
@@ -517,6 +518,8 @@ class NavigationNodes {
             this.drawNodesRectanglesAndLines();
 
             this.inputs.dropDown.setSecondNodeTitle(this.secondNode);
+            this.inputs.startPage.populateDropdown(this.secondNode);
+
             this.changeNodePhoto();
 
             // Logic for clicking a line
@@ -544,6 +547,7 @@ class NavigationNodes {
             this.drawAllNodes();
             this.changeNodePhoto();
             this.inputs.dropDown.makeDropdownEmpty();
+            this.inputs.startPage.makeDropdownEmpty();
 
             // disable relevant buttons here:
             this.inputs.pathButton.disableEvent("click");
@@ -661,7 +665,7 @@ class NavigationNodes {
     // Button handler for making one path connection
     eventClickPath(loc, e, elem) {
         let selPath = this.inputs.dropDown.getDropdownSelection();
-        let spInput = this.inputs.startPage.getValue();
+        let spInput = this.inputs.startPage.getDropdownSelection()
         this.attachOne(selPath, spInput);
         this.drawNodesRectanglesAndLines();
     }
@@ -680,8 +684,8 @@ class NavigationNodes {
             let fromPathId = whichPath;
 
             let spInput = undefined;
-            if (startPageInput != "") {
-                spInput = startPageInput - 1;
+            if (startPageInput) {
+                spInput = startPageInput;
             }
 
             ajax_general("addNodeConnectionToMap", {

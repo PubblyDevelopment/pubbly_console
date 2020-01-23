@@ -13,12 +13,34 @@ class NavigationNodes_Input extends NavigationNodes_element {
         //this.availableEvents.push("click");
     }
 
-    populateDropdown(optionList) {
-        let test = ["Page 3", "Page 5", "Page 9"];
+    populateDropdown(node) {
+        let options = node.all_page_names;
     	//select.options[select.options.length] = new Option(name)
-
-        for (let o in test) {
-            this.dropDown.options[this.dropDown.options.length] = new Option(test[o]);
+        this.makeDropdownEmpty();
+        
+        for (let o in options) {
+            this.dropDown.options[this.dropDown.options.length] = new Option(options[o]);
         }
+        this.enable();
+    }
+
+    getDropdownSelection() {
+        return this.dropDown.selectedIndex;
+    }
+
+    makeDropdownEmpty() {
+        for (let o in this.dropDown.options) {
+            this.dropDown.options.remove(o);
+        }
+        this.disable();
+    }
+
+    enable() {
+        this.dropDown.disabled=false;
+    }
+
+    disable() {
+        //this.dropDown.addAttribute("disabled");
+        this.dropDown.disabled=true;
     }
 }
