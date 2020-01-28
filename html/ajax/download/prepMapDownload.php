@@ -71,7 +71,10 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
                             $cleanedUpJson = str_replace('map\/' . $mapName . '\/', '', $jsonStr);
 
                             // Stupid dang post vars don't work on local :/
-                            // $cleanedUpJson = preg_replace('~"\?engineCode.*nn=(.*)"~', '"/${1}.html"', $cleanedUpJson);
+                            // $cleanedUpJson = preg_replace('~\"\?engineCode.*((variable|unit|static)-.*)\"~', '"${1}.html"', $cleanedUpJson);
+			    // $cleanedUpJson = preg_replace('~"\?engineCode.*nn=(.*)"~', '"/${1}.html"', $cleanedUpJson);
+
+                            $cleanedUpJson = preg_replace('~\\\/\\\/~', '/', $cleanedUpJson);
                             
                             $frag = new Html_fragment($runIndexLoc, [
                                 ["PATH_TO_ENGINE", "engine/"],

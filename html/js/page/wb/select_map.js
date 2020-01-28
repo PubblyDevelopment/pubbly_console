@@ -278,6 +278,22 @@ let actionBar = {
                 },
                 */
             ]
+        },
+        {
+            template: "<hr>",
+            height: 26,
+        },
+        {
+            rows: [
+                {
+                    id: "ftk_audio", view: "button", label: "FTK Audio Fixer",
+                    disabled: false, on: {
+                        onItemClick: function () {
+                            window.location.href = "audio_caps.php";
+                        }
+                    }
+                },   
+            ]
         }
     ]
 }

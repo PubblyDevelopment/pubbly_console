@@ -18,7 +18,7 @@ db.close()
 
 ###### Remove contents of appropriate directories ######
 
-folders = ['books','zips','schools','deletedBooks','units','deletedChildren','series','deletedSeries','map']
+folders = ['books','zips','schools','deletedBooks','units','deletedChildren','series','deletedSeries','map','deletedZips']
 
 for f in folders:
 	os.system("rm -r -f /var/www/html/%s/*" % f)
