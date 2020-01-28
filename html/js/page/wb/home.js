@@ -31,7 +31,7 @@ function wb_build() {
     })
     let consoleSections = webix.ui({
         container: "consoleAppRouting",
-        css: "whiteBG",
+        css: "whiteBG, pinkBG",
         rows: [
             {cols: [
                     {},

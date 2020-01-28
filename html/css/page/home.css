@@ -13,3 +13,7 @@
 .greyBtn div button{
     letter-spacing:2px;
 }
+.pinkBG .webixtype_base {
+	background-color: #863c5b !important;
+	border-color:RGBA(0,0,0,0);
+}
