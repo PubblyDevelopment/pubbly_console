@@ -35,7 +35,7 @@ if ($file) {
 	        		if (!$fileInfo->isDot()) {
 	        			$fn = $fileInfo->getFilename();
 	        			$exp = explode(".", $fn);
-	        			$newFn = strtoupper($exp[0]) . "." . strtolower($exp[1]);
+	        			$newFn = "P_" . strtoupper($exp[0]) . "." . strtolower($exp[1]);
 	        			
 	        			if (file_exists($fileInfo->getPathname())) {
 	        				$zip->addFile($fileInfo->getPathname(), $newFn);
