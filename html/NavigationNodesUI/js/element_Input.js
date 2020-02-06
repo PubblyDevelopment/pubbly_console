@@ -3,6 +3,7 @@
     Author: Wallis Muraca
 
     Element class for entry node button
+    Current status: less trash
 */
 
 class NavigationNodes_Input extends NavigationNodes_element {
@@ -22,6 +23,7 @@ class NavigationNodes_Input extends NavigationNodes_element {
             this.dropDown.options[this.dropDown.options.length] = new Option(options[o]);
         }
         this.enable();
+        console.log("***" + this.dropDown.options[0]);
     }
 
     getDropdownSelection() {
@@ -29,9 +31,10 @@ class NavigationNodes_Input extends NavigationNodes_element {
     }
 
     makeDropdownEmpty() {
-        for (let o in this.dropDown.options) {
-            this.dropDown.options.remove(o);
-        }
+        // for (let o in this.dropDown.options) {
+        //     this.dropDown.options.remove(o);
+        // }
+        this.dropDown.options.length = 0;
         this.disable();
     }
 

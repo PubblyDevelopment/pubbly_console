@@ -71,10 +71,11 @@ class NavigationNodes_Dropdown extends NavigationNodes_element {
         
         let select = document.getElementById("pathSelections");
 
-        // Empty the dropdown
-        for (let o in select.options) {
-            select.options.remove(o);
-        }
+        // Empty the dropdown THIS IS BROKEN FFSSSSSSS
+        // for (let o in select.options) {
+        //     select.options.remove(o);
+        // }
+        select.options.length = 0;
     }
 
     // If no node is passed, used default "No node selected"
