@@ -10,7 +10,6 @@ class NavigationNodes_Input extends NavigationNodes_element {
     constructor(elem) {
         super(elem);
         this.dropDown = elem;
-        console.log("***" + elem.options.item(0));
         //this.availableEvents.push("click");
     }
 
@@ -22,8 +21,7 @@ class NavigationNodes_Input extends NavigationNodes_element {
         for (let o in options) {
             this.dropDown.options[this.dropDown.options.length] = new Option(options[o]);
         }
-        this.enable();
-        console.log("***" + this.dropDown.options[0]);
+        this.enable();;
     }
 
     getDropdownSelection() {
