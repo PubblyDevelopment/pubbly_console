@@ -83,7 +83,7 @@ function setChildCombo(data) {
     window.selectedChildName = data[0];
 }
 
-getSeries();
+
 
 function getBooks() {
     $.ajax({
@@ -966,4 +966,5 @@ $(document).ready(function () {
             ]
         }
     });
+    getSeries();
 })
