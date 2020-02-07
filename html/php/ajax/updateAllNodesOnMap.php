@@ -61,6 +61,7 @@ if (LOGGED_IN) {
                 frm.from_link_name AS from_link_name,
                 frm.from_link_page AS from_link_page,
                 frm.to_node_id AS to_node_id,
+                frm.to_node_start_page AS to_node_start_page,
                 ton.name AS to_node_name
             FROM
                 map_node_path frm
@@ -72,7 +73,12 @@ if (LOGGED_IN) {
         foreach ($allConnections as $connection) {
             $foundInXml = false;
             $toNodeName = $connection['to_node_name'];
+            $toNodeStartPage = $connection['to_node_start_page'];
+            
             $url = "?engineCode=new&t=m&mn=$mapName&nn=$toNodeName";
+            if (isset($toNodeStartPage)) {
+                $url = $url . "&sp=$toNodeStartPage";
+            }
 
             $xml = simplexml_load_file($xmlPath);
             $xmlPage = $xml->Pages->Page[$connection['from_link_page']];
