@@ -108,7 +108,7 @@ function getBooks() {
     });
 }
 
-getBooks();
+
 
 // TODO: Disable add buttons before ajax call, enable after ajax call. For both these two functions.
 function addBookToWorkbench(bookID, bookName) {
@@ -256,7 +256,7 @@ function getUnitInfo(callback) {
         },
     });
 }
-getUnitInfo();
+
 
 var unitInfoForm = {
     header: "Unit Info",
@@ -833,13 +833,14 @@ function saveUnit(callback) {
         url += "subjectName=" + window.subjectName + "&";
         url += "levelName=" + window.levelName + "&";
         url += "unitName=" + window.unitName + "&";
-        url += "pageObj=" + stringyPost + "&";
+        //url += "pageObj=" + stringyPost + "&";
     }
 
 
     $.ajax({
         type: "POST",
         url: url,
+        data: "pageObj=" + stringyPost,
         success: function (ret) {
             // Page list has been saved in DB
             if (Number(ret) !== NaN) {
@@ -967,4 +968,6 @@ $(document).ready(function () {
         }
     });
     getSeries();
+    getBooks();
+    getUnitInfo();
 })
