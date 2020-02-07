@@ -3,7 +3,7 @@ require_once("../../config.php");
 
 $unit = $_GET['unitName'];
 $school = $_GET['schoolName'];
-$pageSet = $_GET['pageObj'];
+$pageSet = $_POST['pageObj'];
 $pageSet = json_decode($pageSet);
 
 $subject = isset($_GET['subjectName']) ? $_GET['subjectName'] : false;
