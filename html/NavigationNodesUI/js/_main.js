@@ -484,6 +484,7 @@ class NavigationNodes {
             this.curMovingNode = clickedNode;
             this.inputs.dropDown.populateDropdown(this.curNode);
 
+
             if (this.inputs.dropDown.populateDropdown(this.curNode) == 0) {
                 // Disable buttons if no links exist
                 this.inputs.pathButton.disableEvent("click");
@@ -517,6 +518,8 @@ class NavigationNodes {
             this.drawNodesRectanglesAndLines();
 
             this.inputs.dropDown.setSecondNodeTitle(this.secondNode);
+            this.inputs.startPage.populateDropdown(this.secondNode);
+
             this.changeNodePhoto();
 
             // Logic for clicking a line
@@ -544,6 +547,7 @@ class NavigationNodes {
             this.drawAllNodes();
             this.changeNodePhoto();
             this.inputs.dropDown.makeDropdownEmpty();
+            this.inputs.startPage.makeDropdownEmpty();
 
             // disable relevant buttons here:
             this.inputs.pathButton.disableEvent("click");
@@ -661,27 +665,34 @@ class NavigationNodes {
     // Button handler for making one path connection
     eventClickPath(loc, e, elem) {
         let selPath = this.inputs.dropDown.getDropdownSelection();
-        this.attachOne(selPath);
+        let spInput = this.inputs.startPage.getDropdownSelection()
+        this.attachOne(selPath, spInput);
         this.drawNodesRectanglesAndLines();
     }
 
     // Connect curnode to secondnode at chosen linkname
     // Not really sure what which is doing, probably should remove?
-    attachOne(which) {
+    attachOne(whichPath, startPageInput) {
         if (this.curNode && this.secondNode) {
 
             for (let l in this.curNode.paths) {
-                if (which == this.curNode.paths[l].map_node_path_id) {
+                if (whichPath == this.curNode.paths[l].map_node_path_id) {
                     this.curNode.paths[l].url = this.secondNode.name;
                 }
             }
 
-            let fromPathId = which;
+            let fromPathId = whichPath;
+
+            let spInput = undefined;
+            if (startPageInput) {
+                spInput = startPageInput;
+            }
 
             ajax_general("addNodeConnectionToMap", {
                 mapID: window.mapID,
                 fromPathID: fromPathId,
                 toNodeID: this.secondNode.node_id,
+                startPage: spInput,
             }, {
                 done: function () {
                     console.log("done");
@@ -872,6 +883,7 @@ class NavigationNodes {
             this.inputs.zoomOut = new NavigationNodes_Zoom(inputElements.zoomOutButton);
             this.inputs.dropDown = new NavigationNodes_Dropdown(inputElements.pathDropdown)
             this.inputs.pathButton = new NavigationNodes_Path(inputElements.pathButton);
+            this.inputs.startPage = new NavigationNodes_Input(inputElements.startPage);
             this.inputs.entryNodeButton = new NavigationNodes_Entry(inputElements.entryNodeButton);
             this.inputs.deleteNode = new NavigationNodes_Save(inputElements.deleteNode);
             this.inputs.viewAt = new NavigationNodes_Save(inputElements.viewAt);

@@ -5,13 +5,12 @@
 <head>
    <meta charset="utf-8">
 
-   <title>Console - NavNodes</title>
+   <title>Dev Console - NavNodes</title>
 
    <link rel="stylesheet" href="NavigationNodesUI/css/main.css?v=1">
    <link rel="stylesheet" href="includes/fontawesome.css" />
    <link rel="stylesheet" href="includes/bootstrap.css" />
 
-   <title>Console - NavNodes</title>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <!-- Woo jquery -->
@@ -28,6 +27,7 @@
    <script src="NavigationNodesUI/js/element_Save.js"></script>
    <script src="NavigationNodesUI/js/element_Dropdown.js?v=2"></script>
    <script src="NavigationNodesUI/js/element_Entry.js"></script>
+   <script src="NavigationNodesUI/js/element_Input.js"></script>
    <script src="NavigationNodesUI/js/canvas-arrow.js"></script>
 
    <script src="NavigationNodesUI/js/helper.js"></script>
@@ -52,6 +52,7 @@
             pathButton: $("#pathButton")[0],
             pathDropdown: $("#pathSelections")[0],
             fromNode: $("#firstNodePhoto")[0],
+            startPage: $("#startPage")[0],
             deleteNode: $("#deleteNodeButton")[0],
             viewAt: $("#viewAtButton")[0],
             allPathButton: $("#allPathButton")[0],
@@ -148,6 +149,7 @@
                   src="NavigationNodesUI/assets/nonodeselected.png">
                <!-- text-align:center centers text -->
                <p id="secondNodeSelected" style="text-align:center;">[No node selected]</p>
+               Page: <select id="startPage"></select>
             </div>
          </div>
       </div>

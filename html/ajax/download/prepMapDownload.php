@@ -138,7 +138,9 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
             if ($exportType === "local") {
                 $rootPath = realpath("pubbly_engine");
                 
-                $file = "http://cdn.pubbly.com/downloads/engine.zip";
+                // SET NEW ENGINE
+                // This is stupid
+                $file = "http://cdn.pubbly.com/downloads/engine_start_page.zip";
                 $newFile = "./temp/engine.zip";
                 $newFileUnzippedLoc = "./temp/engine";
                 copy($file, $newFile);
