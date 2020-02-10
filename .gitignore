@@ -1,9 +1,11 @@
 /html/zips/*
+html/deletedZips/*
 /html/schools/*
 /html/deletedBooks/*
 /html/units/*
 /html/books/*
 /html/deletedChildren/*
+/html/deletedZips/*
 /html/series/*
 /html/deletedSeries/*
 /html/deletedZips/*
@@ -15,8 +17,10 @@ html/config.php
 nbproject/*
 html/js/branding.js
 html/js/favicon.ico
-html/staging/*
-html/download/*
+html/staging/map/*
+html/staging/audio_caps/*
+html/download/map/*
+html/pubbly_engine/
 
 /html/favicon.ico
 /html/js/branding.js

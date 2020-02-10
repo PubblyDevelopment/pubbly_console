@@ -60,7 +60,6 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
                         // $runIndexLoc = "http://cdn.pubbly.com/pubbly_engine/releases/2/html/server-run.html";
 			$runIndexLoc = "http://cdn.pubbly.com/pubbly_engine/releases/2/html/offline-run.html";
 
-
                         if (file_exists("$mapExportLoc/$nodePath/Main.2.0.0.json")) {
                             // Get JSON string of file
                             $jsonStr = file_get_contents("$mapExportLoc/$nodePath/Main.2.0.0.json");
@@ -74,9 +73,7 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
 
                             // Stupid dang post vars don't work on local :/
 
-
                             $cleanedUpJson = preg_replace('~\\\/\\\/~', '/', $cleanedUpJson);
-
                             
                             $frag = new Html_fragment($runIndexLoc, [
                                 ["PATH_TO_ENGINE", "engine/"],
@@ -140,7 +137,9 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
             if ($exportType === "local") {
                 $rootPath = realpath("pubbly_engine");
                 
-                $file = "http://cdn.pubbly.com/downloads/engine.zip";
+                // SET NEW ENGINE
+                // This is stupid
+                $file = "http://cdn.pubbly.com/downloads/engine_start_page.zip";
                 $newFile = "./temp/engine.zip";
                 $newFileUnzippedLoc = "./temp/engine";
                 copy($file, $newFile);

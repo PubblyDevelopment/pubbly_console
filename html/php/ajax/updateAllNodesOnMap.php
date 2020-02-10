@@ -48,47 +48,65 @@ if (LOGGED_IN) {
         ]);
         $frag->printOut("map/$mapName/$toName.html");
 
+
         $xmlPath = "$toLoc/MainXML.xml";
         // recreates nodes just incase new ones were added
         // If it's a duplicate entry, it fails the foreign key unique check 
         createNodeSkeletonPathsFromXmlDoc($id, $xmlPath);
 
 
-        $allConnections = $query->fetchRows("SELECT
-    frm.map_node_path_id AS map_node_path_id,
-    frm.from_link_name AS from_link_name,
-    frm.from_link_page AS from_link_page,
-    frm.to_node_id AS to_node_id,
-    ton.name AS to_node_name
-FROM
-    map_node_path frm
-LEFT JOIN map_node ton ON
-    frm.to_node_id = ton.map_node_id
-WHERE
-    frm.from_node_id = ?", ["s", $id]);
+        $allConnections = $query->fetchRows("
+            SELECT
+                frm.map_node_path_id AS map_node_path_id,
+                frm.from_link_name AS from_link_name,
+                frm.from_link_page AS from_link_page,
+                frm.to_node_id AS to_node_id,
+                frm.to_node_start_page AS to_node_start_page,
+                ton.name AS to_node_name
+            FROM
+                map_node_path frm
+            LEFT JOIN map_node ton ON
+                frm.to_node_id = ton.map_node_id
+            WHERE
+                frm.from_node_id = ?", ["s", $id]);
+
         foreach ($allConnections as $connection) {
             $foundInXml = false;
             $toNodeName = $connection['to_node_name'];
+            $toNodeStartPage = $connection['to_node_start_page'];
+            
             $url = "?engineCode=new&t=m&mn=$mapName&nn=$toNodeName";
+            if (isset($toNodeStartPage)) {
+                $url = $url . "&sp=$toNodeStartPage";
+            }
 
             $xml = simplexml_load_file($xmlPath);
             $xmlPage = $xml->Pages->Page[$connection['from_link_page']];
-            foreach ($xmlPage->Links->children() as $xmlLink) {
-                if ((string) $xmlLink->Name == $connection['from_link_name']) {
-                    foreach ($xmlLink->Triggers->children() as $trigger) {
-                        foreach ($trigger->Targets->children() as $target) {
-                            if (
-                                    ((string) $target->Type == "Page" && (string) $target->Destination == "To be Determined") || ((string) $target->Action == "Has been determined")) {
-                                $target->Type = "URL";
-                                $target->Action = "Has been determined";
-                                $target->Destination = "base64Encoded(" .
-                                        base64_encode($url) . ")";
-                                $foundInXml = true;
+
+            if (is_null($xmlPage)) {
+                echo "Something looks bad at <b>" . $node['name'] . "</b>";
+            }
+
+            // This. One FREAKING STUPID NULL CHECK FOR A BAD PAGE KASHJDFKLHASDFJKHASKJDHFLAJKSDH  AHHAHAHAHHAHHHH11H1H1H1H1H1H11
+            // if (!is_null($xmlPage)) {
+                foreach ($xmlPage->Links->children() as $xmlLink) {
+                    if ((string) $xmlLink->Name == $connection['from_link_name']) {
+                        foreach ($xmlLink->Triggers->children() as $trigger) {
+                            foreach ($trigger->Targets->children() as $target) {
+                                if (
+                                        ((string) $target->Type == "Page" && (string) $target->Destination == "To be Determined") || ((string) $target->Action == "Has been determined")) {
+                                    $target->Type = "URL";
+                                    $target->Action = "Has been determined";
+                                    $target->Destination = "base64Encoded(" .
+                                            base64_encode($url) . ")";
+                                    $foundInXml = true;
+                                }
                             }
                         }
                     }
                 }
-            }
+            // }
+
             if (!$foundInXml) {
                 $query->execSingle("DELETE FROM map_node_path WHERE map_node_path_id = ?", ["s", $connection['map_node_path_id']]);
             }

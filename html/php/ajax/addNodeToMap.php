@@ -15,11 +15,14 @@ require_once(CLASS_ROOT . "/mysql_query.php");
 require_once(CLASS_ROOT . "/sec_session.php");
 if (LOGGED_IN && in_array($nodeFromType, ["static", "variable", "unit"])) {
     $nodeFsName = genNodeFsName($nodeFromType, $nodeFromID);
+
+    // This must return false if node is already in map in DB (???)
     $nodeID = createNodeEntryInDB($mapID, $nodeFromType, $nodeFromID, $nodeFsName, $nodeX, $nodeY);
-    if ($nodeID) {
+    if ($nodeID) {    
         $xmlLoc = getXmlLocFromNodeTypeAndId($nodeFromType, $nodeFromID);
         $paths = createNodeSkeletonPathsFromXmlDoc($nodeID, $xmlLoc);
         $xmlFromLoc = getXmlLocFromNodeTypeAndId($nodeFromType, $nodeFromID);
+  
         // Stupid child prefix shit.
         $query = new Mysql_query();
         if ($nodeFromType === "variable") {
@@ -32,9 +35,11 @@ if (LOGGED_IN && in_array($nodeFromType, ["static", "variable", "unit"])) {
         mkdir("map/$mapName/$nodeFsName/images");
         mkdir("map/$mapName/$nodeFsName/audio");
         mkdir("map/$mapName/$nodeFsName/videos");
+
         moveNodeXmlToNodeFsLoc($xmlFromLoc, $assetPrefix, "map/$mapName/$nodeFsName");
         
         // No need to query, it's new, so it's default shit anyway.
+        // HAHAHAHAHA THAT'S WHAT YOU THINK kill me
         $fakeJSON = [
             "name" => $nodeFsName,
             "cover" => 0,
