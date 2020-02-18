@@ -139,7 +139,7 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
                 
                 // SET NEW ENGINE
                 // This is stupid
-                $file = "http://cdn.pubbly.com/downloads/engine_start_page.zip";
+                $file = "http://cdn.pubbly.com/downloads/engine_offline.zip";
                 $newFile = "./temp/engine.zip";
                 $newFileUnzippedLoc = "./temp/engine";
                 copy($file, $newFile);
