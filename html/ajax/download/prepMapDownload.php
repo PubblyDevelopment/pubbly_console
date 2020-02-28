@@ -57,7 +57,7 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
                     } else if ($exportType === "local") {
                         // Get correct server run file from the CDN...
                         // $runIndexLoc = "http://cdn.pubbly.com/pubbly_engine/releases/2/html/server-run.html";
-			$runIndexLoc = "http://cdn.pubbly.com/pubbly_engine/releases/2/html/offline-run.html";
+			            $runIndexLoc = "http://cdn.pubbly.com/pubbly_engine/releases/2/html/offline-run.html";
 
                         if (file_exists("$mapExportLoc/$nodePath/Main.2.0.0.json")) {
                             // Get JSON string of file
