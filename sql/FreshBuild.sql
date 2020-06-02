@@ -161,7 +161,8 @@ CREATE TABLE `map_node_path` (
   `from_node_id` int(11) NOT NULL,
   `from_link_name` varchar(128) NOT NULL,
   `from_link_page` int(11) NOT NULL,
-  `to_node_id` int(11) DEFAULT NULL
+  `to_node_id` int(11) DEFAULT NULL,
+  `to_node_start_page` int(11) DEFAULT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
