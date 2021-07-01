@@ -75,6 +75,18 @@ if (LOGGED_IN && isset($_GET['mapName'])) {
 			    // $cleanedUpJson = preg_replace('~"\?engineCode.*nn=(.*)"~', '"/${1}.html"', $cleanedUpJson);
 
                             $cleanedUpJson = preg_replace('~\\\/\\\/~', '/', $cleanedUpJson);
+
+                            // E X T R E M E L Y STUPID
+                            // Removing \/\/s from the JSON breaks URL becuase they come in as 
+                            // http:/pubbly.com or whatever
+                            // so we have to fix the thing we broke with this stupid replacement
+                            $cleanedUpJson = preg_replace_callback(
+                                '~https?:/~',
+                                function ($matches) {
+                                    return $matches[0] . '/';
+                                },
+                                $cleanedUpJson
+                            );
                             
                             $frag = new Html_fragment($runIndexLoc, [
                                 ["PATH_TO_ENGINE", "engine/"],
