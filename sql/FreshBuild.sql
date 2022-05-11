@@ -309,7 +309,7 @@ INSERT INTO `units` (`ID`, `name`, `outdated`, `order`, `schoolID`, `subjectID`,
 --
 
 CREATE TABLE `user` (
-  `user_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
   `password` varchar(128) NOT NULL,
   `email` varchar(255) NOT NULL,
