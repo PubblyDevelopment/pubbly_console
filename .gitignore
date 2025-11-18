@@ -33,3 +33,4 @@ desktop.ini
 .vscode
 *.swp
 **/.DS_Store
+/.idea
